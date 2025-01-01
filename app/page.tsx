@@ -3,11 +3,10 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { MapPin, Upload } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Papa from "papaparse";
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 interface Event extends Document {
     title: string;
@@ -39,49 +38,6 @@ interface Event extends Document {
 export default function Home() {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [events, setEvents] = useState<Event[]>([]);
-    const [hasUploadedCSV, setHasUploadedCSV] = useState(false);
-
-    // const handleCSVUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = e.target.files?.[0];
-    //     if (!file) return;
-
-    //     Papa.parse(file, {
-    //         header: true, // Use the header row to map fields
-    //         skipEmptyLines: true, // Skip empty lines
-    //         complete: (results: Papa.ParseResult<unknown>) => {
-    //             const parsedEvents = results.data
-    //                 .filter(
-    //                     (row): row is Record<string, string> =>
-    //                         typeof row === "object" && row !== null
-    //                 )
-    //                 .map((row) => {
-    //                     // Convert DD/MM/YYYY to YYYY-MM-DD
-    //                     const dateParts = (row["Start Date*"] || "").split("/");
-    //                     const formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-
-    //                     return {
-    //                         title: row["Event Ttile*"] || "",
-    //                         startDate: formattedDate,
-    //                         startTime: row["Start Time*"] || "",
-    //                         location:
-    //                             row["Location (Country, City, State)*"] || "",
-    //                         description: row["Description*"] || "",
-    //                         url: row["URL"] || "",
-    //                         photoUrl: row["Photo URL"] || "",
-    //                         hosts: row["Host(s)/People"] || "",
-    //                     };
-    //                 })
-    //                 .filter((event) => event.title !== ""); // Ensure event has a title
-
-    //             console.log(parsedEvents);
-    //             setEvents(parsedEvents);
-    //             setHasUploadedCSV(true);
-    //         },
-    //         error: (error) => {
-    //             console.error("Error parsing CSV:", error);
-    //         },
-    //     });
-    // };
 
     useEffect(() => {
         fetch("/api/events")
@@ -151,7 +107,8 @@ export default function Home() {
                                         <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
                                             by{" "}
                                             <span className="font-semibold">
-                                                {event.hosts || "Unknown Host"}
+                                                {String(event.organization) ||
+                                                    "Unknown Host"}
                                             </span>
                                         </p>
                                         <p className="mb-4 pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">

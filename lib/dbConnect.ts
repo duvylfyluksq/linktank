@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 declare global {
-    var mongoose: any; // This must be a `var` and not a `let / const`
+    // eslint-disable-next-line no-var -- we must use a var here so that the global declaration works as expected. Using let/const would cause incorrect behaviour.
+    var mongoose: any;
 }
 
 let cached = global.mongoose;

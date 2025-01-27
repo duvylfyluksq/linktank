@@ -13,7 +13,7 @@ import Image from "next/image";
 
 const Navbar = () => {
     return (
-        <nav className="flex items-center justify-between p-4 px-10 bg-blue-100">
+        <nav className="flex items-center justify-between p-4 px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center">
                 <Image
                     src="/logo.png"
@@ -45,7 +45,7 @@ const Navbar = () => {
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button className="flex items-center gap-x-4 py-7 bg-blue-100 text-black hover:bg-blue-200 shadow-none">
+                    <Button className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
                         <Avatar className="h-8 w-8">
                             <AvatarImage src="/avatar.jpg" alt="User Avatar" />
                             <AvatarFallback>ID</AvatarFallback>

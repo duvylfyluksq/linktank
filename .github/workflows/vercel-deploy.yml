@@ -1,27 +1,24 @@
 name: Trigger Vercel Deploy
+
 on:
   push:
     branches:
-      - main  # or your default branch name
+      - main
+   
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
-    # Run only if the commit author is not the repository owner
-    # if: github.event.pusher.name != github.repository_owner
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Create deployment trigger commit
         run: |
           git config --global user.name 'GitHub Actions Bot'
           git config --global user.email 'actions@github.com'
-          
           # Create an empty commit
           git commit --allow-empty -m "trigger: Vercel deployment for collaborator commit"
-          
           # Push using GitHub token
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git push origin ${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

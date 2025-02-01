@@ -10,23 +10,31 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar = () => {
     return (
-        <nav className="flex items-center justify-between p-4 px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+        <nav className="flex items-center justify-between h-[6rem] px-[3.19rem] bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center">
-                <Image
-                    src="/logo.png"
-                    alt="LinkTank"
-                    width={100}
-                    height={100}
-                    className="w-10 h-10 mr-4"
-                />
-                <span className="text-2xl font-bold mr-10">LinkTank</span>
+                <Link href="/" className="flex items-center">
+                    <Image
+                        src="/logo.png"
+                        alt="LinkTank"
+                        width={100}
+                        height={100}
+                        className="w-10 h-10 mr-[0.625rem]"
+                    />
+                    <span className="text-2xl font-bold mr-[2.44rem]">
+                        LinkTank
+                    </span>
+                </Link>
 
                 <ul className="flex space-x-8 ml-6">
                     <li>
-                        <a href="#" className="text-gray-600 hover:underline">
+                        <a
+                            href="/events"
+                            className="text-gray-600 hover:underline"
+                        >
                             Events
                         </a>
                     </li>
@@ -46,14 +54,18 @@ const Navbar = () => {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
-                        <Avatar className="h-8 w-8">
+                        <Avatar className="h-[2.96125rem] w-[2.96125rem]">
                             <AvatarImage src="/avatar.jpg" alt="User Avatar" />
                             <AvatarFallback>ID</AvatarFallback>
                         </Avatar>
 
                         <div className="flex flex-col text-left">
-                            <span className="font-bold">Vedanta Som</span>
-                            <span className="font-medium">vedanta@ua.ai</span>
+                            <span className="font-bold text-[0.97456rem]">
+                                Vedanta Som
+                            </span>
+                            <span className="font-medium text-[0.97456rem]">
+                                vedanta@ua.ai
+                            </span>
                         </div>
                         <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     </Button>

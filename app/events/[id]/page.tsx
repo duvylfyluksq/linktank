@@ -45,7 +45,29 @@ interface Event extends Document {
 
 export default function EventPage() {
     const [date, setDate] = useState<Date | undefined>(() => new Date());
-    const [event, setEvent] = useState<Event>({});
+    const [event, setEvent] = useState<Event>({
+        room: "",
+        state: "",
+        zip_code: "",
+        _id: "",
+        title: "",
+        date_from: "",
+        date_to: "",
+        url: "",
+        brief_description: "",
+        description: "",
+        speakers: [],
+        organization: {
+            name: "",
+        },
+        is_virtual: false,
+        is_in_person: true,
+        location: "",
+        address: "",
+        city: "",
+        country: "",
+        keywords: [],
+    });
     const params = useParams();
     useEffect(() => {
         fetch("/api/events/" + params.id)

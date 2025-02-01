@@ -1,24 +1,25 @@
-name: Trigger Vercel Deploy
+
+name: Empty Commit
 
 on:
   push:
     branches:
-      - main
-   
+      - main  # Change this to your default branch if different
+
 jobs:
-  trigger-deploy:
+  empty-commit:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Create deployment trigger commit
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Create empty commit
         run: |
-          git config --global user.name 'GitHub Actions Bot'
-          git config --global user.email 'actions@github.com'
-          # Create an empty commit
-          git commit --allow-empty -m "trigger: Vercel deployment for collaborator commit"
-          # Push using GitHub token
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git push origin ${{ github.ref_name }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Empty commit"
+          git push
+

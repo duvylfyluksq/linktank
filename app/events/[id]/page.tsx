@@ -78,6 +78,12 @@ export default function EventPage() {
             });
     }, []);
 
+    const displayDate = (date) => {
+        console.log(date);
+        const dt = new Date(date);
+        return dt.toDateString() + ", " + dt.toLocaleTimeString();
+    };
+
     return (
         <div className="flex flex-col items-center justify-center w-full pt-[4.625rem] pb-[6.56rem]">
             <div className="flex flex-col w-[45.875rem] gap-[2.88rem]">
@@ -94,7 +100,9 @@ export default function EventPage() {
                             <div className="flex flex-col gap-[1.25rem]">
                                 <div className="gap-[0.5625rem] flex flex-col">
                                     <h6 className="text-[1.125rem] font-semibold leading-[1.92869rem] opacity-70 text-[#323232]">
-                                        {event.keywords?.join(", ")}
+                                        {event &&
+                                            event.keywords &&
+                                            event.keywords?.join(", ")}
                                     </h6>
                                     <h1 className="text-[#323232] text-[2.5rem] font-bold">
                                         {event.title}
@@ -134,14 +142,9 @@ export default function EventPage() {
                                 <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
                                     <p className="font-semibold">Event Date</p>
                                     <p>
-                                        {new Date(
-                                            event.date_from
-                                        ).toDateString()}
-                                        ,{" "}
-                                        {new Date(
-                                            event.date_from
-                                        ).toLocaleTimeString()}{" "}
-                                        {event.date_to && " -" + event.date_to}
+                                        {displayDate(event.date_from)}{" "}
+                                        {event.date_to &&
+                                            " - " + displayDate(event.date_to)}
                                     </p>
                                 </div>
                             </div>

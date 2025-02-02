@@ -132,11 +132,16 @@ export default function EventPage() {
                                     />
                                 </div>
                                 <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                    <p className="font-semibold">
-                                        Monday, January 25 - Tuesday, January 26
-                                    </p>
+                                    <p className="font-semibold">Event Date</p>
                                     <p>
-                                        {event.date_from} - {event.date_to}
+                                        {new Date(
+                                            event.date_from
+                                        ).toDateString()}
+                                        ,{" "}
+                                        {new Date(
+                                            event.date_from
+                                        ).toLocaleTimeString()}{" "}
+                                        {event.date_to && " -" + event.date_to}
                                     </p>
                                 </div>
                             </div>

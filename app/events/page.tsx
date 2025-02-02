@@ -46,13 +46,33 @@ interface Event extends Document {
 export default function Home() {
     const [date, setDate] = useState<Date | undefined>(() => new Date());
     const [events, setEvents] = useState<Event[]>([]);
+    const [organizations, setOrganizations] = useState<
+        { name: string; _id: string }[]
+    >([]);
+    const [selectedOrg, setSelectedOrg] = useState<string | undefined>(
+        undefined
+    );
 
     useEffect(() => {
-        fetch("/api/events")
+        const fetchEvents = async () => {
+            const orgQuery = selectedOrg ? `?organization=${selectedOrg}` : "";
+            const response = await fetch(`/api/events${orgQuery}`);
+            const data = await response.json();
+            console.log(data);
+            setEvents(data.events);
+        };
+
+        fetchEvents();
+    }, [selectedOrg]);
+
+    useEffect(() => {
+        // Fetch organizations
+        fetch("/api/organizations")
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
-                setEvents(data.events);
+                if (data.success) {
+                    setOrganizations(data.organizations);
+                }
             });
     }, []);
 
@@ -89,6 +109,25 @@ export default function Home() {
                         <span className="text-[1rem]">Filters (1)</span>
                     </Button>
                 </div>
+
+                <Select
+                    value={selectedOrg}
+                    onValueChange={(val) => setSelectedOrg(val)}
+                >
+                    <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem]">
+                        <SelectValue placeholder="Select Organization" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                        <SelectGroup>
+                            <SelectLabel>Select Organization</SelectLabel>
+                            {organizations.map((org) => (
+                                <SelectItem key={org._id} value={org._id}>
+                                    {org.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
             <div className="flex">
                 <ol className="relative flex-grow pr-20 border-s border-[#808080] border-opacity-25">
@@ -108,7 +147,7 @@ export default function Home() {
                                 <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
                                     <div className="flex-1 flex flex-col gap-[0.5rem]">
                                         <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
-                                            <p>
+                                            <p className="whitespace-nowrap">
                                                 {new Date(
                                                     event.date_from
                                                 ).toLocaleTimeString("en-US", {
@@ -118,7 +157,9 @@ export default function Home() {
                                             </p>
                                             <div className="flex flex-row items-center gap-[0.12rem]">
                                                 <MapPin size={20} />{" "}
-                                                <p>{event.location}</p>
+                                                <p className="line-clamp-1 w-[40%]">
+                                                    {event.location}
+                                                </p>
                                             </div>
                                         </div>
                                         <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">

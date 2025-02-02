@@ -1,5 +1,5 @@
 
-name: Empty Commit
+name: Trigger Vercel Deploy 
 
 on:
   push:
@@ -21,5 +21,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git commit --allow-empty -m "Empty commit"
-          git push
+          git push origin ${{ github.ref_name }}
 

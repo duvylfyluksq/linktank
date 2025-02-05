@@ -31,57 +31,68 @@ const Navbar = () => {
 
                 <ul className="flex space-x-8 ml-6">
                     <li>
-                        <a
+                        <Link
                             href="/events"
                             className="text-gray-600 hover:underline"
                         >
                             Events
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href="#" className="text-gray-600 hover:underline">
+                        <Link
+                            href="#"
+                            className="text-gray-600 hover:underline"
+                        >
                             My calendars
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href="#" className="text-gray-600 hover:underline">
+                        <Link
+                            href="#"
+                            className="text-gray-600 hover:underline"
+                        >
                             Organizations
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </div>
+            <div className="flex items-center gap-x-[1.88rem]">
+                <div></div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
+                            <Avatar className="h-[2.96125rem] w-[2.96125rem]">
+                                <AvatarImage
+                                    src="/avatar.jpg"
+                                    alt="User Avatar"
+                                />
+                                <AvatarFallback>ID</AvatarFallback>
+                            </Avatar>
 
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
-                        <Avatar className="h-[2.96125rem] w-[2.96125rem]">
-                            <AvatarImage src="/avatar.jpg" alt="User Avatar" />
-                            <AvatarFallback>ID</AvatarFallback>
-                        </Avatar>
+                            <div className="flex flex-col text-left">
+                                <span className="font-bold text-[0.97456rem]">
+                                    Vedanta Som
+                                </span>
+                                <span className="font-medium text-[0.97456rem]">
+                                    vedanta@ua.ai
+                                </span>
+                            </div>
+                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                    </DropdownMenuTrigger>
 
-                        <div className="flex flex-col text-left">
-                            <span className="font-bold text-[0.97456rem]">
-                                Vedanta Som
-                            </span>
-                            <span className="font-medium text-[0.97456rem]">
-                                vedanta@ua.ai
-                            </span>
-                        </div>
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>Profile</DropdownMenuItem>
-                    <DropdownMenuItem>Students</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="font-bold text-red-500">
-                        Log out
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                    <DropdownMenuContent>
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>Students</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem className="font-bold text-red-500">
+                            Log out
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </nav>
     );
 };

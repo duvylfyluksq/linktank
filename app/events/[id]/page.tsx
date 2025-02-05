@@ -4,69 +4,36 @@ import { Button } from "@/components/ui/button";
 import { Calendar, ExternalLink, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import mongoose, { Document } from "mongoose";
+// import { Document } from "mongoose";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-interface Event extends Document {
-    title: string;
-    date_from: string;
-    date_to?: string;
-    url: string;
-    ticket_url?: string;
-    brief_description?: string;
-    description: string;
-    agenda?: string;
-    speakers?:
-        | {
-              name: string;
-              title: string;
-              photo_url: string;
-              url: string;
-              twitter: string;
-          }[]
-        | string[];
-    organization?: { name: string };
-    photo_url?: string;
-    is_virtual?: boolean;
-    is_in_person?: boolean;
-    location: string;
-    address?: string;
-    room?: string;
-    city?: string;
-    state?: string;
-    zip_code?: string;
-    country?: string;
-    keywords?: string[];
-    contact_name?: string;
-    contact_phone?: string;
-    contact_email?: string;
-}
-
 export default function EventPage() {
-    const [date, setDate] = useState<Date | undefined>(() => new Date());
-    const [event, setEvent] = useState<Event>({
-        room: "",
-        state: "",
-        zip_code: "",
-        _id: "",
+    const [event, setEvent] = useState<any>({
         title: "",
         date_from: "",
         date_to: "",
         url: "",
+        ticket_url: "",
         brief_description: "",
         description: "",
+        agenda: "",
         speakers: [],
-        organization: {
-            name: "",
-        },
+        organization: { name: "" },
+        photo_url: "",
         is_virtual: false,
-        is_in_person: true,
+        is_in_person: false,
         location: "",
         address: "",
+        room: "",
         city: "",
+        state: "",
+        zip_code: "",
         country: "",
         keywords: [],
+        contact_name: "",
+        contact_phone: "",
+        contact_email: "",
     });
     const params = useParams();
     useEffect(() => {
@@ -148,23 +115,14 @@ export default function EventPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="gap-[0.69rem] flex flex-row items-center">
-                                <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
-                                    <MapPin
-                                        size={30}
-                                        className="text-[#727679]"
-                                    />
-                                </div>
-                                <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                    <p className="font-semibold">
-                                        {event.address}
-                                    </p>
-                                    <p>
-                                        {event.city},{" "}
-                                        {event.state ? event.state + ", " : ""}
-                                        {event.country}
-                                    </p>
-                                </div>
+                        </div>
+                        <div className="gap-[0.69rem] flex flex-row items-center">
+                            <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
+                                <MapPin size={30} className="text-[#727679]" />
+                            </div>
+                            <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
+                                <p className="font-semibold">{event.address}</p>
+                                <p>{event.location}</p>
                             </div>
                         </div>
                         <div className="gap-[0.69rem] flex flex-row items-center">
@@ -183,15 +141,17 @@ export default function EventPage() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-[2.625rem]">
-                    <div className="h-[26.3125rem] w-full rounded-[1.4375rem]">
-                        <Image
-                            src={event.photo_url || "/globe.svg"}
-                            alt="Event Image"
-                            width={8000}
-                            height={8000}
-                            className="h-full object-cover w-full rounded-[1.4375rem]"
-                        />
-                    </div>
+                    {event.photo_url && (
+                        <div className="h-[26.3125rem] w-full rounded-[1.4375rem]">
+                            <Image
+                                src={event.photo_url || "/globe.svg"}
+                                alt="Event Image"
+                                width={8000}
+                                height={8000}
+                                className="h-full object-cover w-full rounded-[1.4375rem]"
+                            />
+                        </div>
+                    )}
                     <div className="flex flex-col gap-[0.75rem]">
                         <h3 className="text-[#323232] font-extrabold leading-[1.92869rem] text-[1.5rem]">
                             About

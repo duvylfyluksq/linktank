@@ -88,7 +88,10 @@ export default function Landing() {
                     </div>
                     <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3 grid-rows-2">
                         {images1.map((image, index) => (
-                            <div className="h-[9.64819rem] w-[9.64819rem] rounded-[1.25375rem]">
+                            <div
+                                className="h-[9.64819rem] w-[9.64819rem] rounded-[1.25375rem]"
+                                key={`${image}-${index}`}
+                            >
                                 <Image
                                     key={`${image}-${index}`}
                                     src={image}
@@ -161,7 +164,7 @@ export default function Landing() {
                 <div className="flex flex-row gap-[2.6875rem]">
                     <div className="flex flex-col gap-[1.625rem] w-[36.25rem]">
                         <h1 className="text-[#113663] font-jakarta text-[2rem] font-bold text-left">
-                            Who's Linktank for?
+                            Who&apos;s Linktank for?
                         </h1>
                         <p className="text-[#1C2329] font-jakarta text-[1rem] text-left font-normal">
                             Linktank is for policy professionals, issue
@@ -175,7 +178,10 @@ export default function Landing() {
                     </div>
                     <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3">
                         {images2.map((image, index) => (
-                            <div className="h-[13.29413rem] w-[10.94063rem] rounded-[0.50888rem]">
+                            <div
+                                className="h-[13.29413rem] w-[10.94063rem] rounded-[0.50888rem]"
+                                key={`${image}-${index}`}
+                            >
                                 <Image
                                     key={`${image}-${index}`}
                                     src={image}

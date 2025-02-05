@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 
 interface Event extends Document {
+    _id: string;
     title: string;
     date_from: Date;
     date_to?: Date;
@@ -78,6 +79,25 @@ export default function Home() {
 
     const today = useMemo(() => new Date(), []);
 
+    const groupedEvents: Record<string, Event[]> = events.reduce(
+        (acc, event) => {
+            const dateKey = new Date(event.date_from).toLocaleDateString(
+                "en-US",
+                {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                }
+            );
+
+            if (!acc[dateKey]) acc[dateKey] = [];
+            acc[dateKey].push(event);
+
+            return acc;
+        },
+        {}
+    );
+
     return (
         <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem]">
             <div className="w-full flex flex-row justify-between items-center">
@@ -92,14 +112,9 @@ export default function Home() {
                         <SelectContent className="bg-white">
                             <SelectGroup>
                                 <SelectLabel>Anywhere</SelectLabel>
-                                <SelectItem value="apple">Apple</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
-                                <SelectItem value="blueberry">
-                                    Blueberry
-                                </SelectItem>
-                                <SelectItem value="grapes">Grapes</SelectItem>
-                                <SelectItem value="pineapple">
-                                    Pineapple
+                                <SelectItem value="ny">New York</SelectItem>
+                                <SelectItem value="dc">
+                                    Washington D.C.
                                 </SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -131,62 +146,74 @@ export default function Home() {
             </div>
             <div className="flex">
                 <ol className="relative flex-grow pr-20 border-s border-[#808080] border-opacity-25">
-                    {events.map((event, index) => (
-                        <Link href={`/events/${event._id}`} key={index}>
-                            <li key={index} className="mb-10 ms-4">
+                    {Object.entries(groupedEvents).map(
+                        ([date, groupedEvents]) => (
+                            <li key={date} className="mb-10 ms-4">
                                 <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white"></div>
                                 <time className="mb-1 text-xl font-semibold leading-none">
-                                    {new Date(
-                                        event.date_from
-                                    ).toLocaleDateString("en-US", {
-                                        month: "short",
-                                        day: "numeric",
-                                        year: "numeric",
-                                    })}
+                                    {date}
                                 </time>
-                                <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
-                                    <div className="flex-1 flex flex-col gap-[0.5rem]">
-                                        <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
-                                            <p className="whitespace-nowrap">
-                                                {new Date(
-                                                    event.date_from
-                                                ).toLocaleTimeString("en-US", {
-                                                    hour: "numeric",
-                                                    minute: "numeric",
-                                                })}{" "}
-                                            </p>
-                                            <div className="flex flex-row items-center gap-[0.12rem]">
-                                                <MapPin size={20} />{" "}
-                                                <p className="line-clamp-1 w-[40%]">
-                                                    {event.location}
+
+                                {groupedEvents.map((event) => (
+                                    <Link
+                                        href={`/events/${event._id}`}
+                                        key={event._id}
+                                    >
+                                        <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
+                                            <div className="flex-1 flex flex-col gap-[0.5rem]">
+                                                <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
+                                                    <p>
+                                                        {new Date(
+                                                            event.date_from
+                                                        ).toLocaleTimeString(
+                                                            "en-US",
+                                                            {
+                                                                hour: "numeric",
+                                                                minute: "numeric",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                    <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
+                                                        <MapPin
+                                                            className="flex-shrink-0"
+                                                            size={20}
+                                                        />
+                                                        <p className="line-clamp-1">
+                                                            {event.location}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
+                                                    {event.title}
+                                                </h3>
+                                                <p className="text-base font-semibold text-black dark:text-gray-400">
+                                                    By{" "}
+                                                    <span className="font-semibold text-[#1F76F9]">
+                                                        {String(
+                                                            event?.organization
+                                                                ?.name
+                                                        ) || "Unknown Host"}
+                                                    </span>
+                                                </p>
+                                                <p className="pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
+                                                    {event.description}
                                                 </p>
                                             </div>
-                                        </div>
-                                        <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
-                                            {event.title}
-                                        </h3>
-                                        <p className="text-base font-semibold text-black dark:text-gray-400">
-                                            By{" "}
-                                            <span className="font-semibold text-[#1F76F9]">
-                                                {String(
-                                                    event?.organization?.name
-                                                ) || "Unknown Host"}
-                                            </span>
-                                        </p>
-                                        <p className=" pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
-                                            {event.description}
-                                        </p>
-                                    </div>
 
-                                    <img
-                                        src={event.photo_url || "/globe.svg"}
-                                        alt={`${event.title} image`}
-                                        className="rounded-[0.9375rem] h-[9.5625rem] w-auto aspect-square object-cover"
-                                    />
-                                </div>
+                                            <img
+                                                src={
+                                                    event.photo_url ||
+                                                    "/globe.svg"
+                                                }
+                                                alt={`${event.title} image`}
+                                                className="rounded-[0.9375rem] h-[9.5625rem] w-auto aspect-square object-cover"
+                                            />
+                                        </div>
+                                    </Link>
+                                ))}
                             </li>
-                        </Link>
-                    ))}
+                        )
+                    )}
                 </ol>
 
                 <div className="h-auto">

@@ -154,19 +154,31 @@ export default function EventPage() {
                                 {/* Action Buttons */}
                                 <div className="flex flex-wrap gap-4">
                                     {event.ticket_url && (
-                                        <Button
-                                            size="lg"
-                                            className="bg-blue-600 hover:bg-blue-700"
+                                        <Link
+                                            href={event.ticket_url}
+                                            target="_blank"
+                                            rel="noreferrer"
                                         >
-                                            <Tag className="mr-2 h-5 w-5" />
-                                            Get Tickets
-                                        </Button>
+                                            <Button
+                                                size="lg"
+                                                className="bg-blue-600 hover:bg-blue-700"
+                                            >
+                                                <Tag className="mr-2 h-5 w-5" />
+                                                Get Tickets
+                                            </Button>
+                                        </Link>
                                     )}
                                     {event.url && (
-                                        <Button size="lg" variant="outline">
-                                            <ExternalLink className="mr-2 h-5 w-5" />
-                                            Visit Website
-                                        </Button>
+                                        <Link
+                                            href={event.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            <Button size="lg" variant="outline">
+                                                <ExternalLink className="mr-2 h-5 w-5" />
+                                                Visit Website
+                                            </Button>
+                                        </Link>
                                     )}
                                 </div>
                             </div>

@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
+import SkeletonCard from "./SkeletonCard";
 
 interface Event extends Document {
     _id: string;
@@ -53,14 +54,17 @@ export default function Home() {
     const [selectedOrg, setSelectedOrg] = useState<string | undefined>(
         undefined
     );
+    const [loading, setLoading] = useState<boolean>(true); // Loading state
 
     useEffect(() => {
         const fetchEvents = async () => {
+            setLoading(true); // Set loading to true when fetching starts
             const orgQuery = selectedOrg ? `?organization=${selectedOrg}` : "";
             const response = await fetch(`/api/events${orgQuery}`);
             const data = await response.json();
             console.log(data);
             setEvents(data.events);
+            setLoading(false); // Set loading to false when fetching ends
         };
 
         fetchEvents();
@@ -146,74 +150,82 @@ export default function Home() {
             </div>
             <div className="flex">
                 <ol className="relative flex-grow pr-20 border-s border-[#808080] border-opacity-25">
-                    {Object.entries(groupedEvents).map(
-                        ([date, groupedEvents]) => (
-                            <li key={date} className="mb-10 ms-4">
-                                <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white"></div>
-                                <time className="mb-1 text-xl font-semibold leading-none">
-                                    {date}
-                                </time>
+                    {loading
+                        ? Array.from({ length: 5 }).map((_, i) => (
+                              <SkeletonCard key={i} />
+                          ))
+                        : Object.entries(groupedEvents).map(
+                              ([date, groupedEvents]) => (
+                                  <li key={date} className="mb-10 ms-4">
+                                      <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white"></div>
+                                      <time className="mb-1 text-xl font-semibold leading-none">
+                                          {date}
+                                      </time>
 
-                                {groupedEvents.map((event) => (
-                                    <Link
-                                        href={`/events/${event._id}`}
-                                        key={event._id}
-                                    >
-                                        <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
-                                            <div className="flex-1 flex flex-col gap-[0.5rem]">
-                                                <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
-                                                    <p>
-                                                        {new Date(
-                                                            event.date_from
-                                                        ).toLocaleTimeString(
-                                                            "en-US",
-                                                            {
-                                                                hour: "numeric",
-                                                                minute: "numeric",
-                                                            }
-                                                        )}
-                                                    </p>
-                                                    <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
-                                                        <MapPin
-                                                            className="flex-shrink-0"
-                                                            size={20}
-                                                        />
-                                                        <p className="line-clamp-1">
-                                                            {event.location}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
-                                                    {event.title}
-                                                </h3>
-                                                <p className="text-base font-semibold text-black dark:text-gray-400">
-                                                    By{" "}
-                                                    <span className="font-semibold text-[#1F76F9]">
-                                                        {String(
-                                                            event?.organization
-                                                                ?.name
-                                                        ) || "Unknown Host"}
-                                                    </span>
-                                                </p>
-                                                <p className="pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
-                                                    {event.description}
-                                                </p>
-                                            </div>
+                                      {groupedEvents.map((event) => (
+                                          <Link
+                                              href={`/events/${event._id}`}
+                                              key={event._id}
+                                          >
+                                              <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
+                                                  <div className="flex-1 flex flex-col gap-[0.5rem]">
+                                                      <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
+                                                          <p>
+                                                              {new Date(
+                                                                  event.date_from
+                                                              ).toLocaleTimeString(
+                                                                  "en-US",
+                                                                  {
+                                                                      hour: "numeric",
+                                                                      minute: "numeric",
+                                                                  }
+                                                              )}
+                                                          </p>
+                                                          <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
+                                                              <MapPin
+                                                                  className="flex-shrink-0"
+                                                                  size={20}
+                                                              />
+                                                              <p className="line-clamp-1">
+                                                                  {
+                                                                      event.location
+                                                                  }
+                                                              </p>
+                                                          </div>
+                                                      </div>
+                                                      <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
+                                                          {event.title}
+                                                      </h3>
+                                                      <p className="text-base font-semibold text-black dark:text-gray-400">
+                                                          By{" "}
+                                                          <span className="font-semibold text-[#1F76F9]">
+                                                              {String(
+                                                                  event
+                                                                      ?.organization
+                                                                      ?.name
+                                                              ) ||
+                                                                  "Unknown Host"}
+                                                          </span>
+                                                      </p>
+                                                      <p className="pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
+                                                          {event.description}
+                                                      </p>
+                                                  </div>
 
-                                            <img
-                                                src={
-                                                    event.photo_url ||
-                                                    "/globe.svg"
-                                                }
-                                                alt={`${event.title} image`}
-                                                className="rounded-[0.9375rem] h-[9.5625rem] w-auto aspect-square object-cover"
-                                            />
-                                        </div>
-                                    </Link>
-                                ))}
-                            </li>
-                        )
-                    )}
+                                                  <img
+                                                      src={
+                                                          event.photo_url ||
+                                                          "/globe.svg"
+                                                      }
+                                                      alt={`${event.title} image`}
+                                                      className="rounded-[0.9375rem] h-[9.5625rem] w-auto aspect-square object-cover"
+                                                  />
+                                              </div>
+                                          </Link>
+                                      ))}
+                                  </li>
+                              )
+                          )}
                 </ol>
 
                 <div className="h-auto">
@@ -254,3 +266,4 @@ export default function Home() {
         </div>
     );
 }
+

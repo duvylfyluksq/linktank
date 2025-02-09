@@ -10,11 +10,11 @@ import {
 import { currentUser } from "@clerk/nextjs/server";
 
 const Navbar = async () => {
-    const user = await currentUser();
+	const user = await currentUser();
 
     return (
-        <nav className="flex items-center justify-between h-[6rem] px-[3.19rem] bg-secondaryBlue border-b border-[#323232] border-opacity-15">
-            <div className="flex items-center">
+        <nav className="flex items-center justify-between h-[6rem] p-4 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+            <div className="flex items-center mr-10">
                 <Link href="/" className="flex items-center">
                     <Image
                         src="/logo.png"
@@ -23,11 +23,10 @@ const Navbar = async () => {
                         height={100}
                         className="w-10 h-10 mr-[0.625rem]"
                     />
-                    <span className="text-2xl font-bold mr-[2.44rem]">
-                        LinkTank
-                    </span>
+                    <span className="text-2xl font-bold">LinkTank</span>
                 </Link>
-
+            </div>
+            <div className="hidden md:flex items-center justify-between w-full">
                 <ul className="flex space-x-8 ml-6">
                     <li>
                         <Link
@@ -54,48 +53,19 @@ const Navbar = async () => {
                         </Link>
                     </li>
                 </ul>
-            </div>
-            <div className="flex items-center gap-x-[1.88rem]">
-                <SignedOut>
-                    <SignInButton />
-                    <SignUpButton />
-                </SignedOut>
-                <SignedIn>
-                    {/* <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
-                                <UserButton />
-
-                                <div className="flex flex-col text-left">
-                                    <span className="font-bold text-[0.97456rem]">
-                                        Vedanta Som
-                                    </span>
-                                    <span className="font-medium text-[0.97456rem]">
-                                        vedanta@ua.ai
-                                    </span>
-                                </div>
-                                <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                            </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent>
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Students</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="font-bold text-red-500">
-                                Log out
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu> */}
-
-                    <div className="flex items-center gap-x-4 py-7 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
-                        <UserButton />
-                        <h4>{user?.fullName}</h4>
-                        <p>{user?.username}</p>
-                    </div>
-                </SignedIn>
+                <div className="flex items-center gap-x-4">
+                    <SignedOut>
+                        <SignInButton />
+                        <SignUpButton />
+                    </SignedOut>
+                    <SignedIn>
+                        <div className="flex items-center gap-x-4 bg-secondaryBlue hover:bg-secondaryBlue text-black shadow-none">
+                            <UserButton />
+                            <h4>{user?.fullName}</h4>
+                            <p>{user?.username}</p>
+                        </div>
+                    </SignedIn>
+                </div>
             </div>
         </nav>
     );

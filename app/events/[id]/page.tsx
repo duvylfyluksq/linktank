@@ -1,172 +1,336 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, ExternalLink, MapPin, Users } from "lucide-react";
-import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+    Calendar,
+    ExternalLink,
+    MapPin,
+    Mail,
+    Phone,
+    User,
+    Tag,
+} from "lucide-react";
 import Link from "next/link";
-// import { Document } from "mongoose";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import SpeakerCard from "./SpeakerCard";
+
+const EventDetailItem = ({ icon: Icon, title, content, className = "" }) => {
+    if (!content) return null;
+    return (
+        <div className={`gap-4 flex flex-row items-start ${className}`}>
+            <div className="w-11 h-11 shrink-0 justify-center flex flex-col items-center bg-blue-50 border border-gray-100 rounded-lg">
+                <Icon size={24} className="text-blue-600" />
+            </div>
+            <div className="flex flex-col text-gray-800">
+                <p className="font-bold text-sm">{title}</p>
+                <p className="text-base">{content}</p>
+            </div>
+        </div>
+    );
+};
 
 export default function EventPage() {
-    const [event, setEvent] = useState<any>({
-        title: "",
-        date_from: "",
-        date_to: "",
-        url: "",
-        ticket_url: "",
-        brief_description: "",
-        description: "",
-        agenda: "",
-        speakers: [],
-        organization: { name: "" },
-        photo_url: "",
-        is_virtual: false,
-        is_in_person: false,
-        location: "",
-        address: "",
-        room: "",
-        city: "",
-        state: "",
-        zip_code: "",
-        country: "",
-        keywords: [],
-        contact_name: "",
-        contact_phone: "",
-        contact_email: "",
-    });
+    const [event, setEvent] = useState<Event | null>(null);
+    const [loading, setLoading] = useState(true);
     const params = useParams();
+
     useEffect(() => {
         fetch("/api/events/" + params.id)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setEvent(data.event);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching event:", error);
+                setLoading(false);
             });
-    }, []);
+    }, [params.id]);
 
-    const displayDate = (date) => {
-        console.log(date);
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+        );
+    }
+
+    if (!event) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <h2 className="text-2xl font-bold text-gray-800">
+                    Event not found
+                </h2>
+                <p className="text-gray-600 mt-2">
+                    The event you&nbsp;re looking for doesn&nbsp;t exist or has
+                    been removed.
+                </p>
+                <Link href="/events">
+                    <Button className="mt-4">View All Events</Button>
+                </Link>
+            </div>
+        );
+    }
+
+    const formatDate = (date) => {
+        if (!date) return "";
         const dt = new Date(date);
-        return dt.toDateString() + ", " + dt.toLocaleTimeString();
+        return dt.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+        });
+    };
+
+    const getEventType = () => {
+        if (event.is_virtual && event.is_in_person) return "Hybrid Event";
+        if (event.is_virtual) return "Virtual Event";
+        if (event.is_in_person) return "In-Person Event";
+        return "Event";
+    };
+
+    const getFullAddress = () => {
+        const parts = [
+            event.address,
+            event.room && `Room ${event.room}`,
+            event.city,
+            event.state,
+            event.zip_code,
+            event.country,
+        ].filter(Boolean);
+        return parts.join(", ");
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full pt-[4.625rem] pb-[6.56rem]">
-            <div className="flex flex-col w-[45.875rem] gap-[2.88rem]">
-                <div className="">
-                    <div className="flex flex-col gap-[1.625rem] w-[42.875rem]">
-                        <Image
-                            src="/rand.svg"
-                            alt="RAND Organization Logo"
-                            width={80}
-                            height={80}
-                            className="h-[5rem] w-[5rem]"
-                        />
-                        <div className="flex flex-col gap-[1.1875rem]">
-                            <div className="flex flex-col gap-[1.25rem]">
-                                <div className="gap-[0.5625rem] flex flex-col">
-                                    <h6 className="text-[1.125rem] font-semibold leading-[1.92869rem] opacity-70 text-[#323232]">
-                                        {event &&
-                                            event.keywords &&
-                                            event.keywords?.join(", ")}
-                                    </h6>
-                                    <h1 className="text-[#323232] text-[2.5rem] font-bold">
+        <div className="flex flex-col items-center w-full min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <div className="w-full bg-white border-b">
+                <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row gap-8">
+                        {/* Left Column */}
+                        <div className="flex-1">
+                            <div className="flex flex-col gap-6">
+                                {/* Event Type & Keywords */}
+                                <div className="flex flex-wrap gap-2">
+                                    <Badge
+                                        variant="secondary"
+                                        className="text-sm"
+                                    >
+                                        {getEventType()}
+                                    </Badge>
+                                    {event.keywords?.map((keyword, index) => (
+                                        <Badge
+                                            key={index}
+                                            variant="outline"
+                                            className="text-sm"
+                                        >
+                                            {keyword}
+                                        </Badge>
+                                    ))}
+                                </div>
+
+                                {/* Title & Organization */}
+                                <div>
+                                    <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">
                                         {event.title}
                                     </h1>
-                                </div>
-                                <h5 className="text-[#323232] text-[1.125rem] font-medium">
-                                    By{" "}
-                                    <Link
-                                        className="text-[#1F76F9]"
-                                        href="/organizations/rand"
-                                    >
-                                        {event.organization?.name}
-                                    </Link>
-                                </h5>
-                            </div>
-                            <Link
-                                href={event.ticket_url ?? event.url}
-                                className="mb-[1.53rem]"
-                                target="_blank"
-                            >
-                                <Button className="bg-[#1C2329] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
-                                    <ExternalLink size={20} />
-                                    <span className="text-[1rem]">
-                                        Register on website
-                                    </span>
-                                </Button>
-                            </Link>
-                        </div>
-                        <div className="flex flex-row items-center gap-[1.5rem]">
-                            <div className="gap-[0.69rem] flex flex-row items-center">
-                                <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
-                                    <Calendar
-                                        size={30}
-                                        className="text-[#727679]"
-                                    />
-                                </div>
-                                <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                    <p className="font-semibold">Event Date</p>
-                                    <p>
-                                        {displayDate(event.date_from)}{" "}
-                                        {event.date_to &&
-                                            " - " + displayDate(event.date_to)}
+                                    <p className="text-lg text-gray-600">
+                                        By{" "}
+                                        <Link
+                                            href={`/organizations/${event.organization?.id}`}
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            {event.organization?.name}
+                                        </Link>
                                     </p>
                                 </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex flex-wrap gap-4">
+                                    {event.ticket_url && (
+                                        <Button
+                                            size="lg"
+                                            className="bg-blue-600 hover:bg-blue-700"
+                                        >
+                                            <Tag className="mr-2 h-5 w-5" />
+                                            Get Tickets
+                                        </Button>
+                                    )}
+                                    {event.url && (
+                                        <Button size="lg" variant="outline">
+                                            <ExternalLink className="mr-2 h-5 w-5" />
+                                            Visit Website
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                        <div className="gap-[0.69rem] flex flex-row items-center">
-                            <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
-                                <MapPin size={30} className="text-[#727679]" />
-                            </div>
-                            <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                <p className="font-semibold">{event.address}</p>
-                                <p>{event.location}</p>
-                            </div>
-                        </div>
-                        <div className="gap-[0.69rem] flex flex-row items-center">
-                            <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
-                                <Users size={30} className="text-[#727679]" />
-                            </div>
-                            <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                <p className="font-semibold">Speakers</p>
-                                <p>
-                                    {event.speakers
-                                        ?.map((speaker) => speaker.name)
-                                        .join(", ")}
-                                </p>
-                            </div>
+
+                        {/* Right Column - Event Details */}
+                        <div className="md:w-1/3">
+                            <Card>
+                                <CardContent className="p-6 space-y-6">
+                                    <EventDetailItem
+                                        icon={Calendar}
+                                        title="Date & Time"
+                                        content={
+                                            <>
+                                                <div>
+                                                    <b>Starts:</b>{" "}
+                                                    {formatDate(
+                                                        event.date_from
+                                                    )}
+                                                </div>
+                                                {event.date_to && (
+                                                    <div>
+                                                        <b>Ends:</b>{" "}
+                                                        {formatDate(
+                                                            event.date_to
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </>
+                                        }
+                                    />
+
+                                    <EventDetailItem
+                                        icon={MapPin}
+                                        title="Location"
+                                        content={getFullAddress()}
+                                    />
+
+                                    {(event.contact_name ||
+                                        event.contact_email ||
+                                        event.contact_phone) && (
+                                        <div className="border-t pt-4">
+                                            <h3 className="font-semibold mb-4">
+                                                Contact Information
+                                            </h3>
+                                            <div className="space-y-4">
+                                                {event.contact_name && (
+                                                    <EventDetailItem
+                                                        icon={User}
+                                                        title="Contact Person"
+                                                        content={
+                                                            event.contact_name
+                                                        }
+                                                    />
+                                                )}
+                                                {event.contact_email && (
+                                                    <EventDetailItem
+                                                        icon={Mail}
+                                                        title="Email"
+                                                        content={
+                                                            <a
+                                                                href={`mailto:${event.contact_email}`}
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                {
+                                                                    event.contact_email
+                                                                }
+                                                            </a>
+                                                        }
+                                                    />
+                                                )}
+                                                {event.contact_phone && (
+                                                    <EventDetailItem
+                                                        icon={Phone}
+                                                        title="Phone"
+                                                        content={
+                                                            <a
+                                                                href={`tel:${event.contact_phone}`}
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                {
+                                                                    event.contact_phone
+                                                                }
+                                                            </a>
+                                                        }
+                                                    />
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col gap-[2.625rem]">
-                    {event.photo_url && (
-                        <div className="h-[26.3125rem] w-full rounded-[1.4375rem]">
-                            <Image
-                                src={event.photo_url || "/globe.svg"}
-                                alt="Event Image"
-                                width={8000}
-                                height={8000}
-                                className="h-full object-cover w-full rounded-[1.4375rem]"
-                            />
-                        </div>
-                    )}
-                    <div className="flex flex-col gap-[0.75rem]">
-                        <h3 className="text-[#323232] font-extrabold leading-[1.92869rem] text-[1.5rem]">
-                            About
-                        </h3>
-                        <p className="opacity-70 text-[#323232] text-[1rem] leading-[127.625%]">
-                            {event.description}
-                        </p>
+            </div>
+
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 w-full">
+                <div className="grid md:grid-cols-3 gap-8">
+                    {/* Left Column - Main Content */}
+                    <div className="md:col-span-2 space-y-8">
+                        {/* Event Image */}
+                        {event.photo_url && (
+                            <div className="aspect-video w-full rounded-xl overflow-hidden">
+                                <img
+                                    src={event.photo_url}
+                                    alt={event.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        )}
+
+                        {/* Description */}
+                        {event.description && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                                    About This Event
+                                </h2>
+                                <div className="prose max-w-none">
+                                    {/* {event.brief_description && (
+                                        <p className="text-lg font-medium text-gray-600 mb-4">
+                                            {event.brief_description}
+                                        </p>
+                                    )} */}
+                                    <p className="text-gray-600 whitespace-pre-wrap">
+                                        {event.description}
+                                    </p>
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Agenda */}
+                        {event.agenda && (
+                            <section>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                                    Event Agenda
+                                </h2>
+                                <div className="prose max-w-none">
+                                    <p className="text-gray-600 whitespace-pre-wrap">
+                                        {event.agenda}
+                                    </p>
+                                </div>
+                            </section>
+                        )}
                     </div>
-                    <div className="flex flex-col gap-[0.75rem]">
-                        <h3 className="text-[#323232] font-extrabold leading-[1.92869rem] text-[1.5rem]">
-                            Agenda
-                        </h3>
-                        <p className="opacity-70 text-[#323232] text-[1rem] leading-[127.625%]">
-                            {event.agenda}
-                        </p>
+
+                    {/* Right Column - Speakers */}
+                    <div>
+                        {event.speakers && event.speakers.length > 0 && (
+                            <div className="space-y-6">
+                                <h2 className="text-2xl font-bold text-gray-900">
+                                    Speakers
+                                </h2>
+                                <div className="space-y-4">
+                                    {event.speakers.map((speaker, index) => (
+                                        <SpeakerCard
+                                            key={index}
+                                            speaker={speaker}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

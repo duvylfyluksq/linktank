@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import SkeletonCard from "./SkeletonCard";
+import { Input } from "@/components/ui/input";
+import debounce from "lodash/debounce";
 
 interface Event extends Document {
     _id: string;
@@ -44,42 +46,43 @@ interface Event extends Document {
     contact_phone?: string;
     contact_email?: string;
 }
-
 export default function Home() {
     const [date, setDate] = useState<Date | undefined>(() => new Date());
     const [events, setEvents] = useState<Event[]>([]);
     const [organizations, setOrganizations] = useState<
         { name: string; _id: string }[]
     >([]);
-    const [selectedOrg, setSelectedOrg] = useState<string | undefined>(
-        undefined
-    );
+    const [selectedOrg, setSelectedOrg] = useState<string>("all");
     const [loading, setLoading] = useState<boolean>(true); // Loading state
+    const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-            setLoading(true); // Set loading to true when fetching starts
-            const orgQuery = selectedOrg ? `?organization=${selectedOrg}` : "";
-            const response = await fetch(`/api/events${orgQuery}`);
+    // Debounced search function to prevent too many API calls
+    const debouncedSearch = debounce(async (searchTerm: string) => {
+        try {
+            const params = new URLSearchParams();
+            if (searchTerm) {
+                params.append("search", searchTerm);
+            }
+            if (selectedOrg !== "all")
+                params.append("organization", selectedOrg);
+
+            const response = await fetch(
+                `/api/events/search?${params.toString()}`
+            );
             const data = await response.json();
-            console.log(data);
-            setEvents(data.events);
-            setLoading(false); // Set loading to false when fetching ends
-        };
 
-        fetchEvents();
-    }, [selectedOrg]);
+            if (data.success) {
+                setEvents(data.events);
+            }
+        } catch (error) {
+            console.error("Error searching events:", error);
+        }
+    }, 300); // 300ms delay
 
-    useEffect(() => {
-        // Fetch organizations
-        fetch("/api/organizations")
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    setOrganizations(data.organizations);
-                }
-            });
-    }, []);
+    const handleSearch = (value: string) => {
+        setSearchTerm(value);
+        debouncedSearch(value.trim());
+    };
 
     const today = useMemo(() => new Date(), []);
 
@@ -102,12 +105,52 @@ export default function Home() {
         {}
     );
 
+    // Clean up debounce on component unmount
+    useEffect(() => {
+        return () => {
+            debouncedSearch.cancel();
+        };
+    }, []);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            setLoading(true); // Set loading to true when fetching starts
+            const orgQuery =
+                selectedOrg !== "all" ? `?organization=${selectedOrg}` : "";
+            const response = await fetch(`/api/events${orgQuery}`);
+            const data = await response.json();
+            console.log(data);
+            setEvents(data.events);
+            setLoading(false); // Set loading to false when fetching ends
+        };
+
+        fetchEvents();
+    }, [selectedOrg]);
+
+    useEffect(() => {
+        // Fetch organizations
+        fetch("/api/organizations")
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    setOrganizations(data.organizations);
+                }
+            });
+    }, []);
+
     return (
         <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem]">
             <div className="w-full flex flex-row justify-between items-center">
                 <h3 className="text-[2rem] font-jakarta font-extrabold">
                     Upcoming Events
                 </h3>
+                <Input
+                    type="search"
+                    placeholder="Search..."
+                    className="md:w-[10rem] rounded-[0.75rem] mr-3 bg-white h-[3.125rem]"
+                    onChange={(e) => handleSearch(e.target.value)}
+                    value={searchTerm}
+                />
                 <div className="flex flex-row items-center gap-[0.75rem]">
                     <Select>
                         <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem]">
@@ -139,6 +182,9 @@ export default function Home() {
                     <SelectContent className="bg-white">
                         <SelectGroup>
                             <SelectLabel>Select Organization</SelectLabel>
+                            <SelectItem value="all">
+                                All Organizations
+                            </SelectItem>
                             {organizations.map((org) => (
                                 <SelectItem key={org._id} value={org._id}>
                                     {org.name}
@@ -163,65 +209,10 @@ export default function Home() {
                                       </time>
 
                                       {groupedEvents.map((event) => (
-                                          <Link
-                                              href={`/events/${event._id}`}
+                                          <EventCard
+                                              event={event}
                                               key={event._id}
-                                          >
-                                              <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
-                                                  <div className="flex-1 flex flex-col gap-[0.5rem]">
-                                                      <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
-                                                          <p>
-                                                              {new Date(
-                                                                  event.date_from
-                                                              ).toLocaleTimeString(
-                                                                  "en-US",
-                                                                  {
-                                                                      hour: "numeric",
-                                                                      minute: "numeric",
-                                                                  }
-                                                              )}
-                                                          </p>
-                                                          <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
-                                                              <MapPin
-                                                                  className="flex-shrink-0"
-                                                                  size={20}
-                                                              />
-                                                              <p className="line-clamp-1">
-                                                                  {
-                                                                      event.location
-                                                                  }
-                                                              </p>
-                                                          </div>
-                                                      </div>
-                                                      <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
-                                                          {event.title}
-                                                      </h3>
-                                                      <p className="text-base font-semibold text-black dark:text-gray-400">
-                                                          By{" "}
-                                                          <span className="font-semibold text-[#1F76F9]">
-                                                              {String(
-                                                                  event
-                                                                      ?.organization
-                                                                      ?.name
-                                                              ) ||
-                                                                  "Unknown Host"}
-                                                          </span>
-                                                      </p>
-                                                      <p className="pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
-                                                          {event.description}
-                                                      </p>
-                                                  </div>
-
-                                                  <img
-                                                      src={
-                                                          event.photo_url ||
-                                                          "/globe.svg"
-                                                      }
-                                                      alt={`${event.title} image`}
-                                                      className="rounded-[0.9375rem] h-[9.5625rem] w-auto aspect-square object-cover"
-                                                  />
-                                              </div>
-                                          </Link>
+                                          />
                                       ))}
                                   </li>
                               )
@@ -267,3 +258,47 @@ export default function Home() {
     );
 }
 
+const EventCard = ({ event }: { event: Event }) => {
+    return (
+        <Link href={`/events/${event._id}`} key={event._id}>
+            <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
+                <div className="flex-1 flex flex-col gap-[0.5rem]">
+                    <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">
+                        <p>
+                            {new Date(event.date_from).toLocaleTimeString(
+                                "en-US",
+                                {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                }
+                            )}
+                        </p>
+                        <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
+                            <MapPin className="flex-shrink-0" size={20} />
+                            <p className="line-clamp-1">{event.location}</p>
+                        </div>
+                    </div>
+                    <h3 className="text-lg font-jakarta font-semibold text-gray-900 dark:text-white line-clamp-1">
+                        {event.title}
+                    </h3>
+                    <p className="text-base font-semibold text-black dark:text-gray-400">
+                        By{" "}
+                        <span className="font-semibold text-[#1F76F9]">
+                            {String(event?.organization?.name) ||
+                                "Unknown Host"}
+                        </span>
+                    </p>
+                    <p className="pr-10 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2">
+                        {event.description}
+                    </p>
+                </div>
+
+                <img
+                    src={event.photo_url || "/linktank_logo.png"}
+                    alt={`${event.title} image`}
+                    className="rounded-lg h-[9.5625rem] w-auto aspect-square object-cover"
+                />
+            </div>
+        </Link>
+    );
+};

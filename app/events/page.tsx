@@ -45,6 +45,7 @@ interface Event extends Document {
     contact_name?: string;
     contact_phone?: string;
     contact_email?: string;
+    backlink?: string;
 }
 export default function Home() {
     const [date, setDate] = useState<Date | undefined>(() => new Date());
@@ -260,7 +261,7 @@ export default function Home() {
 
 const EventCard = ({ event }: { event: Event }) => {
     return (
-        <Link href={`/events/${event._id}`} key={event._id}>
+        <Link href={`/events/${event.backlink}`} key={event._id}>
             <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
                 <div className="flex-1 flex flex-col gap-[0.5rem]">
                     <div className="flex items-center opacity-70 font-jakarta text-[#323232] text-[1rem] font-medium gap-[1.25rem]">

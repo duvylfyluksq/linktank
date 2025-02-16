@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
         }
 
         const event = await Event.findOne({
-            _id: id,
+            backlink: id,
         })
             .populate("organization", "name", Organization)
             .populate("speakers", "name photo_url url twitter title", Speaker)

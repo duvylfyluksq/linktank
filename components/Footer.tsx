@@ -14,6 +14,7 @@ export function Footer() {
                             height={100}
                             className="w-10 h-10 mr-[0.625rem]"
                         />
+
                         <span className="text-2xl font-bold mr-[2.44rem]">
                             LinkTank
                         </span>

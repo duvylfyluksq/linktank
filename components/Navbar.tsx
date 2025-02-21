@@ -10,7 +10,7 @@ import {
 import { currentUser } from "@clerk/nextjs/server";
 
 const Navbar = async () => {
-	const user = await currentUser();
+    const user = await currentUser();
 
     return (
         <nav className="flex items-center justify-between h-[6rem] p-4 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
@@ -23,6 +23,7 @@ const Navbar = async () => {
                         height={100}
                         className="w-10 h-10 mr-[0.625rem]"
                     />
+
                     <span className="text-2xl font-bold">LinkTank</span>
                 </Link>
             </div>

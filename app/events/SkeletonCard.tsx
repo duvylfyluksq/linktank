@@ -8,6 +8,7 @@ export default function SkeletonCard() {
                     <Skeleton className="h-5 w-20" />
                     <div className="flex flex-row items-center gap-[0.12rem] w-[70%]">
                         <Skeleton className="h-5 w-5 rounded-full" />
+
                         <Skeleton className="h-5 w-32" />
                     </div>
                 </div>

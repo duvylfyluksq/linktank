@@ -4,10 +4,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "media.nesta.org.uk",
-      },
-    ],
-  },
+        hostname: "media.nesta.org.uk"
+      }
+    ]
+  }
 };
 
 export default nextConfig;

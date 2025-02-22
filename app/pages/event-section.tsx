@@ -11,6 +11,7 @@ interface Event {
 	title: string;
 	description: string;
 	imageUrl: string;
+	url: string;
 	organization: {
 		name: string;
 	};
@@ -31,6 +32,7 @@ export default function PastEvents() {
 					const eventsWithDates = data.events.slice(0, 3).map((ev: any) => ({
 						...ev,
 						date_from: new Date(ev.date_from),
+						url: ev.url || ev.backlink || "",
 					}));
 					setEvents(eventsWithDates);
 				}

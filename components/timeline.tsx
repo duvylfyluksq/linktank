@@ -4,10 +4,11 @@ import { EventCard } from "@/components/event-card";
 interface Event {
 	_id: string;
 	title: string;
-	date_from: Date;
+	date_from: any;
 	description: string;
 	organization: { name: string };
 	photo_url?: string;
+	url: string;
 	location: string;
 	backlink?: string;
 }
@@ -32,7 +33,8 @@ export const Timeline = ({ events, loading }: TimelineProps) => {
 	return (
 		<ol className="relative flex-grow pr-20 border-s border-[#808080] border-opacity-25">
 			{loading
-				? Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)
+				? // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)
 				: Object.entries(groupedEvents).map(([date, groupedEvents]) => (
 						<li key={date} className="mb-10 ms-4">
 							<div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />

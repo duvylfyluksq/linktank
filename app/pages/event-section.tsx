@@ -7,7 +7,7 @@ import { EventCard } from "@/components/event-card";
 
 interface Event {
 	_id: string;
-	date_from: string;
+	date_from: Date;
 	title: string;
 	description: string;
 	imageUrl: string;

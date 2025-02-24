@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Timeline } from "@/components/timeline";
+import { EventCard } from "@/components/event-card";
 
 interface Event {
 	_id: string;
@@ -22,6 +22,17 @@ interface Event {
 export default function PastEvents() {
 	const [events, setEvents] = useState<Event[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [isMobile, setIsMobile] = useState(false);
+
+	// uh fix
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768);
+		};
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		const fetchPastEvents = async () => {
@@ -29,7 +40,7 @@ export default function PastEvents() {
 				const response = await fetch("/api/events/past");
 				const data = await response.json();
 				if (data.success) {
-					const eventsWithDates = data.events.slice(0, 3).map((ev: any) => ({
+					const eventsWithDates = data.events.slice(0, 4).map((ev: any) => ({
 						...ev,
 						date_from: new Date(ev.date_from),
 						url: ev.url || ev.backlink || "",
@@ -63,7 +74,15 @@ export default function PastEvents() {
 				</p>
 			</div>
 
-			<Timeline events={events} loading={loading} />
+			{isMobile ? (
+				<div className="flex flex-col gap-4">
+					{events.map((event) => (
+						<EventCard key={event._id} event={event} />
+					))}
+				</div>
+			) : (
+				<Timeline events={events} loading={loading} />
+			)}
 		</div>
 	);
 }

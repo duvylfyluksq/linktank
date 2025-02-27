@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Bookmark } from "lucide-react";
+import { useState } from "react";
 
 interface SaveButtonProps {
 	className?: string;
@@ -12,21 +13,28 @@ export function SaveButton({
 	className,
 	eventId,
 	isSaved = false,
+	onToggle,
 }: SaveButtonProps) {
+	const [saved, setSaved] = useState(isSaved);
+
 	const handleAction = async (event: React.MouseEvent) => {
 		event.preventDefault();
 		event.stopPropagation();
-		if (isSaved) {
+		if (saved) {
 			// Unsave the event
 			try {
 				const response = await fetch("/api/saveevent", {
 					method: "DELETE",
-					headers: {},
+					headers: {
+						"Content-Type": "application/json",
+					},
 					body: JSON.stringify({ eventId }),
 				});
 				const data = await response.json();
 				if (response.ok) {
 					console.log("Event removed from saved events:", data);
+					setSaved(false);
+					if (onToggle) onToggle(false);
 				} else {
 					console.error("Failed to remove saved event:", data.message);
 				}
@@ -41,12 +49,13 @@ export function SaveButton({
 					headers: {
 						"Content-Type": "application/json",
 					},
-
 					body: JSON.stringify({ eventId }),
 				});
 				const data = await response.json();
 				if (response.ok) {
 					console.log("Event saved successfully:", data);
+					setSaved(true);
+					if (onToggle) onToggle(true);
 				} else {
 					console.error("Failed to save event:", data.message);
 				}
@@ -73,12 +82,12 @@ export function SaveButton({
         flex 
         items-center 
         gap-1.5
-		max-sm:w-[4rem]
+        max-sm:w-[4rem]
         ${className || ""}
       `}
 		>
-			<Bookmark className={`w-4 h-4 ${isSaved ? "fill-white" : "fill-none"}`} />
-			{isSaved ? "Saved" : "Save"}
+			<Bookmark className={`w-4 h-4 ${saved ? "fill-white" : "fill-none"}`} />
+			{saved ? "Saved" : "Save"}
 		</Button>
 	);
 }

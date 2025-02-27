@@ -13,7 +13,9 @@ export function SaveButton({
 	eventId,
 	isSaved = false,
 }: SaveButtonProps) {
-	const handleAction = async () => {
+	const handleAction = async (event: React.MouseEvent) => {
+		event.preventDefault();
+		event.stopPropagation();
 		if (isSaved) {
 			// Unsave the event
 			try {
@@ -71,6 +73,7 @@ export function SaveButton({
         flex 
         items-center 
         gap-1.5
+		max-sm:w-[4rem]
         ${className || ""}
       `}
 		>

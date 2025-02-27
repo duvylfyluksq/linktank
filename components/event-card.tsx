@@ -35,7 +35,7 @@ interface Event {
 export const EventCard = ({ event }: { event: Event }) => {
 	return (
 		<Link href={`/events/${event.backlink}`} key={event._id}>
-			<div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full">
+			<div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl pl-[1.37rem] pr-[0.88rem] py-[1.41rem] w-full max-sm:w-full max-sm:px-4">
 				{/* Text container: add min-w-0 to prevent overflow issues */}
 				<div className="flex-1 min-w-0 flex flex-col gap-[0.5rem]">
 					<div className="flex items-center opacity-70 font-jakarta text-[0.8rem] md:text-[1rem] font-medium gap-2">
@@ -70,7 +70,7 @@ export const EventCard = ({ event }: { event: Event }) => {
 						height={80}
 						className="rounded-lg object-cover w-[80px] h-[80px] md:w-[120px] md:h-[120px]"
 					/>
-					<div className="absolute top-2 right-2">
+					<div className="absolute top-2 right-2 max:sm:right-4 max:sm:top-4">
 						<SaveButton eventId={event._id} />
 					</div>
 				</div>

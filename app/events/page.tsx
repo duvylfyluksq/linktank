@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { SlidersHorizontal } from "lucide-react";
+import { CalendarIcon, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import type { Document } from "mongoose";
@@ -60,6 +60,7 @@ export default function Home() {
 	const [selectedOrg, setSelectedOrg] = useState<string>("all");
 	const [loading, setLoading] = useState<boolean>(true);
 	const [searchTerm, setSearchTerm] = useState("");
+	const [mobileCalendarOpen, setMobileCalendarOpen] = useState(false);
 
 	// Debounced search function to prevent too many API calls
 	const debouncedSearch = debounce(async (searchTerm: string) => {
@@ -111,7 +112,6 @@ export default function Home() {
 				selectedOrg !== "all" ? `?organization=${selectedOrg}` : "";
 			const response = await fetch(`/api/events${orgQuery}`);
 			const data = await response.json();
-			console.log(data);
 			setEvents(data.events);
 			setLoading(false);
 		};
@@ -131,22 +131,43 @@ export default function Home() {
 	}, []);
 
 	return (
-		<div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem]">
-			<div className="w-full flex flex-row justify-between items-center">
-				<h3 className="text-[2rem] font-jakarta font-extrabold">
-					Upcoming Events
-				</h3>
+		<div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem] max-sm:w-full max-sm:px-5 max-sm:mt-5">
+			<div className="w-full flex flex-row justify-between items-center max-sm:flex-col max-sm:items-start">
+				<div className="flex flex-row items-center gap-2 max-sm:w-full">
+					<h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px] ">
+						Upcoming Events
+					</h3>
+					<div className="flex gap-2.5 max-sm:ml-auto sm:hidden">
+						<Button
+							variant={date && date >= today ? "default" : "secondary"}
+							onClick={() => setDate(new Date())}
+							className="rounded-[0.75rem] h-11 font-medium w-auto py-2"
+						>
+							Upcoming
+						</Button>
+						<Button
+							variant={date && date < today ? "default" : "secondary"}
+							onClick={() => {
+								const pastDate = new Date();
+								pastDate.setMonth(pastDate.getMonth() - 1);
+								setDate(pastDate);
+							}}
+							className="rounded-[0.75rem] h-11 font-medium w-auto py-2"
+						>
+							Past
+						</Button>
+					</div>
+				</div>
 				<Input
 					type="search"
 					placeholder="Search..."
-					className="md:w-[10rem] rounded-[0.75rem] mr-3 bg-white h-[3.125rem]"
+					className="md:w-[10rem] rounded-[0.75rem] mr-3 bg-white h-[3.125rem] max-sm:w-full max-sm:mt-2"
 					onChange={(e) => handleSearch(e.target.value)}
 					value={searchTerm}
 				/>
-
-				<div className="flex flex-row items-center gap-[0.75rem]">
+				<div className="flex flex-row items-center gap-[0.75rem] max-sm:w-full max-sm:mt-2">
 					<Select>
-						<SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem]">
+						<SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:w-full">
 							<SelectValue placeholder="Anywhere" />
 						</SelectTrigger>
 						<SelectContent className="bg-white">
@@ -157,17 +178,16 @@ export default function Home() {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-					<Button className="bg-[#1C2329] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
+					<Button className="bg-[#1C2329] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] max-sm:w-full max-sm:h-11">
 						<SlidersHorizontal size={20} />
 						<span className="text-[1rem]">Filters (1)</span>
 					</Button>
 				</div>
-
 				<Select
 					value={selectedOrg}
 					onValueChange={(val) => setSelectedOrg(val)}
 				>
-					<SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem]">
+					<SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
 						<SelectValue placeholder="Select Organization" />
 					</SelectTrigger>
 					<SelectContent className="bg-white">
@@ -184,29 +204,79 @@ export default function Home() {
 				</Select>
 			</div>
 
-			<div className="flex">
-				<ol className="relative flex-grow pr-20 border-s border-[#808080] border-opacity-25">
-					{loading
-						? Array.from({ length: 5 }).map((_, i) => <SkeletonCard key={i} />)
-						: Object.entries(groupedEvents).map(([date, groupedEvents]) => (
-								<li key={date} className="mb-10 ms-4">
-									<div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
-									<time className="mb-1 text-xl font-semibold leading-none">
-										{date}
-									</time>
-									{groupedEvents.map((event) => (
-										<EventCard event={event} key={event._id} />
-									))}
-								</li>
-							))}
+			<div className="flex max-sm:flex-col">
+				<ol className="relative flex-grow pr-20 border-s border-[#808080] max-sm:border-none border-opacity-25 max-sm:pr-0 max-sm:px-4">
+					<>
+						<div className="absolute right-4 top-2 sm:hidden">
+							<Button
+								variant="outline"
+								onClick={() => setMobileCalendarOpen(true)}
+								className="p-2"
+							>
+								<CalendarIcon size={20} />
+							</Button>
+						</div>
+
+						{mobileCalendarOpen && (
+							<div className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-sm bg-opacity-50 z-50 sm:hidden">
+								<div className="bg-white p-4 rounded-md">
+									<Calendar
+										mode="single"
+										selected={date}
+										onSelect={(d) => {
+											setDate(d);
+											setMobileCalendarOpen(false);
+										}}
+									/>
+									<Button
+										onClick={() => setMobileCalendarOpen(false)}
+										className="mt-2 w-full"
+									>
+										Close
+									</Button>
+								</div>
+							</div>
+						)}
+					</>
+					<div className="sm:hidden">
+						{loading
+							? Array.from({ length: 5 }).map((_, i) => (
+									<SkeletonCard key={i} />
+								))
+							: Object.entries(groupedEvents).map(([date, events]) => (
+									<div key={date} className="mb-6 flex flex-col items-left">
+										<time className="text-2xl font-bold mb-2">{date}</time>
+										{events.map((event) => (
+											<EventCard event={event} key={event._id} />
+										))}
+									</div>
+								))}
+					</div>
+					<div className="hidden sm:block">
+						{loading
+							? Array.from({ length: 5 }).map((_, i) => (
+									<SkeletonCard key={i} />
+								))
+							: Object.entries(groupedEvents).map(([date, groupedEvents]) => (
+									<li key={date} className="mb-10 ms-4">
+										<div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
+										<time className="mb-1 text-xl font-semibold leading-none">
+											{date}
+										</time>
+										{groupedEvents.map((event) => (
+											<EventCard event={event} key={event._id} />
+										))}
+									</li>
+								))}
+					</div>
 				</ol>
 
-				<div className="h-auto">
-					<div className="flex w-full items-center space-x-2 mb-4">
+				<div className="h-auto max-sm:mt-4">
+					<div className="flex w-full items-center space-x-2 mb-4 max-sm:flex-col max-sm:hidden">
 						<Button
 							variant={date && date >= today ? "default" : "secondary"}
 							onClick={() => setDate(new Date())}
-							className="rounded-[0.75rem] w-[70%] h-[3.125rem] font-medium"
+							className="rounded-[0.75rem] w-[70%] h-[3.125rem] font-medium max-sm:w-full"
 						>
 							Upcoming
 						</Button>
@@ -217,7 +287,7 @@ export default function Home() {
 								pastDate.setMonth(pastDate.getMonth() - 1);
 								setDate(pastDate);
 							}}
-							className="rounded-[0.75rem] w-[30%] h-[3.125rem] font-medium"
+							className="rounded-[0.75rem] w-[30%] h-[3.125rem] font-medium max-sm:w-full"
 						>
 							Past
 						</Button>
@@ -227,7 +297,7 @@ export default function Home() {
 						mode="single"
 						selected={date}
 						onSelect={setDate}
-						className="rounded-md border border-black border-opacity-25 bg-white"
+						className="rounded-md border border-black border-opacity-25 bg-white max-sm:hidden"
 					/>
 				</div>
 			</div>

@@ -17,6 +17,7 @@ interface Event {
 	};
 	location: string;
 	backlink: string;
+	alrSaved: boolean;
 }
 
 export default function PastEvents() {
@@ -43,8 +44,9 @@ export default function PastEvents() {
 					const eventsWithDates = data.events.slice(0, 4).map((ev: any) => ({
 						...ev,
 						date_from: new Date(ev.date_from),
-						url: ev.url || ev.backlink || "",
+						alrSaved: ev.alrSaved || false,
 					}));
+
 					setEvents(eventsWithDates);
 				}
 			} catch (error) {

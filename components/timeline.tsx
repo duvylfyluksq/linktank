@@ -7,6 +7,7 @@ interface Event {
 	date_from: any;
 	description: string;
 	organization: { name: string };
+	alrSaved: boolean;
 	photo_url?: string;
 	url: string;
 	location: string;

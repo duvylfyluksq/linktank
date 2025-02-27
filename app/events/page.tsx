@@ -49,6 +49,7 @@ interface Event extends Document {
 	contact_phone?: string;
 	contact_email?: string;
 	backlink?: string;
+	alrSaved: boolean;
 }
 
 export default function Home() {

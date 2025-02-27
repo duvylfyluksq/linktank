@@ -30,6 +30,7 @@ interface Event {
 	contact_phone?: string;
 	contact_email?: string;
 	backlink?: string;
+	alrSaved: boolean;
 }
 
 export const EventCard = ({ event }: { event: Event }) => {
@@ -71,7 +72,7 @@ export const EventCard = ({ event }: { event: Event }) => {
 						className="rounded-lg object-cover w-[80px] h-[80px] md:w-[120px] md:h-[120px]"
 					/>
 					<div className="absolute top-2 right-2 max:sm:right-4 max:sm:top-4">
-						<SaveButton eventId={event._id} />
+						<SaveButton eventId={event._id} isSaved={event.alrSaved} />
 					</div>
 				</div>
 			</div>

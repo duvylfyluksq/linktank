@@ -46,6 +46,7 @@ interface Event extends Document {
 	contact_phone?: string;
 	contact_email?: string;
 	backlink?: string;
+	alrSaved?: boolean;
 }
 
 export default function Home() {
@@ -276,7 +277,10 @@ export default function Home() {
 									<div key={date} className="mb-6 flex flex-col items-left">
 										<time className="text-2xl font-bold mb-2">{date}</time>
 										{events.map((event) => (
-											<EventCard event={event} key={event._id} />
+											<EventCard
+												event={{ ...event, alrSaved: event.alrSaved ?? false }}
+												key={event._id}
+											/>
 										))}
 									</div>
 								))}
@@ -293,7 +297,10 @@ export default function Home() {
 											{date}
 										</time>
 										{groupedEvents.map((event) => (
-											<EventCard event={event} key={event._id} />
+											<EventCard
+												event={{ ...event, alrSaved: true }}
+												key={event._id}
+											/>
 										))}
 									</li>
 								))}

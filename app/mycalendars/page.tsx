@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-
-import type mongoose from "mongoose";
 import type { Document } from "mongoose";
 import { EventCard } from "@/components/event-card";
 import {
@@ -31,7 +29,7 @@ interface Event extends Document {
 	brief_description?: string;
 	description: string;
 	agenda?: string;
-	speakers?: mongoose.Schema.Types.ObjectId[];
+	speakers?: string[];
 	organization?: { name: string };
 	photo_url?: string;
 	is_virtual?: boolean;

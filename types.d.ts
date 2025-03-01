@@ -15,29 +15,32 @@ interface Organization {
     events_url: string; // Assuming URLField is a string
 }
 
-interface Event {
+interface Event extends Document {
+    _id: string;
     title: string;
-    date_from: Date; // Assuming date_from is a Date object
-    date_to?: Date; // Optional
-    url: string; // Assuming URLField is a string
-    ticket_url?: string; // Optional
-    brief_description?: string; // Optional
+    date_from: Date;
+    date_to?: Date;
+    url: string;
+    ticket_url?: string;
+    brief_description?: string;
     description: string;
-    agenda?: string; // Optional
-    speakers?: Speaker[];
-    organization?: Organization;
-    photo_url?: string; // Optional
-    is_virtual?: boolean; // Optional
-    is_in_person?: boolean; // Optional
+    agenda?: string;
+    speakers?: string[];
+    organization?: { name: string };
+    photo_url?: string;
+    is_virtual?: boolean;
+    is_in_person?: boolean;
     location: string;
-    address?: string; // Optional
-    room?: string; // Optional
-    city?: string; // Optional
-    state?: string; // Optional
-    zip_code?: string; // Optional, 5-digit zip code
-    country: string;
-    keywords?: string[]; // Optional
-    contact_name?: string; // Optional
-    contact_phone?: string; // Optional
-    contact_email?: string; // Optional
+    address?: string;
+    room?: string;
+    city?: string;
+    state?: string;
+    zip_code?: string;
+    country?: string;
+    keywords?: string[];
+    contact_name?: string;
+    contact_phone?: string;
+    contact_email?: string;
+    backlink?: string;
+    alrSaved: boolean;
 }

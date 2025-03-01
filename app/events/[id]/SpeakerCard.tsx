@@ -28,11 +28,18 @@ export default function SpeakerCard({ speaker }) {
                             {speaker.name}
                         </h3>
                         {speaker.title && (
-                            <p className="text-gray-600">{speaker.title}</p>
+                            <p className="text-gray-600 line-clamp-2">
+                                {speaker.title}
+                            </p>
                         )}
                         {speaker.affiliation && (
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 line-clamp-2">
                                 {speaker.affiliation}
+                            </p>
+                        )}
+                        {speaker.bio && (
+                            <p className="text-gray-600 line-clamp-2">
+                                {speaker.bio}
                             </p>
                         )}
                         {speaker.role && (

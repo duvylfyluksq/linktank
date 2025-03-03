@@ -68,6 +68,15 @@ export default function Home() {
                     } else {
                         newActiveFilters.push(dateFilter);
                     }
+
+                    // Remove any event type filter when date range is selected
+                    newFilters.eventType = "all";
+                    const eventTypeIndex = newActiveFilters.findIndex((f) =>
+                        f.startsWith("Type:")
+                    );
+                    if (eventTypeIndex >= 0) {
+                        newActiveFilters.splice(eventTypeIndex, 1);
+                    }
                 } else if (dateFilterIndex >= 0) {
                     newActiveFilters.splice(dateFilterIndex, 1);
                 }
@@ -97,6 +106,19 @@ export default function Home() {
                 const eventTypeIndex = newActiveFilters.findIndex((f) =>
                     f.startsWith("Type:")
                 );
+
+                // Remove any date range filter when event type is selected
+                newFilters.dateRange = {
+                    from: undefined,
+                    to: undefined,
+                };
+                const dateRangeIndex = newActiveFilters.findIndex((f) =>
+                    f.startsWith("Date:")
+                );
+                if (dateRangeIndex >= 0) {
+                    newActiveFilters.splice(dateRangeIndex, 1);
+                }
+
                 if (value !== "all") {
                     const eventTypeFilter = `Type: ${value.charAt(0).toUpperCase() + value.slice(1)}`;
                     if (eventTypeIndex >= 0) {
@@ -141,23 +163,70 @@ export default function Home() {
         setActiveFilters([]);
     };
 
-    const handleSearch = async (term: string) => {
-        setSearchTerm(term);
+    const fetchFilteredEvents = async (searchTerm: string = "") => {
+        setLoading(true);
 
         try {
+            // Build query parameters
             const params = new URLSearchParams();
-            if (term) {
-                params.append("search", term);
+
+            // Add search term if exists
+            if (searchTerm) {
+                params.append("search", searchTerm);
             }
-            if (selectedOrg !== "all")
+
+            // Add organization filter
+            if (selectedOrg !== "all") {
                 params.append("organization", selectedOrg);
+            }
+
+            // Add date range filters
+            if (filters.dateRange.from) {
+                params.append("dateFrom", filters.dateRange.from.toISOString());
+            }
+
+            if (filters.dateRange.to) {
+                params.append("dateTo", filters.dateRange.to.toISOString());
+            }
+
+            // Add location filters
+            if (filters.locations.length > 0) {
+                filters.locations.forEach((location) => {
+                    params.append("locations", location);
+                });
+            }
+
+            // Add event type filter - only if no date range is selected
+            if (
+                filters.eventType !== "all" &&
+                !(filters.dateRange.from && filters.dateRange.to)
+            ) {
+                params.append("eventType", filters.eventType);
+            }
+
+            // Make the API request
             const response = await fetch(
                 `/api/events/search?${params.toString()}`
             );
             const data = await response.json();
+
             if (data.success) {
                 setEvents(data.events);
+            } else {
+                console.error("Error fetching events:", data.error);
             }
+        } catch (error) {
+            console.error("Error fetching filtered events:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSearch = async (term: string) => {
+        setSearchTerm(term);
+
+        try {
+            await fetchFilteredEvents(term);
         } catch (error) {
             console.error("Error searching events:", error);
         }
@@ -181,18 +250,9 @@ export default function Home() {
     );
 
     useEffect(() => {
-        const fetchEvents = async () => {
-            setLoading(true);
-            const orgQuery =
-                selectedOrg !== "all" ? `?organization=${selectedOrg}` : "";
-            const response = await fetch(`/api/events${orgQuery}`);
-            const data = await response.json();
-            setEvents(data.events);
-            setLoading(false);
-        };
-
-        fetchEvents();
-    }, [selectedOrg]);
+        fetchFilteredEvents();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedOrg, filters]); // Add filters to dependency array
 
     useEffect(() => {
         // Fetch organizations

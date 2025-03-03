@@ -26,7 +26,7 @@ interface Event extends Document {
     description: string;
     agenda?: string;
     speakers?: string[];
-    organization?: { name: string };
+    organization?: Organization;
     photo_url?: string;
     is_virtual?: boolean;
     is_in_person?: boolean;

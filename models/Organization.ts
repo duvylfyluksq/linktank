@@ -19,6 +19,9 @@ const OrganizationSchema = new Schema({
         type: String,
         required: true
     },
+    about: {
+        type: String,
+    }
 }, { strict: false });
 
 export default models.Organization || model("Organization", OrganizationSchema);

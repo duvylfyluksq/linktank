@@ -282,48 +282,46 @@ export default function Home() {
                     </div>
                 </div>
 
-                <SearchBar
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="max-sm:w-full max-sm:mt-2"
-                />
+                <div className="flex items-center h-full">
+                    <SearchBar value={searchTerm} onChange={handleSearch} />
 
-                <Filters
-                    activeFilters={activeFilters}
-                    filters={filters}
-                    onFilterChangeAction={handleFilterChange}
-                    clearAllFiltersAction={clearAllFilters}
-                />
+                    <Filters
+                        activeFilters={activeFilters}
+                        filters={filters}
+                        onFilterChangeAction={handleFilterChange}
+                        clearAllFiltersAction={clearAllFilters}
+                    />
 
-                <Select
-                    value={selectedOrg}
-                    onValueChange={(val) => setSelectedOrg(val)}
-                >
-                    <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
-                        <SelectValue placeholder="Select Organization" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                        <SelectGroup>
-                            <SelectLabel>Select Organization</SelectLabel>
-                            <SelectItem value="all">
-                                All Organizations
-                            </SelectItem>
-                            {organizations.map((org) => (
-                                <SelectItem key={org._id} value={org._id}>
-                                    {org.name}
+                    <Select
+                        value={selectedOrg}
+                        onValueChange={(val) => setSelectedOrg(val)}
+                    >
+                        <SelectTrigger className="w-[12rem] ml-3 h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
+                            <SelectValue placeholder="Select Organization" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                            <SelectGroup>
+                                <SelectLabel>Select Organization</SelectLabel>
+                                <SelectItem value="all">
+                                    All Organizations
                                 </SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                                {organizations.map((org) => (
+                                    <SelectItem key={org._id} value={org._id}>
+                                        {org.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             {/* Active filters display */}
-            <FiltersDisplay
+            {/* <FiltersDisplay
                 activeFilters={activeFilters}
                 onRemoveFilter={removeFilter}
                 onClearAllFilters={clearAllFilters}
-            />
+            /> */}
 
             <div className="flex max-sm:flex-col">
                 <ol className="relative flex-grow w-full md:pr-20 border-s border-[#808080] max-sm:border-none border-opacity-25 px-0">

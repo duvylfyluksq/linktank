@@ -8,6 +8,7 @@ import {
 	UserButton,
 } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
+import SearchPalette from "./SearchPalette";
 
 const Navbar = async () => {
 	const user = await currentUser();
@@ -49,6 +50,7 @@ const Navbar = async () => {
 					</li>
 				</ul>
 				<div className="flex items-center gap-x-4">
+				<SearchPalette />
 					<SignedOut>
 						<SignInButton />
 						<SignUpButton />

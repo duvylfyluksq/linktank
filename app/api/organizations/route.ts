@@ -6,7 +6,7 @@ export async function GET() {
     await dbConnect();
 
     try {
-        const organizations = await Organization.find({}, "name").exec();
+        const organizations = await Organization.find({}).exec();
         return NextResponse.json(
             { success: true, organizations },
             { status: 200 }

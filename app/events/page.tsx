@@ -15,7 +15,6 @@ import SkeletonCard from "./SkeletonCard";
 import { EventCard } from "@/components/event-card";
 import { SearchBar } from "@/app/events/SearchBar";
 import { EventCalendar } from "@/app/events/EventCalendar";
-import { FiltersDisplay } from "@/app/events/FiltersDisplay";
 import { EventTypeSelector } from "@/app/events/EventTypeSelector";
 import Filters from "./Filters";
 
@@ -48,7 +47,6 @@ export default function Home() {
         { id: "virtual", name: "Virtual" },
     ];
 
-    // Add this function to handle filter changes
     const handleFilterChange = (filterType: string, value: any) => {
         const newFilters = { ...filters };
         let newActiveFilters = [...activeFilters];
@@ -136,24 +134,22 @@ export default function Home() {
         setActiveFilters(newActiveFilters);
     };
 
-    // Add this function to remove a filter
-    const removeFilter = (filter: string) => {
-        if (filter.startsWith("Location:")) {
-            const locationName = filter.replace("Location: ", "");
-            const locationId = availableLocations.find(
-                (l) => l.name === locationName
-            )?.id;
-            if (locationId) {
-                handleFilterChange("location", locationId);
-            }
-        } else if (filter.startsWith("Date:")) {
-            handleFilterChange("dateRange", { from: undefined, to: undefined });
-        } else if (filter.startsWith("Type:")) {
-            handleFilterChange("eventType", "all");
-        }
-    };
+    // const removeFilter = (filter: string) => {
+    //     if (filter.startsWith("Location:")) {
+    //         const locationName = filter.replace("Location: ", "");
+    //         const locationId = availableLocations.find(
+    //             (l) => l.name === locationName
+    //         )?.id;
+    //         if (locationId) {
+    //             handleFilterChange("location", locationId);
+    //         }
+    //     } else if (filter.startsWith("Date:")) {
+    //         handleFilterChange("dateRange", { from: undefined, to: undefined });
+    //     } else if (filter.startsWith("Type:")) {
+    //         handleFilterChange("eventType", "all");
+    //     }
+    // };
 
-    // Add this function to clear all filters
     const clearAllFilters = () => {
         setFilters({
             dateRange: { from: undefined, to: undefined },

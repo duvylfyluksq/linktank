@@ -13,6 +13,7 @@ interface Organization {
     name: string;
     url: string; // Assuming URLField is a string
     events_url: string; // Assuming URLField is a string
+    logo_url?: string; // Optional, assuming URLField is a string
 }
 
 interface Event extends Document {

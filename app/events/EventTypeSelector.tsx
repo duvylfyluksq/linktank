@@ -18,14 +18,14 @@ export function EventTypeSelector({
             <Button
                 variant={currentType === "upcoming" ? "default" : "secondary"}
                 onClick={() => onChange("upcoming")}
-                className="rounded-[0.75rem] font-medium"
+                className="rounded-[0.75rem] font-medium w-full"
             >
                 Upcoming
             </Button>
             <Button
                 variant={currentType === "past" ? "default" : "secondary"}
                 onClick={() => onChange("past")}
-                className="rounded-[0.75rem] font-medium"
+                className="rounded-[0.75rem] font-medium w-full"
             >
                 Past
             </Button>

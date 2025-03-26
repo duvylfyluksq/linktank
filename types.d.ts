@@ -25,8 +25,14 @@ interface Event extends Document {
     ticket_url?: string;
     brief_description?: string;
     description: string;
-    agenda?: string;
-    speakers?: string[];
+    agenda?: {
+        start_time: Date;
+        end_time: Date;
+        topic: string;
+        brief_description: string;
+        speakers: Speaker[];
+    }[][];
+    speakers?: Speaker[];
     organization?: Organization;
     photo_url?: string;
     is_virtual?: boolean;

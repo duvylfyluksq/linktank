@@ -29,21 +29,21 @@ export async function GET(request: Request) {
         // Handle date range and event type filters
         if (eventType === "upcoming" || eventType === "past" || dateFrom || dateTo) {
             query.date_from = {};
-            
+
             // If event type is "upcoming"
             if (eventType === "upcoming") {
                 query.date_from.$gte = new Date();
-            } 
+            }
             // If event type is "past"
             else if (eventType === "past") {
                 query.date_from.$lt = new Date();
             }
-            
+
             // Apply custom date range if specified (these override the default event type dates)
             if (dateFrom) {
                 query.date_from.$gte = new Date(dateFrom);
             }
-            
+
             if (dateTo) {
                 query.date_from.$lte = new Date(dateTo);
             }
@@ -69,7 +69,7 @@ export async function GET(request: Request) {
 
         const events = await Event.find(query)
             .sort(sortOrder)
-            .populate("organization", "name", Organization)
+            .populate("organization", "name logo_url", Organization)
             .exec();
 
         return NextResponse.json(

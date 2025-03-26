@@ -2,11 +2,12 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, ExternalLink, MapPin } from "lucide-react";
+import { Bookmark, Calendar, ExternalLink, MapPin } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const displayDate = (date) => {
     console.log(date);
@@ -26,6 +27,7 @@ const displayTime = (date) => {
         minute: "numeric",
     });
 };
+
 export default function EventPage() {
     const [event, setEvent] = useState<Event | null>(null);
     const [loading, setLoading] = useState(true);
@@ -103,18 +105,32 @@ export default function EventPage() {
                                     </Link>
                                 </h5>
                             </div>
-                            <Link
-                                href={event.ticket_url ?? event.url}
-                                className="mb-[1.53rem]"
-                                target="_blank"
-                            >
-                                <Button className="bg-[#113663] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
-                                    <ExternalLink size={20} />
-                                    <span className="text-[1rem]">
-                                        Register on website
-                                    </span>
-                                </Button>
-                            </Link>
+                            <div className="flex flex-row gap-4">
+                                <Link
+                                    href={event.ticket_url ?? event.url}
+                                    className="mb-[1.53rem]"
+                                    target="_blank"
+                                >
+                                    <Button className="bg-[#113663] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
+                                        <ExternalLink size={20} />
+                                        <span className="text-[1rem]">
+                                            Register on website
+                                        </span>
+                                    </Button>
+                                </Link>
+                                <Link
+                                    href={event.ticket_url ?? event.url}
+                                    className="mb-[1.53rem]"
+                                    target="_blank"
+                                >
+                                    <Button className="bg-[#1C2329] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
+                                        <Bookmark className={`w-4 h-4`} />
+                                        <span className="text-[1rem]">
+                                            Save event
+                                        </span>
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                         <div className="flex flex-row gap-6">
                             <div className="flex flex-row items-center gap-[1.5rem] w-full">
@@ -177,7 +193,7 @@ export default function EventPage() {
                 <div className="flex flex-col gap-[2.625rem]">
                     {event.photo_url && (
                         <div className="h-[26.3125rem] w-full rounded-[1.4375rem]">
-                            <Image
+                            <img
                                 src={event.photo_url || "/globe.svg"}
                                 alt="Event Image"
                                 width={8000}
@@ -186,26 +202,168 @@ export default function EventPage() {
                             />
                         </div>
                     )}
-                    <div className="flex flex-col gap-[0.75rem]">
-                        <h3 className="text-[#323232] font-extrabold leading-[1.92869rem] text-[1.5rem]">
-                            About
-                        </h3>
-                        <p
-                            className="opacity-70 text-[#323232] text-[1rem] leading-[127.625%]"
+                </div>
+                <Tabs defaultValue="about">
+                    <TabsList className="text-base font-medium p-1 h-[unset] bg-white border-[#E8E8E8] border-[1px]">
+                        {event.description && (
+                            <TabsTrigger
+                                value="about"
+                                className="data-[state=active]:text-white px-5 py-2 data-[state=active]:bg-[#1C2329]"
+                            >
+                                About
+                            </TabsTrigger>
+                        )}
+                        {event.agenda && event.agenda.length > 0 && (
+                            <TabsTrigger
+                                value="agenda"
+                                className="data-[state=active]:text-white px-5 py-2 data-[state=active]:bg-[#1C2329]"
+                            >
+                                Agenda
+                            </TabsTrigger>
+                        )}
+                        {event.speakers && event.speakers.length > 0 && (
+                            <TabsTrigger
+                                value="speakers"
+                                className="data-[state=active]:text-white px-5 py-2 data-[state=active]:bg-[#1C2329]"
+                            >
+                                Speakers
+                            </TabsTrigger>
+                        )}
+                    </TabsList>
+                    <TabsContent value="about">
+                        <div
+                            className="text-[#323232] text-[1rem] mt-6 flex flex-col gap-6"
                             dangerouslySetInnerHTML={{
                                 __html: event.description,
                             }}
-                        ></p>
-                    </div>
-                    <div className="flex flex-col gap-[0.75rem]">
-                        <h3 className="text-[#323232] font-extrabold leading-[1.92869rem] text-[1.5rem]">
-                            Agenda
-                        </h3>
-                        <p className="opacity-70 text-[#323232] text-[1rem] leading-[127.625%]">
-                            {event.agenda}
-                        </p>
-                    </div>
-                </div>
+                        ></div>
+                    </TabsContent>
+                    <TabsContent value="agenda">
+                        <div className="flex flex-col gap-7 w-full mt-6">
+                            {event.agenda &&
+                                event.agenda[0]?.map((agenda) => (
+                                    <div
+                                        className="flex flex-col gap-4 w-full"
+                                        key={agenda.topic}
+                                    >
+                                        <div className="flex flex-col gap-6">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    {agenda.start_time && (
+                                                        <p className="text-base text-[#323232] font-jakarta font-medium">
+                                                            {new Date(
+                                                                agenda.start_time
+                                                            )?.toLocaleTimeString(
+                                                                "en-US",
+                                                                {
+                                                                    hour: "numeric",
+                                                                    minute: "numeric",
+                                                                }
+                                                            )}
+                                                        </p>
+                                                    )}
+                                                    {agenda.end_time && (
+                                                        <svg
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            width="6"
+                                                            height="6"
+                                                            viewBox="0 0 6 6"
+                                                            fill="none"
+                                                        >
+                                                            <circle
+                                                                cx="2.63721"
+                                                                cy="2.86279"
+                                                                r="2.63721"
+                                                                fill="#1C2329"
+                                                            />
+                                                        </svg>
+                                                    )}
+                                                    {agenda.end_time && (
+                                                        <p className="text-base text-[#323232] font-jakarta font-medium">
+                                                            {new Date(
+                                                                agenda.end_time
+                                                            )?.toLocaleTimeString(
+                                                                "en-US",
+                                                                {
+                                                                    hour: "numeric",
+                                                                    minute: "numeric",
+                                                                }
+                                                            )}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <h2 className="font-jakarta text-[#323232] text-2xl font-extrabold">
+                                                    {agenda.topic}
+                                                </h2>
+                                            </div>
+                                            <div
+                                                className="font-jakarta text-[#323232] text-base font-normal"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: agenda.brief_description,
+                                                }}
+                                            ></div>
+                                        </div>
+                                        <div>
+                                            {agenda.speakers?.map((speaker) => (
+                                                <div
+                                                    key={speaker.name}
+                                                    className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+                                                >
+                                                    <Image
+                                                        src={
+                                                            speaker?.photo_url ||
+                                                            "/linktank_logo.png"
+                                                        }
+                                                        alt={`${speaker?.name} image`}
+                                                        width={1000}
+                                                        height={1000}
+                                                        className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
+                                                    />
+                                                    <div className="flex flex-col h-full justify-center">
+                                                        <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
+                                                            {speaker?.name}
+                                                        </h3>
+                                                        <p className="text-[#71717A] text-sm font-jakarta">
+                                                            {speaker?.title}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="speakers">
+                        <div className="flex flex-col gap-6 w-full mt-6">
+                            {event.speakers?.map((speaker) => (
+                                <div
+                                    key={speaker.name}
+                                    className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+                                >
+                                    <Image
+                                        src={
+                                            speaker?.photo_url ||
+                                            "/linktank_logo.png"
+                                        }
+                                        alt={`${speaker?.name} image`}
+                                        width={1000}
+                                        height={1000}
+                                        className="h-[4.25rem] w-[4.25rem] rounded-full object-cover flex-shrink-0"
+                                    />
+                                    <div className="flex flex-col h-full justify-center">
+                                        <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
+                                            {speaker?.name}
+                                        </h3>
+                                        <p className="text-[#71717A] text-sm font-jakarta">
+                                            {speaker?.title}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
     );

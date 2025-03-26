@@ -30,9 +30,18 @@ const EventSchema = new Schema({
         type: String,
         required: true,
     },
-    agenda: {
-        type: String,
-    },
+    agenda: [[{
+        start_time: Date,
+        end_time: Date,
+        topic: String,
+        brief_description: String,
+        speakers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Speaker",
+            }
+        ]
+    }]],
     speakers: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -50,6 +59,9 @@ const EventSchema = new Schema({
         type: Boolean,
     },
     is_in_person: {
+        type: Boolean,
+    },
+    is_date_range: {
         type: Boolean,
     },
     location: {
@@ -99,6 +111,11 @@ const EventSchema = new Schema({
     contact_email: {
         type: String,
     },
+    backlink: {
+        type: String,
+        unique: true,
+        required: true
+    }
 }, { strict: false });
 
 export default models.Event || model("Event", EventSchema);

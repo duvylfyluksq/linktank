@@ -221,8 +221,8 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.1875rem] max-sm:px-5 max-sm:mt-5 flex-grow-0">
-            <div className="w-full flex flex-row justify-between items-center max-sm:flex-col max-sm:items-start">
+        <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.1875rem]">
+            <div className="w-full flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center gap-2 max-sm:w-full">
                     <h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px]">
                         Upcoming Events
@@ -239,14 +239,12 @@ export default function Home() {
 
                 <div className="flex items-center h-full">
                     <SearchBar value={searchTerm} onChange={handleSearch} />
-
                     <Filters
                         activeFilters={activeFilters}
                         filters={filters}
                         onFilterChangeAction={handleFilterChange}
                         clearAllFiltersAction={clearAllFilters}
                     />
-
                     <Select
                         value={selectedOrg}
                         onValueChange={(val) => setSelectedOrg(val)}
@@ -270,76 +268,43 @@ export default function Home() {
                     </Select>
                 </div>
             </div>
-
-            {/* <div className="flex flex-row w-full gap-[1.625rem]">
-                <ol className="relative grow border-s border-[#808080] max-sm:border-none border-opacity-25 px-0">
-                    <div className="sm:hidden">
-                        {loading
-                            ? Array.from({ length: 5 }).map((_, i) => (
-                                  <SkeletonCard key={i} />
-                              ))
-                            : Object.entries(groupedEvents).map(
-                                  ([date, events]) => (
-                                      <div
-                                          key={date}
-                                          className="mb-6 flex flex-col items-left"
-                                      >
-                                          <time className="text-lg font-bold mt-6">
-                                              {date}
-                                          </time>
-                                          {events.map((event) => (
-                                              <EventCard
-                                                  event={event}
-                                                  key={event._id}
-                                              />
-                                          ))}
-                                      </div>
-                                  )
-                              )}
-                    </div>
-
-                    <div className="hidden sm:block w-[69.1875rem]">
-                        {loading
-                            ? Array.from({ length: 5 }).map((_, i) => (
-                                  <SkeletonCard key={i} />
-                              ))
-                            : Object.entries(groupedEvents).map(
-                                  ([date, groupedEvents]) => (
-                                      <li key={date} className="mb-10 ms-4">
-                                          <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
-                                          <time className="text-base md:text-xl font-semibold leading-none">
-                                              {date}
-                                          </time>
-                                          {groupedEvents.map((event) => (
-                                              <EventCard
-                                                  event={event}
-                                                  key={event._id}
-                                              />
-                                          ))}
-                                      </li>
-                                  )
-                              )}
-                    </div>
-                </ol>
-                <div className="h-auto max-sm:mt-4 w-[18.875rem] flex-shrink-0">
-                    <EventTypeSelector
-                        currentType={filters.eventType}
-                        onChange={(type) =>
-                            handleFilterChange("eventType", type)
-                        }
-                        className="flex w-full items-center space-x-2 mb-4 max-sm:flex-col max-sm:hidden"
-                    />
-
-                    <EventCalendar
-                        filters={filters}
-                        onFilterChange={handleFilterChange}
-                        className="rounded-md border border-black border-opacity-25 bg-white max-sm:hidden"
-                    />
-                </div>
-            </div> */}
             <div className="flex flex-row w-full gap-[1.625rem]">
-                <ol className="relative grow border-s border-[#808080] max-sm:border-none border-opacity-25 px-0">
-                    <div className="sm:hidden">
+                <ol className="relative border-s border-[#808080] border-opacity-25 w-full">
+                    {/* <>
+                        <div className="absolute right-4 top-2 sm:hidden">
+                            <Button
+                                variant="outline"
+                                onClick={() => setMobileCalendarOpen(true)}
+                                className="p-2"
+                            >
+                                <CalendarIcon size={20} />
+                            </Button>
+                        </div>
+
+                        {mobileCalendarOpen && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-sm bg-opacity-50 z-50 sm:hidden">
+                                <div className="bg-white p-4 rounded-md">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={(d) => {
+                                            setDate(d);
+                                            setMobileCalendarOpen(false);
+                                        }}
+                                    />
+                                    <Button
+                                        onClick={() =>
+                                            setMobileCalendarOpen(false)
+                                        }
+                                        className="mt-2 w-full"
+                                    >
+                                        Close
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </> */}
+                    {/* <div className="sm:hidden">
                         {loading
                             ? Array.from({ length: 5 }).map((_, i) => (
                                   <SkeletonCard key={i} />
@@ -350,7 +315,7 @@ export default function Home() {
                                           key={date}
                                           className="mb-6 flex flex-col items-left"
                                       >
-                                          <time className="text-lg font-bold mt-6">
+                                          <time className="text-2xl font-bold mb-2">
                                               {date}
                                           </time>
                                           {events.map((event) => (
@@ -362,9 +327,8 @@ export default function Home() {
                                       </div>
                                   )
                               )}
-                    </div>
-
-                    <div className="hidden sm:flex flex-col">
+                    </div> */}
+                    <div className="hidden sm:block">
                         {loading
                             ? Array.from({ length: 5 }).map((_, i) => (
                                   <SkeletonCard key={i} />
@@ -373,7 +337,7 @@ export default function Home() {
                                   ([date, groupedEvents]) => (
                                       <li key={date} className="mb-10 ms-4">
                                           <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
-                                          <time className="text-base md:text-xl font-semibold leading-none">
+                                          <time className="mb-1 text-xl font-semibold leading-none">
                                               {date}
                                           </time>
                                           {groupedEvents.map((event) => (

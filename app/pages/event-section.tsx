@@ -5,21 +5,6 @@ import { useEffect, useState } from "react";
 import { Timeline } from "@/components/timeline";
 import { EventCard } from "@/components/event-card";
 
-interface Event {
-    _id: string;
-    date_from: Date;
-    title: string;
-    description: string;
-    imageUrl: string;
-    url: string;
-    organization: {
-        name: string;
-    };
-    location: string;
-    backlink: string;
-    alrSaved: boolean;
-}
-
 export default function PastEvents() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState(true);

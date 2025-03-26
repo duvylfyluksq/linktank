@@ -25,6 +25,7 @@ export async function GET(
 		})
 			.populate("organization", "name logo_url", Organization)
 			.populate("speakers", "name photo_url url twitter title", Speaker)
+			.lean()
 			.exec();
 
 		if (!event) {

@@ -1,9 +1,8 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { NextResponse } from "next/server";
-import dbConnect from '@/lib/dbConnect'
-import User from '@/models/User'
+import { createUser, deleteUser } from '@/app/actions/User';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
@@ -65,19 +64,18 @@ export async function POST(req: Request) {
         last_sign_in_at: last_sign_in_at
     };
 
-    try{
-        await dbConnect();
-        const newUser = await User.create(user);
-        return NextResponse.json({ success: true, newUser }, { status: 201 });
-    } 
-    catch (error) {
-        console.error("Error creating user:", error);
-        return NextResponse.json(
-            { success: false, message: "Server error" },
-            { status: 500 },
-        );
-    }
+    return createUser(user);
   }
 
-  return new Response('Webhook received', { status: 200 })
+  if(eventType === "user.deleted"){
+    const {id} = evt.data;
+
+    const user = {
+        clerk_id: id
+    }
+
+    return deleteUser(user);
+  }
+
+  return NextResponse.json({ success: true, message: "Event type not handled" }, { status: 200 });
 }

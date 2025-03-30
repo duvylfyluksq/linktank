@@ -1,7 +1,7 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { createUser, deleteUser } from '@/app/actions/User';
+import { createUser, deleteUser, updateUser } from '@/app/actions/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         username: username,
         first_name: first_name,
         last_name: last_name,
-        email: email_addresses[0].email_address,
+        email: email_addresses?.[0]?.email_address,
         saved_events: [],
         created_at: created_at,
         updated_at: updated_at,
@@ -75,6 +75,21 @@ export async function POST(req: Request) {
     }
 
     return deleteUser(user);
+  }
+
+  if (eventType === "user.updated") {
+    const { id, email_addresses, first_name, last_name, username, updated_at } = evt.data;
+
+    const user = {
+      clerk_id: id,
+      username: username,
+      first_name: first_name,
+      last_name: last_name,
+      email: email_addresses?.[0]?.email_address,
+      updated_at: updated_at
+    };
+
+    return updateUser(user);
   }
 
   return NextResponse.json({ success: true, message: "Event type not handled" }, { status: 200 });

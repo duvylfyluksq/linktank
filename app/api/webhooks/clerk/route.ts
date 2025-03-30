@@ -1,6 +1,9 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
+import { NextResponse } from "next/server";
+import dbConnect from '@/lib/dbConnect'
+import User from '@/models/User'
 
 export async function POST(req: Request) {
   const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
@@ -45,12 +48,36 @@ export async function POST(req: Request) {
     })
   }
 
-  // Do something with payload
-  // For this guide, log payload to console
-  const { id } = evt.data
   const eventType = evt.type
-  console.log(`Received webhook with ID ${id} and event type of ${eventType}`)
-  console.log('Webhook payload:', body)
+
+  if(eventType === "user.created"){
+    const { id, email_addresses, first_name, last_name, username, created_at, updated_at, last_sign_in_at} = evt.data;
+
+    const user = {
+        clerk_id: id,
+        username: username,
+        first_name: first_name,
+        last_name: last_name,
+        email: email_addresses[0].email_address,
+        saved_events: [],
+        created_at: created_at,
+        updated_at: updated_at,
+        last_sign_in_at: last_sign_in_at
+    };
+
+    try{
+        await dbConnect();
+        const newUser = await User.create(user);
+        return NextResponse.json({ success: true, newUser }, { status: 201 });
+    } 
+    catch (error) {
+        console.error("Error creating user:", error);
+        return NextResponse.json(
+            { success: false, message: "Server error" },
+            { status: 500 },
+        );
+    }
+  }
 
   return new Response('Webhook received', { status: 200 })
 }

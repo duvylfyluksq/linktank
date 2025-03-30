@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SpeakerCard from "./SpeakerCard";
+// import { connect } from "node:net";
 
 const displayDate = (date) => {
     console.log(date);
@@ -305,29 +307,30 @@ export default function EventPage() {
                                         </div>
                                         <div>
                                             {agenda.speakers?.map((speaker) => (
-                                                <div
-                                                    key={speaker.name}
-                                                    className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
-                                                >
-                                                    <Image
-                                                        src={
-                                                            speaker?.photo_url ||
-                                                            "/linktank_logo.png"
-                                                        }
-                                                        alt={`${speaker?.name} image`}
-                                                        width={1000}
-                                                        height={1000}
-                                                        className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
-                                                    />
-                                                    <div className="flex flex-col h-full justify-center">
-                                                        <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
-                                                            {speaker?.name}
-                                                        </h3>
-                                                        <p className="text-[#71717A] text-sm font-jakarta">
-                                                            {speaker?.title}
-                                                        </p>
-                                                    </div>
-                                                </div>
+                                                // <div
+                                                //     key={speaker.name}
+                                                //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+                                                // >
+                                                //     <Image
+                                                //         src={
+                                                //             speaker?.photo_url ||
+                                                //             "/linktank_logo.png"
+                                                //         }
+                                                //         alt={`${speaker?.name} image`}
+                                                //         width={1000}
+                                                //         height={1000}
+                                                //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
+                                                //     />
+                                                //     <div className="flex flex-col h-full justify-center">
+                                                //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
+                                                //             {speaker?.name}
+                                                //         </h3>
+                                                //         <p className="text-[#71717A] text-sm font-jakarta">
+                                                //             {speaker?.title}
+                                                //         </p>
+                                                //     </div>
+                                                // </div>
+                                                SpeakerCard({ speaker })
                                             ))}
                                         </div>
                                     </div>
@@ -337,29 +340,30 @@ export default function EventPage() {
                     <TabsContent value="speakers">
                         <div className="flex flex-col gap-6 w-full mt-6">
                             {event.speakers?.map((speaker) => (
-                                <div
-                                    key={speaker.name}
-                                    className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
-                                >
-                                    <Image
-                                        src={
-                                            speaker?.photo_url ||
-                                            "/linktank_logo.png"
-                                        }
-                                        alt={`${speaker?.name} image`}
-                                        width={1000}
-                                        height={1000}
-                                        className="h-[4.25rem] w-[4.25rem] rounded-full object-cover flex-shrink-0"
-                                    />
-                                    <div className="flex flex-col h-full justify-center">
-                                        <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
-                                            {speaker?.name}
-                                        </h3>
-                                        <p className="text-[#71717A] text-sm font-jakarta">
-                                            {speaker?.title}
-                                        </p>
-                                    </div>
-                                </div>
+                                // <div
+                                //     key={speaker.name}
+                                //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+                                // >
+                                //     <Image
+                                //         src={
+                                //             speaker?.photo_url ||
+                                //             "/linktank_logo.png"
+                                //         }
+                                //         alt={`${speaker?.name} image`}
+                                //         width={1000}
+                                //         height={1000}
+                                //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover flex-shrink-0"
+                                //     />
+                                //     <div className="flex flex-col h-full justify-center">
+                                //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
+                                //             {speaker?.name}
+                                //         </h3>
+                                //         <p className="text-[#71717A] text-sm font-jakarta">
+                                //             {speaker?.title}
+                                //         </p>
+                                //     </div>
+                                // </div>
+                                SpeakerCard({ speaker })
                             ))}
                         </div>
                     </TabsContent>

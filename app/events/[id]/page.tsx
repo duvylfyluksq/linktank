@@ -248,7 +248,7 @@ export default function EventPage() {
                     <TabsContent value="agenda">
                         <div className="flex flex-col gap-7 w-full mt-6">
                             {event.agenda &&
-                                event.agenda.map((day_agenda) => 
+                                event.agenda.map((day_agenda, day_index) => 
                                     (day_agenda.map((agenda_item, item_index) =>
                                     <div key={item_index}>
                                         <div
@@ -258,6 +258,22 @@ export default function EventPage() {
                                             <div className="flex flex-col gap-6">
                                                 <div className="flex flex-col gap-2">
                                                     <div className="flex flex-row gap-2">
+                                                        {item_index === 0 && (
+                                                            <div className="flex items-center gap-2 text-base text-[#323232] font-jakarta font-medium">
+                                                                <span>
+                                                                    {displayDate(new Date(new Date(event.date_from).getTime() + day_index * 86400000))}
+                                                                </span>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="6"
+                                                                    height="6"
+                                                                    viewBox="0 0 6 6"
+                                                                    fill="none"
+                                                                >
+                                                                <circle cx="2.63721" cy="2.86279" r="2.63721" fill="#1C2329" />
+                                                                </svg>
+                                                            </div>
+                                                        )}
                                                         {agenda_item.start_time && (
                                                             <p className="text-base text-[#323232] font-jakarta font-medium">
                                                                 {new Date(
@@ -272,20 +288,9 @@ export default function EventPage() {
                                                             </p>
                                                         )}
                                                         {agenda_item.end_time && (
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="6"
-                                                                height="6"
-                                                                viewBox="0 0 6 6"
-                                                                fill="none"
-                                                            >
-                                                                <circle
-                                                                    cx="2.63721"
-                                                                    cy="2.86279"
-                                                                    r="2.63721"
-                                                                    fill="#1C2329"
-                                                                />
-                                                            </svg>
+                                                            <p className="text-base text-[#323232] font-jakarta font-medium">
+                                                                {"-"} 
+                                                            </p>
                                                         )}
                                                         {agenda_item.end_time && (
                                                             <p className="text-base text-[#323232] font-jakarta font-medium">

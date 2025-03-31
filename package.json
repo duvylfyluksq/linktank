@@ -10,6 +10,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^6.1.0",
+    "@stripe/react-stripe-js": "^3.5.1",
     "@clerk/nextjs": "^6.11.1",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-avatar": "^1.1.1",

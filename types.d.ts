@@ -16,6 +16,18 @@ interface Organization {
     logo_url?: string; // Optional, assuming URLField is a string
 }
 
+interface User {
+    clerk_id: string,
+    username: string,
+    first_name: string,
+    last_name: string,
+    email: string,
+    saved_events: Event[],
+    created_at: Date,
+    updated_at: Date,
+    last_sign_in_at: Date
+}
+
 interface Event extends Document {
     _id: string;
     title: string;

@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import { SavedEventsProvider } from "./contexts/SavedEventsContext";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -33,16 +34,18 @@ export default function RootLayout({
 		<ClerkProvider
 			publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 		>
-			<html lang="en">
-				<body
-					className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF]`}
-				>
-					<Navbar />
+			<SavedEventsProvider>
+				<html lang="en">
+					<body
+						className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF]`}
+					>
+						<Navbar />
 
-					<main className="flex flex-col items-center">{children}</main>
-					<Footer />
-				</body>
-			</html>
+						<main className="flex flex-col items-center">{children}</main>
+						<Footer />
+					</body>
+				</html>
+			</SavedEventsProvider>
 		</ClerkProvider>
 	);
 }

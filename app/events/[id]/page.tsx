@@ -9,6 +9,9 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SpeakerCard from "./SpeakerCard";
+import { useUser } from "@clerk/nextjs";
+import SubscriptionPage from "@/app/authwall/authwall";
+import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
 // import { connect } from "node:net";
 
 const displayDate = (date) => {
@@ -33,8 +36,11 @@ const displayTime = (date) => {
 export default function EventPage() {
     const [event, setEvent] = useState<Event | null>(null);
     const [loading, setLoading] = useState(true);
+    const { savedEvents, setSavedEvents } = useSavedEvents();
     const params = useParams();
+    const [isSaved, setIsSaved] = useState(savedEvents.some((event: any) => event.backlink === params.id));
 
+    
     useEffect(() => {
         fetch(`/api/events/${params.id}`)
             .then((response) => response.json())
@@ -47,6 +53,55 @@ export default function EventPage() {
                 setLoading(false);
             });
     }, [params.id]);
+
+    useEffect(() => {
+        setIsSaved(savedEvents.some((event: any) => event.backlink === params.id));
+      }, [savedEvents]);
+
+
+    const { user, isSignedIn } = useUser();
+
+    if(!isSignedIn){
+        return <SubscriptionPage/>;
+    }
+      
+    const handleSaveEvent = async () => {
+        try {
+            setLoading(true);
+            const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+            });
+
+            const data = await res.json();
+            setSavedEvents(data.saved_events);
+
+        } catch (error) {
+            console.error("Error saving event:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUnsaveEvent = async () => {
+        setLoading(true);
+        try {
+          const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          setSavedEvents(data.saved_events);
+        } catch (error) {
+          console.error("Error removing saved event:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
     if (loading) {
         return (
@@ -120,18 +175,18 @@ export default function EventPage() {
                                         </span>
                                     </Button>
                                 </Link>
-                                <Link
-                                    href={event.ticket_url ?? event.url}
-                                    className="mb-[1.53rem]"
-                                    target="_blank"
+                                <Button className="bg-[#1C2329] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]"
+                                        onClick={isSaved ? handleUnsaveEvent : handleSaveEvent}
                                 >
-                                    <Button className="bg-[#1C2329] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]">
-                                        <Bookmark className={`w-4 h-4`} />
-                                        <span className="text-[1rem]">
-                                            Save event
-                                        </span>
-                                    </Button>
-                                </Link>
+                                    {isSaved ? (
+                                        <Bookmark fill="white" className="w-4 h-4" />
+                                    ) : (
+                                        <Bookmark className="w-4 h-4" />
+                                    )}
+                                    <span className="text-[1rem]">
+                                        {isSaved ? "Saved" : "Save event"}
+                                    </span>
+                                </Button>
                             </div>
                         </div>
                         <div className="flex flex-row gap-6">
@@ -179,22 +234,6 @@ export default function EventPage() {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="gap-[0.69rem] flex flex-row items-center">
-                            <div className="w-[2.6875rem] h-[2.6875rem] justify-center flex flex-col items-center bg-[#EDFAFF] border-[rgba(91, 100, 105, 0.10)] border-[1px] rounded-[0.33594rem]">
-                                <UsersIcon
-                                    size={30}
-                                    className="text-[#727679]"
-                                />
-                            </div>
-                            <div className="flex flex-col text-[#323232] text-[1.125rem] opacity-70">
-                                <p className="font-semibold">Speakers</p>
-                                <p>
-                                    {event.speakers
-                                        ?.map((speaker) => speaker)
-                                        .join(", ")}
-                                </p>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
                 <div className="flex flex-col gap-[2.625rem]">

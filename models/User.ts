@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     first_name: { type: String },
     last_name: { type: String },
     email: { type: String, required: true, unique: true },
-    saved_events: { type: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}] },
+    saved_events: { type: [{type: mongoose.Schema.Types.ObjectId, ref: "Event"}], default: [] },
     created_at: { type: Date },
     updated_at: { type: Date },
     last_sign_in_at: { type: Date }

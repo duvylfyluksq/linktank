@@ -8,11 +8,11 @@ export function Footer() {
                 <div className="mb-6 md:mb-0">
                     <Link href="/" className="flex items-center">
                         <Image
-                            src="/logo.png"
+                            src="/linktank_logo.png"
                             alt="LinkTank"
                             width={100}
                             height={100}
-                            className="w-10 h-10 mr-[0.625rem]"
+                            className="w-10 h-10 mr-[0.625rem] rounded-full"
                         />
 
                         <span className="text-2xl font-bold mr-[2.44rem]">

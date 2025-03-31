@@ -35,6 +35,7 @@ interface Event extends Document {
     speakers?: Speaker[];
     organization?: Organization;
     photo_url?: string;
+    is_date_range: boolean;
     is_virtual?: boolean;
     is_in_person?: boolean;
     location: string;

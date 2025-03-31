@@ -150,12 +150,17 @@ export default function EventPage() {
                                                 " - " +
                                                     displayDate(event.date_to)}
                                         </p>
-                                        <p>
-                                            {displayTime(event.date_from)}{" "}
-                                            {event.date_to &&
-                                                " - " +
-                                                    displayTime(event.date_to)}
-                                        </p>
+                                        {
+                                            !event.is_date_range &&
+                                                (
+                                                    <p>
+                                                        {displayTime(event.date_from)}{" "}
+                                                        {event.date_to &&
+                                                            " - " +
+                                                                displayTime(event.date_to)}
+                                                    </p>
+                                                )
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -243,98 +248,101 @@ export default function EventPage() {
                     <TabsContent value="agenda">
                         <div className="flex flex-col gap-7 w-full mt-6">
                             {event.agenda &&
-                                event.agenda[0]?.map((agenda) => (
-                                    <div
-                                        className="flex flex-col gap-4 w-full"
-                                        key={agenda.topic}
-                                    >
-                                        <div className="flex flex-col gap-6">
-                                            <div className="flex flex-col gap-2">
-                                                <div className="flex flex-row gap-2">
-                                                    {agenda.start_time && (
-                                                        <p className="text-base text-[#323232] font-jakarta font-medium">
-                                                            {new Date(
-                                                                agenda.start_time
-                                                            )?.toLocaleTimeString(
-                                                                "en-US",
-                                                                {
-                                                                    hour: "numeric",
-                                                                    minute: "numeric",
-                                                                }
-                                                            )}
-                                                        </p>
-                                                    )}
-                                                    {agenda.end_time && (
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            width="6"
-                                                            height="6"
-                                                            viewBox="0 0 6 6"
-                                                            fill="none"
-                                                        >
-                                                            <circle
-                                                                cx="2.63721"
-                                                                cy="2.86279"
-                                                                r="2.63721"
-                                                                fill="#1C2329"
-                                                            />
-                                                        </svg>
-                                                    )}
-                                                    {agenda.end_time && (
-                                                        <p className="text-base text-[#323232] font-jakarta font-medium">
-                                                            {new Date(
-                                                                agenda.end_time
-                                                            )?.toLocaleTimeString(
-                                                                "en-US",
-                                                                {
-                                                                    hour: "numeric",
-                                                                    minute: "numeric",
-                                                                }
-                                                            )}
-                                                        </p>
-                                                    )}
+                                event.agenda.map((day_agenda) => 
+                                    (day_agenda.map((agenda_item, item_index) =>
+                                    <div key={item_index}>
+                                        <div
+                                            className="flex flex-col gap-4 w-full"
+                                            key={agenda_item.topic}
+                                        >
+                                            <div className="flex flex-col gap-6">
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="flex flex-row gap-2">
+                                                        {agenda_item.start_time && (
+                                                            <p className="text-base text-[#323232] font-jakarta font-medium">
+                                                                {new Date(
+                                                                    agenda_item.start_time
+                                                                )?.toLocaleTimeString(
+                                                                    "en-US",
+                                                                    {
+                                                                        hour: "numeric",
+                                                                        minute: "numeric",
+                                                                    }
+                                                                )}
+                                                            </p>
+                                                        )}
+                                                        {agenda_item.end_time && (
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="6"
+                                                                height="6"
+                                                                viewBox="0 0 6 6"
+                                                                fill="none"
+                                                            >
+                                                                <circle
+                                                                    cx="2.63721"
+                                                                    cy="2.86279"
+                                                                    r="2.63721"
+                                                                    fill="#1C2329"
+                                                                />
+                                                            </svg>
+                                                        )}
+                                                        {agenda_item.end_time && (
+                                                            <p className="text-base text-[#323232] font-jakarta font-medium">
+                                                                {new Date(
+                                                                    agenda_item.end_time
+                                                                )?.toLocaleTimeString(
+                                                                    "en-US",
+                                                                    {
+                                                                        hour: "numeric",
+                                                                        minute: "numeric",
+                                                                    }
+                                                                )}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                    <h2 className="font-jakarta text-[#323232] text-2xl font-extrabold">
+                                                        {agenda_item.topic}
+                                                    </h2>
                                                 </div>
-                                                <h2 className="font-jakarta text-[#323232] text-2xl font-extrabold">
-                                                    {agenda.topic}
-                                                </h2>
+                                                <div
+                                                    className="font-jakarta text-[#323232] text-base font-normal"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: agenda_item.brief_description,
+                                                    }}
+                                                ></div>
                                             </div>
-                                            <div
-                                                className="font-jakarta text-[#323232] text-base font-normal"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: agenda.brief_description,
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <div>
-                                            {agenda.speakers?.map((speaker) => (
-                                                // <div
-                                                //     key={speaker.name}
-                                                //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
-                                                // >
-                                                //     <Image
-                                                //         src={
-                                                //             speaker?.photo_url ||
-                                                //             "/linktank_logo.png"
-                                                //         }
-                                                //         alt={`${speaker?.name} image`}
-                                                //         width={1000}
-                                                //         height={1000}
-                                                //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
-                                                //     />
-                                                //     <div className="flex flex-col h-full justify-center">
-                                                //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
-                                                //             {speaker?.name}
-                                                //         </h3>
-                                                //         <p className="text-[#71717A] text-sm font-jakarta">
-                                                //             {speaker?.title}
-                                                //         </p>
-                                                //     </div>
-                                                // </div>
-                                                SpeakerCard({ speaker })
-                                            ))}
+                                            <div>
+                                                {agenda_item.speakers?.map((speaker) => (
+                                                    // <div
+                                                    //     key={speaker.name}
+                                                    //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+                                                    // >
+                                                    //     <Image
+                                                    //         src={
+                                                    //             speaker?.photo_url ||
+                                                    //             "/linktank_logo.png"
+                                                    //         }
+                                                    //         alt={`${speaker?.name} image`}
+                                                    //         width={1000}
+                                                    //         height={1000}
+                                                    //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
+                                                    //     />
+                                                    //     <div className="flex flex-col h-full justify-center">
+                                                    //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
+                                                    //             {speaker?.name}
+                                                    //         </h3>
+                                                    //         <p className="text-[#71717A] text-sm font-jakarta">
+                                                    //             {speaker?.title}
+                                                    //         </p>
+                                                    //     </div>
+                                                    // </div>
+                                                    SpeakerCard({ speaker })
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-                                ))}
+                                )))}
                         </div>
                     </TabsContent>
                     <TabsContent value="speakers">

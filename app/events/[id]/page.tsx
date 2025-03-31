@@ -263,15 +263,17 @@ export default function EventPage() {
                                                                 <span>
                                                                     {displayDate(new Date(new Date(event.date_from).getTime() + day_index * 86400000))}
                                                                 </span>
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="6"
-                                                                    height="6"
-                                                                    viewBox="0 0 6 6"
-                                                                    fill="none"
-                                                                >
-                                                                <circle cx="2.63721" cy="2.86279" r="2.63721" fill="#1C2329" />
-                                                                </svg>
+                                                                {agenda_item.start_time && 
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="6"
+                                                                        height="6"
+                                                                        viewBox="0 0 6 6"
+                                                                        fill="none"
+                                                                    >
+                                                                    <circle cx="2.63721" cy="2.86279" r="2.63721" fill="#1C2329" />
+                                                                    </svg>
+                                                                }
                                                             </div>
                                                         )}
                                                         {agenda_item.start_time && (

@@ -13,7 +13,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
             { $pull: { saved_events: event._id } },
             { new: true }
         )
-        .populate("saved_events", "title date_from date_to location photo_url brief_description backlink")
+        .populate("saved_events", "title date_from date_to location photo_url brief_description backlink is_date_range")
         .lean() as any;
     
         if (!user) {
@@ -37,7 +37,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
             { $addToSet: { saved_events: event } },
             { new: true }
           )
-          .populate("saved_events", "title date_from date_to location photo_url brief_description backlink")
+          .populate("saved_events", "title date_from date_to location photo_url brief_description backlink is_date_range")
           .lean() as any;
         
           if (!user) {

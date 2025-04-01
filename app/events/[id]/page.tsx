@@ -40,7 +40,8 @@ export default function EventPage() {
     const params = useParams();
     const [isSaved, setIsSaved] = useState(savedEvents.some((event: any) => event.backlink === params.id));
 
-    
+    const { user, isSignedIn } = useUser();
+
     useEffect(() => {
         fetch(`/api/events/${params.id}`)
             .then((response) => response.json())
@@ -58,13 +59,18 @@ export default function EventPage() {
         setIsSaved(savedEvents.some((event: any) => event.backlink === params.id));
       }, [savedEvents]);
 
-
-    const { user, isSignedIn } = useUser();
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+            </div>
+        );
+    }
 
     if(!isSignedIn){
         return <SubscriptionPage/>;
     }
-      
+
     const handleSaveEvent = async () => {
         try {
             setLoading(true);
@@ -102,14 +108,6 @@ export default function EventPage() {
           setLoading(false);
         }
       };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
-            </div>
-        );
-    }
 
     if (!event) {
         return (

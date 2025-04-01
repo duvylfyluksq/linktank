@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
+import mongoose, {Schema, models, model} from 'mongoose';
 
-const { Schema, model, models } = mongoose;
 
 const EventSchema = new Schema({
     title: {
@@ -118,4 +117,6 @@ const EventSchema = new Schema({
     }
 }, { strict: false });
 
-export default models.Event || model("Event", EventSchema);
+const Event = models.Event || model("Event", EventSchema);
+
+export default Event;

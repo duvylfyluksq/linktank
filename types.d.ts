@@ -64,3 +64,5 @@ interface Event extends Document {
     backlink?: string;
     alrSaved: boolean;
 }
+
+type EventModel = Event;

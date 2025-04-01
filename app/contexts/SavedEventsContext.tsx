@@ -4,15 +4,15 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useUser } from "@clerk/nextjs";
 
 interface SavedEventsContextType {
-  savedEvents: Event[]; 
-  setSavedEvents: React.Dispatch<React.SetStateAction<Event[]>>;
+  savedEvents: EventModel[]; 
+  setSavedEvents: React.Dispatch<React.SetStateAction<EventModel[]>>;
 }
 
 const SavedEventsContext = createContext<SavedEventsContextType | undefined>(undefined);
 
 export function SavedEventsProvider({ children }: { children: ReactNode }) {
   const { isLoaded, isSignedIn, user } = useUser();
-  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
+  const [savedEvents, setSavedEvents] = useState<EventModel[]>([]);
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {

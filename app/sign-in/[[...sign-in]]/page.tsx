@@ -35,14 +35,16 @@ export default function SignInPage() {
                 />
                 <Clerk.FieldError className="block text-sm text-red-400" />
               </Clerk.Field>
-              <Clerk.Field name="password">
-                <Clerk.Label className="text-sm  font-medium text-zinc-950">Password</Clerk.Label>
-                <Clerk.Input
-                  type="password"
-                  className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
-                />
-                <Clerk.FieldError className="block text-sm text-red-400" />
-              </Clerk.Field>
+              <SignIn.Strategy name="password">
+                <Clerk.Field name="password">
+                  <Clerk.Label className="text-sm  font-medium text-zinc-950">Password</Clerk.Label>
+                  <Clerk.Input
+                    type="password"
+                    className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
+                  />
+                  <Clerk.FieldError className="block text-sm text-red-400" />
+                </Clerk.Field>
+              </SignIn.Strategy>
               <SignIn.Action 
                 navigate="forgot-password"
                 className="underline underline-offset-4"

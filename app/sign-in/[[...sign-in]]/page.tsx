@@ -99,6 +99,52 @@ export default function SignInPage() {
               </SignIn.Action>
             </SignIn.Strategy>
           </SignIn.Step>
+          <SignIn.Step
+            name="forgot-password"
+            className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:px-8"
+          >
+            <div className="flex items-center justify-center">
+              <Image
+                  src="/linktank_logo.png"
+                  alt="Linktank"
+                  width={100}
+                  height={100}
+                  className="w-10 h-10 mr-[0.625rem] rounded-full"
+              />
+              <span className="text-2xl font-bold">Linktank</span>
+            </div>
+            <Clerk.GlobalError className="block text-sm text-red-400" />
+            <SignIn.SupportedStrategy name="reset_password_email_code">
+              Reset your password via Email
+            </SignIn.SupportedStrategy>
+          </SignIn.Step>
+          <SignIn.Step
+            name="reset-password"
+            className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:px-8"
+          >
+            <div className="flex items-center justify-center">
+              <Image
+                  src="/linktank_logo.png"
+                  alt="Linktank"
+                  width={100}
+                  height={100}
+                  className="w-10 h-10 mr-[0.625rem] rounded-full"
+              />
+              <span className="text-2xl font-bold">Linktank</span>
+            </div>
+            <Clerk.GlobalError className="block text-sm text-red-400" />
+            <Clerk.Field name="password">
+              <Clerk.Label>New password</Clerk.Label>
+              <Clerk.Input />
+              <Clerk.FieldError />
+            </Clerk.Field>
+            <Clerk.Field name="confirmPassword">
+              <Clerk.Label>Confirm password</Clerk.Label>
+              <Clerk.Input />
+              <Clerk.FieldError />
+            </Clerk.Field>
+            <SignIn.Action submit>Update password</SignIn.Action>
+          </SignIn.Step>
         </SignIn.Root>
       </div>
     </div>

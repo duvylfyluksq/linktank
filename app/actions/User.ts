@@ -51,15 +51,14 @@ export async function updateUser(user: any) {
           { status: 404 }
         );
       }
-      if (result.modifiedCount === 0){
-        return NextResponse.json(
-            { success: true, message: "No changes made" },
-            { status: 204 }
-          );
-      }
+      // if (result.modifiedCount === 0){
+      //   return NextResponse.json(
+      //       { success: true, message: "No changes made" },
+      //       { status: 204 }
+      //     );
+      // }
       return NextResponse.json(
-        { success: true, message: "User updated successfully", result},
-        { status: 200 }
+        { success: true, message: "User updated successfully", result}, { status: 200 }
       );
     } 
     catch (error) {

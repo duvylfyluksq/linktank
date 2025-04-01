@@ -50,11 +50,10 @@ export async function POST(req: Request) {
   const eventType = evt.type
 
   if(eventType === "user.created"){
-    const { id, email_addresses, first_name, last_name, username, created_at, updated_at, last_sign_in_at} = evt.data;
+    const { id, email_addresses, first_name, last_name, created_at, updated_at, last_sign_in_at} = evt.data;
 
     const user = {
         clerk_id: id,
-        username: username,
         first_name: first_name,
         last_name: last_name,
         email: email_addresses?.[0]?.email_address,
@@ -78,11 +77,10 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.updated") {
-    const { id, email_addresses, first_name, last_name, username, updated_at, last_sign_in_at } = evt.data;
+    const { id, email_addresses, first_name, last_name, updated_at, last_sign_in_at } = evt.data;
 
     const user = {
       clerk_id: id,
-      username: username,
       first_name: first_name,
       last_name: last_name,
       email: email_addresses?.[0]?.email_address,

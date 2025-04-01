@@ -25,6 +25,7 @@ export async function GET(
 		})
 			.populate("organization", "name logo_url", Organization)
 			.populate("speakers", "name photo_url url twitter title", Speaker)
+			.populate({path: "agenda", populate: [{path: "speakers", model: Speaker}]})
 			.lean()
 			.exec() as any;
 
@@ -34,28 +35,6 @@ export async function GET(
 				{ status: 404 },
 			);
 		}
-
-		if (event.agenda) {
-			event.agenda = await Promise.all(
-			  event.agenda.map(async (dayAgenda) => {
-				return await Promise.all(
-				  dayAgenda.map(async (agendaItem) => {
-					if (agendaItem.speakers) {
-					  const populatedSpeakers = await Promise.all(
-						agendaItem.speakers.map(async (speakerId) => {
-						  return await Speaker.findById(speakerId)
-							.select("name photo_url url twitter title")
-							.lean();
-						})
-					  );
-					  agendaItem.speakers = populatedSpeakers;
-					}
-					return agendaItem;
-				  })
-				);
-			  })
-			);
-		  }
 
 		return NextResponse.json({ success: true, event });
 	} catch (error) {

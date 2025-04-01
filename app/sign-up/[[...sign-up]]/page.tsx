@@ -84,6 +84,19 @@ export default function SignUpPage() {
               </Clerk.Connection>
             </div>
           </SignUp.Step>
+          <SignUp.Step name="verifications">
+            <SignUp.Strategy name="email_code">
+              <h1>Check your email</h1>
+
+              <Clerk.Field name="code">
+                <Clerk.Label>Email Code</Clerk.Label>
+                <Clerk.Input />
+                <Clerk.FieldError />
+              </Clerk.Field>
+
+              <SignUp.Action submit>Verify</SignUp.Action>
+            </SignUp.Strategy>
+        </SignUp.Step>
         </SignUp.Root>
       </div>
     </div>

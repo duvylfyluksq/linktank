@@ -2,12 +2,16 @@
 
 // import { SignUp} from '@clerk/nextjs'
 import Image from "next/image";
-// import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 import * as Clerk from '@clerk/elements/common';
 import * as SignUp from '@clerk/elements/sign-up';
+import AuthTabs from "../../../components/AuthTabs";
 
 export default function SignUpPage() {
   // return <SignUp routing="path" path="/sign-up" />;
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-[#D1E7FD]">
       <div className="grid w-full flex-grow items-center px-4 justify-center pt-20">
@@ -26,11 +30,12 @@ export default function SignUpPage() {
               />
               <span className="text-2xl font-bold">Linktank</span>
             </div>
+            <AuthTabs/>
             <Clerk.GlobalError className="block text-sm text-red-400" />
             <div className="flex-row flex-grow items-center space-y-4 justify-center">
               <div className="flex items-center gap-2">
                 <Clerk.Field name="firstName">
-                  <Clerk.Label className="text-sm font-medium text-zinc-950">First Name</Clerk.Label>
+                  <Clerk.Label className="text-sm font-medium text-zinc-950">First Name<span className="text-red-500">*</span></Clerk.Label>
                   <Clerk.Input
                     type="text"
                     className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
@@ -38,7 +43,7 @@ export default function SignUpPage() {
                   <Clerk.FieldError className="block text-sm text-red-400" />
                 </Clerk.Field>
                 <Clerk.Field name="lastName">
-                  <Clerk.Label className="text-sm font-medium text-zinc-950">Last Name</Clerk.Label>
+                  <Clerk.Label className="text-sm font-medium text-zinc-950">Last Name<span className="text-red-500">*</span></Clerk.Label>
                   <Clerk.Input
                     type="text"
                     className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
@@ -47,7 +52,7 @@ export default function SignUpPage() {
                 </Clerk.Field>
               </div>
               <Clerk.Field name="emailAddress">
-                <Clerk.Label className="text-sm font-medium text-zinc-950">Email</Clerk.Label>
+                <Clerk.Label className="text-sm font-medium text-zinc-950">Email<span className="text-red-500">*</span></Clerk.Label>
                 <Clerk.Input
                   type="email"
                   className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
@@ -55,11 +60,23 @@ export default function SignUpPage() {
                 <Clerk.FieldError className="block text-sm text-red-400" />
               </Clerk.Field>
               <Clerk.Field name="password">
-                <Clerk.Label className="text-sm  font-medium text-zinc-950">Password</Clerk.Label>
-                <Clerk.Input
-                  type="password"
-                  className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
-                />
+                <Clerk.Label className="text-sm font-medium text-zinc-950">
+                  Password<span className="text-red-500">*</span>
+                </Clerk.Label>
+                <div className="relative">
+                  <Clerk.Input
+                    type={showPassword ? "text" : "password"}
+                    required
+                    className="w-full rounded-md bg-white px-3.5 py-2 pr-10 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-900 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 <Clerk.FieldError className="block text-sm text-red-400" />
               </Clerk.Field>
             </div>

@@ -153,9 +153,14 @@ export default function Home() {
         <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem] max-sm:w-full max-sm:px-5 max-sm:mt-5">
             <div className="w-full flex flex-row justify-between items-center max-sm:flex-col max-sm:items-start">
                 <div className="flex flex-row items-center gap-2 max-sm:w-full">
-                    <h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px] ">
-                        Upcoming Events
-                    </h3>
+                    <div>
+                        <h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px] ">
+                            My calendar
+                        </h3>
+                        <p className="text-gray-700">
+                            These are your saved events
+                        </p>
+                    </div>
                     <div className="flex gap-2.5 max-sm:ml-auto sm:hidden">
                         <Button
                             variant={

@@ -23,8 +23,8 @@ export async function GET(
 		const event = await Event.findOne({
 			backlink: id,
 		})
-			.populate("organization", "name logo_url", Organization)
-			.populate("speakers", "name photo_url url twitter title", Speaker)
+			.populate({path: "organization", model: Organization})
+			.populate({path: "speakers", model: Speaker})
 			.populate({path: "agenda", populate: [{path: "speakers", model: Speaker}]})
 			.lean()
 			.exec() as any;

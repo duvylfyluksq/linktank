@@ -34,7 +34,7 @@ const displayTime = (date) => {
 };
 
 export default function EventPage() {
-    const [event, setEvent] = useState<Event | null>(null);
+    const [event, setEvent] = useState<EventModel | null>(null);
     const [loading, setLoading] = useState(true);
     const { savedEvents, setSavedEvents } = useSavedEvents();
     const params = useParams();
@@ -154,7 +154,7 @@ export default function EventPage() {
                                     By{" "}
                                     <Link
                                         className="text-[#1F76F9]"
-                                        href="/organizations/rand"
+                                        href={event.organization.url}
                                     >
                                         {event.organization?.name}
                                     </Link>

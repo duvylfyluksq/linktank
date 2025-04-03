@@ -14,7 +14,7 @@ export async function GET(request: Request) {
         : { date_from: { $gte: new Date() } };
         const events = await Event.find(query)
             .sort({ date_from: 1 })
-            .populate("organization", "name", Organization)
+            .populate({path: "organization", model: Organization})
             .exec();
         return NextResponse.json(
             { success: true, events: events },

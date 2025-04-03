@@ -8,8 +8,9 @@ interface Speaker {
     url?: string; // Optional, assuming URLField is a string
     twitter?: string; // Optional
 }
+
 interface Organization {
-    id: string;
+    _id: string;
     name: string;
     url: string; // Assuming URLField is a string
     events_url: string; // Assuming URLField is a string
@@ -45,7 +46,7 @@ interface Event extends Document {
         speakers: Speaker[];
     }[][];
     speakers?: Speaker[];
-    organization?: Organization;
+    organization: Organization;
     photo_url?: string;
     is_date_range: boolean;
     is_virtual?: boolean;

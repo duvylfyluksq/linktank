@@ -92,22 +92,22 @@ export default function EventPage() {
     };
 
     const handleUnsaveEvent = async () => {
-        setLoading(true);
         try {
-          const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          const data = await res.json();
-          setSavedEvents(data.saved_events);
+            setLoading(true);
+            const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
+                method: "DELETE",
+                headers: {
+                "Content-Type": "application/json",
+                },
+            });
+            const data = await res.json();
+            setSavedEvents(data.saved_events);
         } catch (error) {
           console.error("Error removing saved event:", error);
         } finally {
           setLoading(false);
         }
-      };
+    };
 
     if (!event) {
         return (

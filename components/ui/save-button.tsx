@@ -1,73 +1,75 @@
 import { Button } from "@/components/ui/button";
-import { Bookmark } from "lucide-react";
-import { useState } from "react";
+import { Bookmark, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
+import { useUser } from "@clerk/nextjs";
 
 interface SaveButtonProps {
-	className?: string;
 	eventId: string;
-	isSaved?: boolean;
-	onToggle?: (newState: boolean) => void;
 }
 
 export function SaveButton({
-	className,
-	eventId,
-	isSaved = false,
-	onToggle,
+	eventId
 }: SaveButtonProps) {
-	const [saved, setSaved] = useState(isSaved);
+	const [loading, setLoading] = useState(false);
+	const {savedEvents, setSavedEvents} = useSavedEvents();
+	const [isSaved, setIsSaved] = useState(savedEvents.some((event: any) => event.backlink === eventId));
+	const {user} = useUser();
 
-	const handleAction = async (event: React.MouseEvent) => {
-		event.preventDefault();
-		event.stopPropagation();
-		if (saved) {
-			// Unsave the event
-			try {
-				const response = await fetch("/api/saveevent", {
-					method: "DELETE",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ eventId }),
-				});
-				const data = await response.json();
-				if (response.ok) {
-					console.log("Event removed from saved events:", data);
-					setSaved(false);
-					if (onToggle) onToggle(false);
-				} else {
-					console.error("Failed to remove saved event:", data.message);
-				}
-			} catch (error) {
-				console.error("Error unsaving event:", error);
-			}
-		} else {
-			// Save the event
-			try {
-				const response = await fetch("/api/saveevent", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ eventId }),
-				});
-				const data = await response.json();
-				if (response.ok) {
-					console.log("Event saved successfully:", data);
-					setSaved(true);
-					if (onToggle) onToggle(true);
-				} else {
-					console.error("Failed to save event:", data.message);
-				}
-			} catch (error) {
-				console.error("Error saving event:", error);
-			}
-		}
-	};
+	useEffect(() => {
+		setIsSaved(savedEvents.some((event: any) => event.backlink === eventId));
+		}, [savedEvents]);
 
+	if(!user){
+		return null;
+	}
+
+	const handleSaveEvent = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();    
+        try {
+            setLoading(true);
+            const res = await fetch(`/api/users/${user.id}/saved_events/${eventId}`, {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+            });
+
+            const data = await res.json();
+            setSavedEvents(data.saved_events);
+
+        } catch (error) {
+            console.error("Error saving event:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleUnsaveEvent = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault(); 
+        try {
+            setLoading(true);
+            const res = await fetch(`/api/users/${user.id}/saved_events/${eventId}`, {
+                method: "DELETE",
+                headers: {
+                "Content-Type": "application/json",
+                },
+            });
+            const data = await res.json();
+            setSavedEvents(data.saved_events);
+
+        } catch (error) {
+          console.error("Error removing saved event:", error);
+        } finally {
+          setLoading(false);
+        }
+    };
+    
 	return (
 		<Button
-			onClick={handleAction}
+			onClick={isSaved ? handleUnsaveEvent : handleSaveEvent}
 			variant="secondary"
 			size="sm"
 			className={`
@@ -83,11 +85,14 @@ export function SaveButton({
         items-center 
         gap-1.5
         max-sm:w-[4rem]
-        ${className || ""}
       `}
 		>
-			<Bookmark className={`w-4 h-4 ${saved ? "fill-white" : "fill-none"}`} />
-			{saved ? "Saved" : "Save"}
+			{loading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+                <Bookmark className={`w-4 h-4 ${isSaved ? "fill-white" : "fill-none"}`} />
+            )}
+			{!loading && (isSaved ? "Saved" : "Save")}
 		</Button>
 	);
 }

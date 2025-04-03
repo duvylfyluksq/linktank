@@ -26,22 +26,24 @@ function removeMediaTags(htmlString: string): string {
     return div.innerHTML;
 }
 
-export const EventCard = ({ event }: { event: Event }) => {
+export const EventCard = ({ event }: { event: EventModel }) => {
     return (
         <Link href={`/events/${event.backlink}`} key={event._id}>
             <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full">
                 {/* Text container: add min-w-0 to prevent overflow issues */}
                 <div className="flex-1 flex flex-col gap-[0.5rem]">
                     <div className="flex items-center opacity-70 font-jakarta text-[0.8rem] md:text-[1rem] font-medium gap-2">
-                        <p className="flex-shrink-0">
-                            {new Date(event.date_from).toLocaleTimeString(
-                                "en-US",
-                                {
-                                    hour: "numeric",
-                                    minute: "numeric",
-                                }
-                            )}
-                        </p>
+                        {!event.is_date_range && 
+                            (<p className="flex-shrink-0">
+                                {new Date(event.date_from).toLocaleTimeString(
+                                    "en-US",
+                                    {
+                                        hour: "numeric",
+                                        minute: "numeric",
+                                    }
+                                )}
+                            </p>)
+                        }
                         <MapPin className="flex-shrink-0" size={16} />
                         <p className="line-clamp-1">{event.location}</p>
                     </div>
@@ -81,8 +83,7 @@ export const EventCard = ({ event }: { event: Event }) => {
                     />
                     <div className="absolute top-2 right-2 max:sm:right-4 max:sm:top-4">
                         <SaveButton
-                            eventId={event._id}
-                            isSaved={event.alrSaved}
+                            eventId={event.backlink}
                         />
                     </div>
                 </div>

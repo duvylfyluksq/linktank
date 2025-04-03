@@ -61,8 +61,7 @@ interface Event extends Document {
     contact_name?: string;
     contact_phone?: string;
     contact_email?: string;
-    backlink?: string;
-    alrSaved: boolean;
+    backlink: string;
 }
 
 type EventModel = Event;

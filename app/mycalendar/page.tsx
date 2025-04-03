@@ -17,10 +17,12 @@ import {
 import SkeletonCard from "@/app/events/SkeletonCard";
 import { Input } from "@/components/ui/input";
 import debounce from "lodash/debounce";
+import { useSavedEvents } from "../contexts/SavedEventsContext";
 
 export default function Home() {
     const [date, setDate] = useState<Date | undefined>(() => new Date());
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<EventModel[]>([]);
+    console.log(events);
     const [organizations, setOrganizations] = useState<
         { name: string; _id: string }[]
     >([]);
@@ -28,6 +30,8 @@ export default function Home() {
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [mobileCalendarOpen, setMobileCalendarOpen] = useState(false);
+
+    const {savedEvents} = useSavedEvents();
 
     // Debounced search function
     const debouncedSearch = debounce(async (searchTerm: string) => {
@@ -60,7 +64,7 @@ export default function Home() {
     const today = useMemo(() => new Date(), []);
 
     // Group events by date for display
-    const groupedEvents: Record<string, Event[]> = events.reduce(
+    const groupedEvents: Record<string, EventModel[]> = savedEvents.reduce(
         (acc, event) => {
             const dateKey = new Date(event.date_from).toLocaleDateString(
                 "en-US",
@@ -279,12 +283,7 @@ export default function Home() {
                                           </time>
                                           {events.map((event) => (
                                               <EventCard
-                                                  event={{
-                                                      ...event,
-                                                      alrSaved:
-                                                          event.alrSaved ??
-                                                          false,
-                                                  }}
+                                                  event={event}
                                                   key={event._id}
                                               />
                                           ))}
@@ -295,27 +294,24 @@ export default function Home() {
                     <div className="hidden sm:block">
                         {loading
                             ? Array.from({ length: 5 }).map((_, i) => (
-                                  <SkeletonCard key={i} />
-                              ))
+                                    <SkeletonCard key={i} />
+                                ))
                             : Object.entries(groupedEvents).map(
-                                  ([date, groupedEvents]) => (
-                                      <li key={date} className="mb-10 ms-4">
-                                          <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
-                                          <time className="mb-1 text-xl font-semibold leading-none">
-                                              {date}
-                                          </time>
-                                          {groupedEvents.map((event) => (
-                                              <EventCard
-                                                  event={{
-                                                      ...event,
-                                                      alrSaved: true,
-                                                  }}
-                                                  key={event._id}
-                                              />
-                                          ))}
-                                      </li>
-                                  )
-                              )}
+                                    ([date, groupedEvents]) => (
+                                        <li key={date} className="mb-10 ms-4">
+                                            <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
+                                            <time className="mb-1 text-xl font-semibold leading-none">
+                                                {date}
+                                            </time>
+                                            {groupedEvents.map((event) => (
+                                                <EventCard
+                                                    event={event}
+                                                    key={event._id}
+                                                />
+                                            ))}
+                                        </li>
+                                    )
+                                )}
                     </div>
                 </ol>
 

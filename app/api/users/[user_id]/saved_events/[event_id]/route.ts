@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import Event from "@/models/Event";
+import Organization from "@/models/Organization";
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ user_id: string, event_id: string }> }){
     await dbConnect();
@@ -13,7 +14,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ u
             { $pull: { saved_events: event._id } },
             { new: true }
         )
-        .populate({path: "saved_events", model: Event})
+        .populate({path: "saved_events", model: Event, populate: {path: "organization", model: Organization}})
         .lean() as any;
     
         if (!user) {
@@ -37,7 +38,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ use
             { $addToSet: { saved_events: event } },
             { new: true }
           )
-          .populate({path: "saved_events", model: Event})
+          .populate({path: "saved_events", model: Event, populate: {path: "organization", model: Organization}})
           .lean() as any;
         
           if (!user) {

@@ -18,7 +18,7 @@ export default function SignUpPage() {
         <SignUp.Root>
           <SignUp.Step
             name="start"
-            className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:px-8"
+            className="w-[36rem] min-w-[20rem] space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:px-8"
           >
             <div className="flex items-center justify-center">
               <Image
@@ -35,38 +35,42 @@ export default function SignUpPage() {
             <div className="flex-row flex-grow items-center space-y-4 justify-center">
               <div className="flex items-center gap-2">
                 <Clerk.Field name="firstName">
-                  <Clerk.Label className="text-sm font-medium text-zinc-950">First Name<span className="text-red-500">*</span></Clerk.Label>
+                  <Clerk.Label className="text-sm font-medium text-gray-700">First Name<span className="text-red-500">*</span></Clerk.Label>
                   <Clerk.Input
                     type="text"
+                    placeholder="Vedanta"
                     className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
                   />
                   <Clerk.FieldError className="block text-sm text-red-400" />
                 </Clerk.Field>
                 <Clerk.Field name="lastName">
-                  <Clerk.Label className="text-sm font-medium text-zinc-950">Last Name<span className="text-red-500">*</span></Clerk.Label>
+                  <Clerk.Label className="text-sm font-medium text-gray-700">Last Name<span className="text-red-500">*</span></Clerk.Label>
                   <Clerk.Input
                     type="text"
+                    placeholder="Neogi"
                     className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
                   />
                   <Clerk.FieldError className="block text-sm text-red-400" />
                 </Clerk.Field>
               </div>
               <Clerk.Field name="emailAddress">
-                <Clerk.Label className="text-sm font-medium text-zinc-950">Email<span className="text-red-500">*</span></Clerk.Label>
+                <Clerk.Label className="text-sm font-medium text-gray-700">Email<span className="text-red-500">*</span></Clerk.Label>
                 <Clerk.Input
                   type="email"
+                  placeholder="vedanta@techbrig.co"
                   className="w-full rounded-md bg-white px-3.5 py-2 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
                 />
                 <Clerk.FieldError className="block text-sm text-red-400" />
               </Clerk.Field>
               <Clerk.Field name="password">
-                <Clerk.Label className="text-sm font-medium text-zinc-950">
+                <Clerk.Label className="text-sm font-medium text-gray-700">
                   Password<span className="text-red-500">*</span>
                 </Clerk.Label>
                 <div className="relative">
                   <Clerk.Input
                     type={showPassword ? "text" : "password"}
                     required
+                    placeholder="Create password"
                     className="w-full rounded-md bg-white px-3.5 py-2 pr-10 text-sm outline-none ring-1 ring-inset ring-zinc-300 hover:ring-zinc-400 focus:ring-[1.5px] focus:ring-zinc-950 data-[invalid]:ring-red-400"
                   />
                   <button
@@ -90,13 +94,13 @@ export default function SignUpPage() {
               <Clerk.Connection name="google" className="flex-1">
                 <div className="flex items-center justify-center gap-2 rounded-[9px] border-[1.23px] border-[#CBD5E1] px-4 py-2 whitespace-nowrap flex-grow">
                   <Clerk.Icon/>
-                  <span>Continue with Google</span>
+                  <span className="text-gray-700">Continue with Google</span>
                 </div>
               </Clerk.Connection>
               <Clerk.Connection name="apple" className="flex-1">
                 <div className="flex items-center justify-center gap-2 rounded-[9px] border-[1.23px] border-[#CBD5E1] px-4 py-2 whitespace-nowrap flex-grow">
                     <Clerk.Icon/>
-                    <span>Continue with Apple</span>
+                    <span className="text-gray-700">Continue with Apple</span>
                 </div>
               </Clerk.Connection>
             </div>

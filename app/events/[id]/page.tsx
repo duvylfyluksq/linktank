@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Bookmark, Calendar, ExternalLink, MapPin } from "lucide-react";
+import { Bookmark, Calendar, ExternalLink, MapPin, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -39,6 +39,7 @@ export default function EventPage() {
     const { savedEvents, setSavedEvents } = useSavedEvents();
     const params = useParams();
     const [isSaved, setIsSaved] = useState(savedEvents.some((event: any) => event.backlink === params.id));
+    const [isSaving, setIsSaving] = useState(false);
 
     const { user, isSignedIn } = useUser();
 
@@ -73,7 +74,7 @@ export default function EventPage() {
 
     const handleSaveEvent = async () => {
         try {
-            setLoading(true);
+            setIsSaving(true);
             const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
                 method: "POST",
                 headers: {
@@ -87,13 +88,13 @@ export default function EventPage() {
         } catch (error) {
             console.error("Error saving event:", error);
         } finally {
-            setLoading(false);
+            setIsSaving(false);
         }
     };
 
     const handleUnsaveEvent = async () => {
         try {
-            setLoading(true);
+            setIsSaving(true);
             const res = await fetch(`/api/users/${user.id}/saved_events/${params.id}`, {
                 method: "DELETE",
                 headers: {
@@ -105,7 +106,7 @@ export default function EventPage() {
         } catch (error) {
           console.error("Error removing saved event:", error);
         } finally {
-          setLoading(false);
+            setIsSaving(false);
         }
     };
 
@@ -173,9 +174,14 @@ export default function EventPage() {
                                         </span>
                                     </Button>
                                 </Link>
-                                <Button className="bg-[#1C2329] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]"
-                                        onClick={isSaved ? handleUnsaveEvent : handleSaveEvent}
+                                <Button
+                                className="bg-[#1C2329] border-[1px] border-[#3F4749] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem]"
+                                onClick={isSaved ? handleUnsaveEvent : handleSaveEvent}
                                 >
+                                {isSaving ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <>
                                     {isSaved ? (
                                         <Bookmark fill="white" className="w-4 h-4" />
                                     ) : (
@@ -184,6 +190,8 @@ export default function EventPage() {
                                     <span className="text-[1rem]">
                                         {isSaved ? "Saved" : "Save event"}
                                     </span>
+                                    </>
+                                )}
                                 </Button>
                             </div>
                         </div>
@@ -358,29 +366,6 @@ export default function EventPage() {
                                             </div>
                                             <div>
                                                 {agenda_item.speakers?.map((speaker) => (
-                                                    // <div
-                                                    //     key={speaker.name}
-                                                    //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
-                                                    // >
-                                                    //     <Image
-                                                    //         src={
-                                                    //             speaker?.photo_url ||
-                                                    //             "/linktank_logo.png"
-                                                    //         }
-                                                    //         alt={`${speaker?.name} image`}
-                                                    //         width={1000}
-                                                    //         height={1000}
-                                                    //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover"
-                                                    //     />
-                                                    //     <div className="flex flex-col h-full justify-center">
-                                                    //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
-                                                    //             {speaker?.name}
-                                                    //         </h3>
-                                                    //         <p className="text-[#71717A] text-sm font-jakarta">
-                                                    //             {speaker?.title}
-                                                    //         </p>
-                                                    //     </div>
-                                                    // </div>
                                                     SpeakerCard({ speaker })
                                                 ))}
                                             </div>
@@ -392,29 +377,6 @@ export default function EventPage() {
                     <TabsContent value="speakers">
                         <div className="flex flex-col gap-6 w-full mt-6">
                             {event.speakers?.map((speaker) => (
-                                // <div
-                                //     key={speaker.name}
-                                //     className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
-                                // >
-                                //     <Image
-                                //         src={
-                                //             speaker?.photo_url ||
-                                //             "/linktank_logo.png"
-                                //         }
-                                //         alt={`${speaker?.name} image`}
-                                //         width={1000}
-                                //         height={1000}
-                                //         className="h-[4.25rem] w-[4.25rem] rounded-full object-cover flex-shrink-0"
-                                //     />
-                                //     <div className="flex flex-col h-full justify-center">
-                                //         <h3 className="text-[#1C2329] font-semibold text-base font-jakarta">
-                                //             {speaker?.name}
-                                //         </h3>
-                                //         <p className="text-[#71717A] text-sm font-jakarta">
-                                //             {speaker?.title}
-                                //         </p>
-                                //     </div>
-                                // </div>
                                 SpeakerCard({ speaker })
                             ))}
                         </div>

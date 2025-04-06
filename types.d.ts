@@ -7,6 +7,7 @@ interface Speaker {
     photo_url?: string; // Optional, assuming URLField is a string
     url?: string; // Optional, assuming URLField is a string
     twitter?: string; // Optional
+    linkedin?: string;
 }
 
 interface Organization {

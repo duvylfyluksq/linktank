@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SavedEventsProvider } from "./contexts/SavedEventsContext";
+import { localization } from "./localization";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({
 	return (
 		<ClerkProvider
 			publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+			localization={localization}
 		>
 			<SavedEventsProvider>
 				<html lang="en">

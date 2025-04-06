@@ -84,7 +84,7 @@ export default function Organizations() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {filteredOrganizations.map((org) => (
-                            <Link href={org.url} key={org._id}>
+                            <Link href={org.url} key={org._id} target="_blank" rel="noopener noreferrer">
                                 <div
                                     key={org._id}
                                     className="border border-[#D3D0D0] bg-white rounded-[10px] shadow-sm

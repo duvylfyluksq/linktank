@@ -13,7 +13,8 @@ const SpeakerSchema: Schema = new Schema({
     title: { type: String, required: true },
     photo_url: { type: String, required: true },
     url: { type: String, required: true },
-    twitter: { type: String, required: true }
+    twitter: { type: String, required: true },
+    linkedin: {type: String, required: true}
 });
 
 const Speaker = models.Speaker || model("Speaker", SpeakerSchema);

@@ -3,7 +3,7 @@ import { EventCard } from "@/components/event-card";
 
 interface TimelineProps {
     events: Event[];
-    loading: boolean;
+    loading?: boolean;
 }
 
 export const Timeline = ({ events, loading }: TimelineProps) => {

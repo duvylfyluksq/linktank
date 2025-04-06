@@ -43,7 +43,7 @@ const images1 = [
 
 const images2 = ["/landing-3-1.jpg", "/landing-3-2.jpg", "/landing-3-3.jpg"];
 
-export default function Landing() {
+export default function Landing({ events }: { events: Event[] }) {
     const [isYearly, setIsYearly] = useState(true);
 
     const price = isYearly ? "99.97" : "10.97";
@@ -58,6 +58,7 @@ export default function Landing() {
                     alt=""
                     width={1920}
                     height={1080}
+                    priority
                     className="w-full h-auto absolute bottom-0"
                 />
                 <div className="w-full max-w-[42.875rem] flex flex-col items-center gap-[1.625rem]">
@@ -82,7 +83,7 @@ export default function Landing() {
                     </div>
                 </div>
             </div>
-            <EventsSection />
+            <EventsSection events={events} />
             <div className="min-h-[35.0625rem] bg-[#EDFAFF] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
                 <div className="flex flex-col md:flex-row gap-[2.6875rem] max-w-[75rem]">
                     <div className="flex flex-col gap-[1.625rem] w-full md:w-[36.25rem]">
@@ -109,8 +110,9 @@ export default function Landing() {
                                     key={`${image}-${index}`}
                                     src={image || "/placeholder.svg"}
                                     alt=""
-                                    width={100}
-                                    height={100}
+                                    width={250}
+                                    height={250}
+                                    loading="lazy"
                                     className="h-full w-full object-cover rounded-[1.25375rem]"
                                 />
                             </div>
@@ -123,53 +125,77 @@ export default function Landing() {
                     Events and insights from organizations and experts shaping
                     conversations today
                 </h4>
-                <div className="flex flex-wrap justify-center gap-[1.3125rem] flex-shrink-0">
+                <div className="flex flex-wrap justify-center gap-[1.3125rem] flex-shrink-0 items-center">
                     <Image
                         src="/rand.svg"
                         alt="RAND Organization Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] w-auto flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[3.9375rem] w-auto flex-shrink-0 rounded-[10px] grayscale"
                     />
 
                     <Image
                         src="/Cato_Institute.svg"
                         alt="CATO Institute Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] w-auto flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[3.48588rem] w-auto flex-shrink-0 grayscale"
                     />
 
                     <Image
                         src="/foodtank-inverted.webp"
                         alt="Food Tank Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] w-auto flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[2.68513rem] w-auto flex-shrink-0 grayscale"
                     />
 
                     <Image
                         src="/csis.jpg"
                         alt="CSIS Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] w-auto flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[4.4375rem] w-auto flex-shrink-0 rounded-[10px] grayscale"
                     />
 
                     <Image
                         src="/heritage.png"
                         alt="Heritage Foundation Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] scale-125 w-auto flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[3.92388rem] w-auto scale-[1.3] flex-shrink-0 grayscale"
                     />
 
                     <Image
                         src="/brookings.png"
                         alt="Brookings Logo"
-                        width={100}
-                        height={100}
-                        className="h-[3rem] md:h-[4.9375rem] w-auto scale-[1.3] flex-shrink-0"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:w-[11.77556rem] md:h-auto w-auto flex-shrink-0 grayscale"
+                    />
+
+                    <Image
+                        src="/usip.jpg"
+                        alt="United States Institute of Peace Logo"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[4.5rem] w-auto flex-shrink-0 grayscale rounded-[10px]"
+                    />
+
+                    <Image
+                        src="/wilson.jpg"
+                        alt="Wilson Centre Logo"
+                        width={250}
+                        height={250}
+                        loading="lazy"
+                        className="h-[3rem] md:h-[4.5rem] w-auto flex-shrink-0 grayscale rounded-[10px]"
                     />
                 </div>
             </div>
@@ -226,8 +252,9 @@ export default function Landing() {
                                     key={`${image}-${index}`}
                                     src={image || "/placeholder.svg"}
                                     alt=""
-                                    width={1000}
-                                    height={1000}
+                                    width={250}
+                                    height={250}
+                                    loading="lazy"
                                     className="h-full w-full object-cover rounded-[0.50888rem]"
                                 />
                             </div>

@@ -5,6 +5,7 @@ import { Bell, Check, TrendingUp, Users, Wand } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import EventsSection from "./pages/event-section";
+import Link from "next/link";
 
 const features = [
     {
@@ -61,7 +62,7 @@ export default function Landing({ events }: { events: Event[] }) {
                     priority
                     className="w-full h-auto absolute bottom-0"
                 />
-                <div className="w-full max-w-[42.875rem] flex flex-col items-center gap-[1.625rem]">
+                <div className="w-full max-w-[42.875rem] flex flex-col items-center gap-[1.625rem] z-10">
                     <h1 className="text-[#113663] font-jakarta text-[2rem] md:text-[2.5rem] font-extrabold text-center">
                         Discover Conversations that
                         <br />
@@ -74,9 +75,11 @@ export default function Landing({ events }: { events: Event[] }) {
                     </p>
 
                     <div className="flex flex-row flex-wrap gap-[0.56rem] w-full justify-center">
-                        <Button className="flex-1 sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem]">
-                            Get Started
-                        </Button>
+                        <Link href="/sign-up">
+                            <Button className="flex-1 sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem]">
+                                Get Started
+                            </Button>
+                        </Link>
                         <Button className="flex-1 sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-transparent text-[#113663] hover:bg-transparent shadow-none font-inter font-semibold text-[0.875rem] md:text-[1rem]">
                             Learn More
                         </Button>

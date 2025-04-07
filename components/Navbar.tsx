@@ -1,23 +1,44 @@
 "use client";
 
 import Image from "next/image";
+
 import Link from "next/link";
 import {
     SignUpButton,
     SignedIn,
     SignedOut,
-    UserButton,
     useUser,
+    SignOutButton
 } from "@clerk/nextjs";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+  } from "@/components/ui/dropdown-menu";
+import { LogOut, User } from "lucide-react";
 import SearchPalette from "./SearchPalette";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
+import { useState } from "react";
+import AccountModal from "./AccountModal";
 
 const Navbar = () => {
     const { user } = useUser();
     const pathname = usePathname();
+    const [accountModalOpen, setAccountModalOpen] = useState(false);
+
+    const handleOpenChange = (open: boolean) => {
+        setAccountModalOpen(open);      
+        if (!open) {
+          setTimeout(() => {
+            const active = document.activeElement as HTMLElement;
+            if (active) active.blur();
+          }, 10);
+        }
+      };
 
     return (
         <nav className="flex items-center justify-between h-[6rem] py-6 px-12 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
@@ -81,21 +102,60 @@ const Navbar = () => {
                     </SignedOut>
 
                     <SignedIn>
-                        <div className="flex items-center gap-x-2 bg-secondaryBlue text-black shadow-none flex-row">
-                            <UserButton />
-                            <div className="text-sm leading-tight">
-                                <h4 className="text-base text-[#1C2329] font-semibold">
-                                    {user?.fullName}
-                                </h4>
-                                <p className="text-base text-gray-500">
-                                    {user?.username}
-                                </p>
-                            </div>
-                            <ChevronDownIcon className="text-[#737272] w-6 h-6" />
-                        </div>
+                        {!accountModalOpen && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <button className="flex items-center gap-x-2 text-black shadow-none px-3 py-2 rounded-md transition-none focus:outline-none">
+                                        <img
+                                            src={user?.imageUrl || ""}
+                                            alt="User avatar"
+                                            className="w-8 h-8 rounded-full object-cover"
+                                        />
+                                        <div className="text-sm leading-tight text-left">
+                                            <h4 className="text-base text-[#1C2329] font-semibold">
+                                                {user?.fullName}
+                                            </h4>
+                                            <p className="text-sm text-gray-500">
+                                                {user?.primaryEmailAddress?.emailAddress}
+                                            </p>
+                                        </div>
+                                        <ChevronDownIcon className="text-[#737272] w-5 h-5 ml-1" />
+                                    </button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent 
+                                    align="start"
+                                    sideOffset={0}
+                                    alignOffset={4}
+                                    className="w-[--radix-dropdown-menu-trigger-width] shadow-md border rounded-md bg-white"
+                                >
+                                    <DropdownMenuItem
+                                        className="cursor-pointer"
+                                        onClick={() => {
+                                            setAccountModalOpen(true);
+                                        }}
+                                    >
+                                        <User className="mr-2 h-4 w-4"/>
+                                        My account
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem asChild className="cursor-pointer text-red-500 focus:text-red-600">
+                                        <SignOutButton>
+                                            <div className="flex items-center">
+                                                <LogOut className="mr-2 h-4 w-4" />
+                                                Logout
+                                            </div>
+                                        </SignOutButton>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
                     </SignedIn>
                 </div>
             </div>
+            <AccountModal
+                open={accountModalOpen}
+                onOpenChange={handleOpenChange}
+            />
         </nav>
     );
 };

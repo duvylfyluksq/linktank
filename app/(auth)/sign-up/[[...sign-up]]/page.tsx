@@ -1,25 +1,45 @@
 "use client";
 
 import { SignUp} from '@clerk/nextjs'
-import { appearance } from './appearance';
-// import Image from "next/image";
+import { appearance } from '../../appearance';
+import Image from "next/image";
 // import { Eye, EyeOff } from "lucide-react";
 // import { useState } from "react";
 // import * as Clerk from '@clerk/elements/common';
 // import * as SignUp from '@clerk/elements/sign-up';
-// import AuthTabs from "../../../components/AuthTabs";
+import AuthTabs from "@/components/AuthTabs";
 
 export default function SignUpPage() {
 
   return (
-        <div className="py-10">
+    <div className="py-10 flex justify-center">
+      <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
+        <div className="flex items-center justify-center px-6 pt-6">
+          <Image
+            src="/linktank_logo.png"
+            alt="Linktank"
+            width={100}
+            height={100}
+            className="w-10 h-10 mr-[0.625rem] rounded-full"
+          />
+          <span className="text-2xl font-bold">Linktank</span>
+        </div>
+  
+        <div className="px-6 mt-4">
+          <AuthTabs />
+        </div>
+  
+        <div className="px-0 mt-2">
           <SignUp
             path="/sign-up"
             routing="path"
             appearance={appearance}
           />
         </div>
+      </div>
+    </div>
   );
+  
   // const [showPassword, setShowPassword] = useState(false);
 
   // return (
@@ -30,17 +50,17 @@ export default function SignUpPage() {
   //           name="start"
   //           className="w-[36rem] min-w-[20rem] space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:px-8"
   //         >
-  //           <div className="flex items-center justify-center">
-  //             <Image
-  //                 src="/linktank_logo.png"
-  //                 alt="Linktank"
-  //                 width={100}
-  //                 height={100}
-  //                 className="w-10 h-10 mr-[0.625rem] rounded-full"
-  //             />
-  //             <span className="text-2xl font-bold">Linktank</span>
-  //           </div>
-  //           <AuthTabs/>
+            // <div className="flex items-center justify-center">
+            //   <Image
+            //       src="/linktank_logo.png"
+            //       alt="Linktank"
+            //       width={100}
+            //       height={100}
+            //       className="w-10 h-10 mr-[0.625rem] rounded-full"
+            //   />
+            //   <span className="text-2xl font-bold">Linktank</span>
+            // </div>
+            // <AuthTabs/>
   //           <Clerk.GlobalError className="block text-sm text-red-400" />
   //           <div className="flex-row flex-grow items-center space-y-4 justify-center">
   //             <div className="flex items-center gap-2">

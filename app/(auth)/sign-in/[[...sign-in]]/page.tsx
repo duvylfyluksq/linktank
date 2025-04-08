@@ -29,7 +29,13 @@ export default function SignInPage() {
             <SignIn
               path="/sign-in"
               routing="path"
-              appearance={appearance}
+              appearance={{
+                ...appearance,
+                elements: {
+                  ...appearance.elements,
+                  formFieldRow__password: "hidden",
+                },
+              }}
             />
           </div>
         </div>

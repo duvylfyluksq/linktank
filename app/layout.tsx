@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SavedEventsProvider } from "./contexts/SavedEventsContext";
+import { Toaster } from "@/components/ui/toaster";
 // import { localization } from "./localization";
 
 const geistSans = localFont({
@@ -42,7 +43,10 @@ export default function RootLayout({
 					>
 						<Navbar />
 
-						<main className="flex flex-col items-center">{children}</main>
+						<main className="flex flex-col items-center">
+							{children}
+							<Toaster />
+						</main>
 						<Footer />
 					</body>
 				</html>

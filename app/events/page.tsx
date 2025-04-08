@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
 import {
     Select,
     SelectContent,
@@ -13,158 +12,63 @@ import {
 } from "@/components/ui/select";
 import SkeletonCard from "./SkeletonCard";
 import { EventCard } from "@/components/event-card";
-import { SearchBar } from "@/app/events/SearchBar";
 import { EventCalendar } from "@/app/events/EventCalendar";
-import { EventTypeSelector } from "@/app/events/EventTypeSelector";
-import Filters from "./Filters";
+import EventTypeSelector from "@/app/events/EventTypeSelector";
+import { Button } from "@/components/ui/button";
+import EventFiltersDialog from "@/components/EventFiltersDialog";
+import {SlidersHorizontal } from "lucide-react";
 
 export default function Home() {
     const [events, setEvents] = useState<Event[]>([]);
-    const [organizations, setOrganizations] = useState<
-        { name: string; _id: string }[]
-    >([]);
-    const [selectedOrg, setSelectedOrg] = useState<string>("all");
+    const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filters, setFilters] = useState({
-        dateRange: {
-            from: undefined as Date | undefined,
-            to: undefined as Date | undefined,
-        },
-        locations: [] as string[],
-        eventType: "upcoming" as "upcoming" | "past" | "all",
-    });
-    const [activeFilters, setActiveFilters] = useState<string[]>([]);
+    const [filtersOpen, setFiltersOpen] = useState(false);
 
-    const availableLocations = [
-        { id: "ny", name: "New York" },
-        { id: "dc", name: "Washington D.C." },
-        { id: "sf", name: "San Francisco" },
-        { id: "chi", name: "Chicago" },
-        { id: "la", name: "Los Angeles" },
-        { id: "bos", name: "Boston" },
-        { id: "virtual", name: "Virtual" },
-    ];
-
-    const handleFilterChange = (filterType: string, value: any) => {
-        const newFilters = { ...filters };
-        let newActiveFilters = [...activeFilters];
-
-        switch (filterType) {
-            case "dateRange":
-                newFilters.dateRange = value;
-
-                const dateFilterIndex = newActiveFilters.findIndex((f) =>
-                    f.startsWith("Date:")
-                );
-
-                if (value.from && value.to) {
-                    const dateFilter = `Date: ${format(
-                        value.from,
-                        "MMM d"
-                    )} - ${format(value.to, "MMM d")}`;
-                    if (dateFilterIndex >= 0) {
-                        newActiveFilters[dateFilterIndex] = dateFilter;
-                    } else {
-                        newActiveFilters.push(dateFilter);
-                    }
-
-                    // Remove event type filter if date range is selected
-                    newFilters.eventType = "all";
-                    const eventTypeIndex = newActiveFilters.findIndex((f) =>
-                        f.startsWith("Type:")
-                    );
-                    if (eventTypeIndex >= 0)
-                        newActiveFilters.splice(eventTypeIndex, 1);
-                } else if (dateFilterIndex >= 0) {
-                    newActiveFilters.splice(dateFilterIndex, 1);
-                }
-                break;
-
-            case "location":
-                const locationIndex = newFilters.locations.indexOf(value);
-                const locationName = availableLocations.find(
-                    (l) => l.id === value
-                )?.name;
-
-                if (locationIndex >= 0) {
-                    newFilters.locations.splice(locationIndex, 1);
-                    newActiveFilters = newActiveFilters.filter(
-                        (f) => f !== `Location: ${locationName}`
-                    );
-                } else {
-                    newFilters.locations.push(value);
-                    newActiveFilters.push(`Location: ${locationName}`);
-                }
-                break;
-
-            case "eventType":
-                newFilters.eventType = value;
-
-                const eventTypeIndex = newActiveFilters.findIndex((f) =>
-                    f.startsWith("Type:")
-                );
-
-                // Remove date range filter if event type is selected
-                newFilters.dateRange = { from: undefined, to: undefined };
-                const dateRangeIndex = newActiveFilters.findIndex((f) =>
-                    f.startsWith("Date:")
-                );
-                if (dateRangeIndex >= 0)
-                    newActiveFilters.splice(dateRangeIndex, 1);
-
-                if (value !== "all") {
-                    const eventTypeFilter = `Type: ${
-                        value.charAt(0).toUpperCase() + value.slice(1)
-                    }`;
-                    if (eventTypeIndex >= 0) {
-                        newActiveFilters[eventTypeIndex] = eventTypeFilter;
-                    } else {
-                        newActiveFilters.push(eventTypeFilter);
-                    }
-                } else if (eventTypeIndex >= 0) {
-                    newActiveFilters.splice(eventTypeIndex, 1);
-                }
-                break;
+    const updateFilters = <K extends keyof EventFilter>(
+        keyOrUpdates: K | Partial<EventFilter>,
+        value?: EventFilter[K]
+      ) => {
+        if (typeof keyOrUpdates === "string") {
+          setFilters((prev) => ({
+            ...prev,
+            [keyOrUpdates]: value,
+          }));
+        } else {
+          setFilters((prev) => ({
+            ...prev,
+            ...keyOrUpdates,
+          }));
         }
-
-        setFilters(newFilters);
-        setActiveFilters(newActiveFilters);
     };
 
-    const clearAllFilters = () => {
-        setFilters({
-            dateRange: { from: undefined, to: undefined },
-            locations: [],
-            eventType: "all",
-        });
-        setActiveFilters([]);
-    };
+    const [filters, setFilters] = useState<EventFilter>({
+        location_type: "all",
+        locations: [],
+        date_type: "upcoming",
+        date: undefined,
+        organization_id: "all",
+    });
 
-    const fetchFilteredEvents = async (searchTerm: string = "") => {
+    const fetchFilteredEvents = async () => {
         setLoading(true);
-
         try {
             const params = new URLSearchParams();
 
-            if (searchTerm) params.append("search", searchTerm);
-            if (selectedOrg !== "all")
-                params.append("organization", selectedOrg);
-            if (filters.dateRange.from)
-                params.append("dateFrom", filters.dateRange.from.toISOString());
-            if (filters.dateRange.to)
-                params.append("dateTo", filters.dateRange.to.toISOString());
+            if (filters.organization_id !== "all")
+                params.append("organization", filters.organization_id);
+
+            if (filters.date)
+                params.append("date", filters.date.toISOString());
 
             filters.locations.forEach((location) => {
                 params.append("locations", location);
             });
 
-            if (
-                filters.eventType !== "all" &&
-                !(filters.dateRange.from && filters.dateRange.to)
-            ) {
-                params.append("eventType", filters.eventType);
-            }
+            if (filters.date_type !== "all")
+                params.append("dateType", filters.date_type);
+
+            if (filters.location_type !== "all")
+                params.append("locationType", filters.location_type);
 
             const response = await fetch(
                 `/api/events/search?${params.toString()}`
@@ -183,12 +87,7 @@ export default function Home() {
         }
     };
 
-    const handleSearch = async (term: string) => {
-        setSearchTerm(term);
-        await fetchFilteredEvents(term);
-    };
-
-    const groupedEvents: Record<string, Event[]> = events.reduce(
+    const groupedEvents: Record<string, EventModel[]> = events.reduce(
         (acc, event) => {
             const dateKey = new Date(event.date_from).toLocaleDateString(
                 "en-US",
@@ -207,8 +106,18 @@ export default function Home() {
     );
 
     useEffect(() => {
+        if (filters.date) {
+            const now = new Date();
+            const selected = filters.date;
+            const isUpcoming = selected >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const dateType = isUpcoming ? "upcoming" : "past";
+            updateFilters("date_type", dateType);
+        }
+      }, [filters.date]);
+
+    useEffect(() => {
         fetchFilteredEvents();
-    }, [selectedOrg, filters]);
+    }, [filters]);
 
     useEffect(() => {
         fetch("/api/organizations")
@@ -225,31 +134,27 @@ export default function Home() {
             <div className="w-full flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center gap-2 max-sm:w-full">
                     <h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px]">
-                        Upcoming Events
+                        {filters.date_type === "upcoming" ? "Upcoming Events" : "Past Events"}
                     </h3>
                     <div className="flex gap-2.5 max-sm:ml-auto sm:hidden">
                         <EventTypeSelector
-                            currentType={filters.eventType}
-                            onChange={(type) =>
-                                handleFilterChange("eventType", type)
-                            }
+                            currentType={filters.date_type}
+                            onChange={(type) => {
+                                updateFilters({
+                                    date: undefined,
+                                    date_type: type
+                                })
+                            }}
                         />
                     </div>
                 </div>
 
-                <div className="flex items-center h-full">
-                    <SearchBar value={searchTerm} onChange={handleSearch} />
-                    <Filters
-                        activeFilters={activeFilters}
-                        filters={filters}
-                        onFilterChangeAction={handleFilterChange}
-                        clearAllFiltersAction={clearAllFilters}
-                    />
+                <div className="flex gap-4 items-center h-full">
                     <Select
-                        value={selectedOrg}
-                        onValueChange={(val) => setSelectedOrg(val)}
+                        value={filters.organization_id}
+                        onValueChange={(val) => updateFilters("organization_id", val)}
                     >
-                        <SelectTrigger className="w-[12rem] ml-3 h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
+                        <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
                             <SelectValue placeholder="Select Organization" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
@@ -266,6 +171,20 @@ export default function Home() {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <Button 
+                        className="bg-[#1C2329] hover:bg-[#0e3b69] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] max-sm:w-full max-sm:h-11"
+                        onClick={() => setFiltersOpen(true)}
+                    >
+                        <SlidersHorizontal size={20} />
+                        <span className="text-[1rem]">Filters</span>
+                    </Button>
+                    <EventFiltersDialog
+                        open={filtersOpen}
+                        onOpenChange={setFiltersOpen}
+                        selectedType={filters.location_type}
+                        onApply={(type) => updateFilters("location_type", type)}
+                        onClear={() => updateFilters("location_type", "all")}
+                    />
                 </div>
             </div>
             <div className="flex flex-row w-full gap-[1.625rem]">
@@ -353,17 +272,20 @@ export default function Home() {
                 </ol>
                 <div className="h-auto max-sm:mt-4 flex-shrink-0">
                     <EventTypeSelector
-                        currentType={filters.eventType}
-                        onChange={(type) =>
-                            handleFilterChange("eventType", type)
-                        }
+                        currentType={filters.date_type}
+                        onChange={(type) => {
+                            updateFilters({
+                                date: undefined,
+                                date_type: type
+                            })
+                        }}
                         className="flex w-full items-center space-x-2 mb-4 max-sm:flex-col max-sm:hidden"
                     />
 
                     <EventCalendar
                         filters={filters}
-                        onFilterChange={handleFilterChange}
-                        className="rounded-md border border-black border-opacity-25 bg-white max-sm:hidden"
+                        onFilterChange={updateFilters}
+                        className="bg-white max-sm:hidden"
                     />
                 </div>
             </div>

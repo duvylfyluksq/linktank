@@ -67,3 +67,11 @@ interface Event extends Document {
 }
 
 type EventModel = Event;
+
+interface EventFilter{
+    location_type: "online" | "in-person" | "hybrid" | "all";
+    locations: string[];
+    date_type: "upcoming" | "past" | "all";
+    date: Date | undefined;
+    organization_id: Organization["_id"] | "all";
+}

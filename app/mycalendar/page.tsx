@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { EventCard } from "@/components/event-card";
 import {
@@ -15,131 +14,112 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import SkeletonCard from "@/app/events/SkeletonCard";
-import { Input } from "@/components/ui/input";
-import debounce from "lodash/debounce";
 import { useSavedEvents } from "../contexts/SavedEventsContext";
+import { useUser } from "@clerk/nextjs";
+import SubscriptionPage from "@/app/authwall/authwall";
+import EventFiltersDialog from "@/components/EventFiltersDialog";
+import EventTypeSelector from "../events/EventTypeSelector";
+import { EventCalendar } from "../events/EventCalendar";
+
 
 export default function Home() {
-    const [date, setDate] = useState<Date | undefined>(() => new Date());
-    const [events, setEvents] = useState<EventModel[]>([]);
-    console.log(events);
-    const [organizations, setOrganizations] = useState<
-        { name: string; _id: string }[]
-    >([]);
-    const [selectedOrg, setSelectedOrg] = useState<string>("all");
-    const [loading, setLoading] = useState<boolean>(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [mobileCalendarOpen, setMobileCalendarOpen] = useState(false);
+    const [filters, setFilters] = useState<EventFilter>({
+        location_type: "all",
+        locations: [],
+        date_type: "upcoming",
+        date: undefined,
+        organization_id: "all",
+    });
 
-    const {savedEvents} = useSavedEvents();
-
-    // Debounced search function
-    const debouncedSearch = debounce(async (searchTerm: string) => {
-        try {
-            const params = new URLSearchParams();
-            if (searchTerm) {
-                params.append("search", searchTerm);
-            }
-            if (selectedOrg !== "all")
-                params.append("organization", selectedOrg);
-
-            const response = await fetch(
-                `/api/events/search?${params.toString()}`
-            );
-            const data = await response.json();
-
-            if (data.success) {
-                setEvents(data.events);
-            }
-        } catch (error) {
-            console.error("Error searching events:", error);
+    const updateFilters = <K extends keyof EventFilter>(
+        keyOrUpdates: K | Partial<EventFilter>,
+        value?: EventFilter[K]
+      ) => {
+        if (typeof keyOrUpdates === "string") {
+          setFilters((prev) => ({
+            ...prev,
+            [keyOrUpdates]: value,
+          }));
+        } else {
+          setFilters((prev) => ({
+            ...prev,
+            ...keyOrUpdates,
+          }));
         }
-    }, 300);
-
-    const handleSearch = (value: string) => {
-        setSearchTerm(value);
-        debouncedSearch(value.trim());
     };
 
-    const today = useMemo(() => new Date(), []);
+    const [organizations, setOrganizations] = useState<Organization[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [filtersOpen, setFiltersOpen] = useState(false);
+    const { isSignedIn } = useUser();
+    const {savedEvents} = useSavedEvents();
 
-    // Group events by date for display
-    const groupedEvents: Record<string, EventModel[]> = savedEvents.reduce(
-        (acc, event) => {
-            const dateKey = new Date(event.date_from).toLocaleDateString(
-                "en-US",
-                {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                }
-            );
-            if (!acc[dateKey]) acc[dateKey] = [];
+    useEffect(() => {
+        if (filters.date) {
+            const now = new Date();
+            const selected = filters.date;
+            const isUpcoming = selected >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const dateType = isUpcoming ? "upcoming" : "past";
+            updateFilters("date_type", dateType);
+        }
+      }, [filters.date]);
+
+    const filteredEvents = useMemo(() => {
+        const now = new Date();
+      
+        return savedEvents.filter((event) => {
+          if (
+            filters.organization_id !== "all" &&
+            event.organization._id !== filters.organization_id
+          ) {
+            return false;
+          }
+      
+          if (filters.location_type === "in-person" && !event.is_in_person) return false;
+          if (filters.location_type === "online" && !event.is_virtual) return false;
+          if (filters.location_type === "hybrid" &&
+            !(event.is_virtual && event.is_in_person)
+          )
+            return false;
+      
+          const dateFrom = new Date(event.date_from);
+          const dateTo = event.date_to ? new Date(event.date_to) : dateFrom;
+      
+          if (filters.date) {
+            const selectedDate = filters.date;
+            const sameDay =
+              dateFrom.getFullYear() === selectedDate.getFullYear() &&
+              dateFrom.getMonth() === selectedDate.getMonth() &&
+              dateFrom.getDate() === selectedDate.getDate();
+      
+            return sameDay;
+          }
+      
+          if (filters.date_type === "past" && dateFrom >= now) return false;
+          if (filters.date_type === "upcoming" && dateTo < now) return false;
+      
+          return true;
+        });
+      }, [savedEvents, filters]);
+
+    const groupedEvents: Record<string, EventModel[]> = useMemo(() => {
+        return filteredEvents.reduce((acc, event) => {
+          const dateKey = new Date(event.date_from).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+          if (!acc[dateKey]) acc[dateKey] = [];
             acc[dateKey].push(event);
-            return acc;
-        },
-        {}
-    );
-
-    // Clean up debounce on unmount
+          return acc;
+        }, {} as Record<string, EventModel[]>);
+      }, [filteredEvents]);
+    
     useEffect(() => {
-        return () => {
-            debouncedSearch.cancel();
-        };
-    }, []);
-
-    // Fetch saved events instead of all events
-    useEffect(() => {
-        const fetchSavedEvents = async () => {
-            setLoading(true);
-            try {
-                // First, get saved event ids from your saveevent API
-                const savedRes = await fetch("/api/saveevent", {
-                    method: "GET",
-                });
-                const savedData = await savedRes.json();
-                if (savedData.success) {
-                    const savedIds: string[] = savedData.eventIds;
-                    if (savedIds.length > 0) {
-                        // Fetch full event details for these saved events
-                        const eventsRes = await fetch(
-                            `/api/events/savedevents?savedIds=${savedIds.join(
-                                ","
-                            )}`,
-                            {
-                                method: "GET",
-                            }
-                        );
-                        const eventsData = await eventsRes.json();
-                        if (eventsData.success) {
-                            setEvents(eventsData.events);
-                        } else {
-                            console.error(
-                                "Error fetching event details:",
-                                eventsData.message
-                            );
-                        }
-                    } else {
-                        setEvents([]);
-                    }
-                } else {
-                    console.error(
-                        "Error fetching saved event ids:",
-                        savedData.message
-                    );
-                }
-            } catch (error) {
-                console.error("Error fetching saved events:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchSavedEvents();
-    }, [selectedOrg]);
+        if(savedEvents) setLoading(false);
+    }, [savedEvents]);
 
     useEffect(() => {
-        // Fetch organizations
         fetch("/api/organizations")
             .then((response) => response.json())
             .then((data) => {
@@ -148,6 +128,11 @@ export default function Home() {
                 }
             });
     }, []);
+
+    if(!isSignedIn){
+        return <SubscriptionPage/>;
+    }
+    
 
     return (
         <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.375rem] max-sm:w-full max-sm:px-5 max-sm:mt-5">
@@ -162,83 +147,59 @@ export default function Home() {
                         </p>
                     </div>
                     <div className="flex gap-2.5 max-sm:ml-auto sm:hidden">
-                        <Button
-                            variant={
-                                date && date >= today ? "default" : "secondary"
-                            }
-                            onClick={() => setDate(new Date())}
-                            className="rounded-[0.75rem] h-11 font-medium w-auto py-2"
-                        >
-                            Upcoming
-                        </Button>
-                        <Button
-                            variant={
-                                date && date < today ? "default" : "secondary"
-                            }
-                            onClick={() => {
-                                const pastDate = new Date();
-                                pastDate.setMonth(pastDate.getMonth() - 1);
-                                setDate(pastDate);
+                        <EventTypeSelector
+                            currentType={filters.date_type}
+                            onChange={(type) => {
+                                updateFilters({
+                                    date: undefined,
+                                    date_type: type
+                                })
                             }}
-                            className="rounded-[0.75rem] h-11 font-medium w-auto py-2"
-                        >
-                            Past
-                        </Button>
+                        />
                     </div>
                 </div>
-                <Input
-                    type="search"
-                    placeholder="Search..."
-                    className="md:w-[10rem] rounded-[0.75rem] mr-3 bg-white h-[3.125rem] max-sm:w-full max-sm:mt-2"
-                    onChange={(e) => handleSearch(e.target.value)}
-                    value={searchTerm}
-                />
-                <div className="flex flex-row items-center gap-[0.75rem] max-sm:w-full max-sm:mt-2">
-                    <Select>
-                        <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:w-full">
-                            <SelectValue placeholder="Anywhere" />
+                <div className="flex gap-4">
+                    <Select
+                        value={filters.organization_id}
+                        onValueChange={(val) => updateFilters("organization_id", val)}
+                    >
+                        <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
+                            <SelectValue placeholder="Select Organization" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
                             <SelectGroup>
-                                <SelectLabel>Anywhere</SelectLabel>
-                                <SelectItem value="ny">New York</SelectItem>
-                                <SelectItem value="dc">
-                                    Washington D.C.
+                                <SelectLabel>Select Organization</SelectLabel>
+                                <SelectItem value="all">
+                                    All Organizations
                                 </SelectItem>
+                                {organizations.map((org) => (
+                                    <SelectItem key={org._id} value={org._id}>
+                                        {org.name}
+                                    </SelectItem>
+                                ))}
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button className="bg-[#1C2329] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] max-sm:w-full max-sm:h-11">
+                    <Button 
+                        className="bg-[#1C2329] hover:bg-[#0e3b69] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] max-sm:w-full max-sm:h-11"
+                        onClick={() => setFiltersOpen(true)}
+                    >
                         <SlidersHorizontal size={20} />
-                        <span className="text-[1rem]">Filters (1)</span>
+                        <span className="text-[1rem]">Filters</span>
                     </Button>
+                    <EventFiltersDialog
+                        open={filtersOpen}
+                        onOpenChange={setFiltersOpen}
+                        selectedType={filters.location_type}
+                        onApply={(type) => updateFilters("location_type", type)}
+                        onClear={() => updateFilters("location_type", "all")}
+                    />
                 </div>
-                <Select
-                    value={selectedOrg}
-                    onValueChange={(val) => setSelectedOrg(val)}
-                >
-                    <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
-                        <SelectValue placeholder="Select Organization" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white">
-                        <SelectGroup>
-                            <SelectLabel>Select Organization</SelectLabel>
-                            <SelectItem value="all">
-                                All Organizations
-                            </SelectItem>
-                            {organizations.map((org) => (
-                                <SelectItem key={org._id} value={org._id}>
-                                    {org.name}
-                                </SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
             </div>
 
             <div className="flex max-sm:flex-col">
                 <ol className="relative flex-grow pr-20 border-s border-[#808080] max-sm:border-none border-opacity-25 max-sm:pr-0 max-sm:px-4">
-                    <>
+                    {/* <>
                         <div className="absolute right-4 top-2 sm:hidden">
                             <Button
                                 variant="outline"
@@ -295,7 +256,7 @@ export default function Home() {
                                       </div>
                                   )
                               )}
-                    </div>
+                    </div> */}
                     <div className="hidden sm:block">
                         {loading
                             ? Array.from({ length: 5 }).map((_, i) => (
@@ -320,39 +281,24 @@ export default function Home() {
                     </div>
                 </ol>
 
-                <div className="h-auto max-sm:mt-4">
-                    <div className="flex w-full items-center space-x-2 mb-4 max-sm:flex-col max-sm:hidden">
-                        <Button
-                            variant={
-                                date && date >= today ? "default" : "secondary"
-                            }
-                            onClick={() => setDate(new Date())}
-                            className="rounded-[0.75rem] w-[70%] h-[3.125rem] font-medium max-sm:w-full"
-                        >
-                            Upcoming
-                        </Button>
-                        <Button
-                            variant={
-                                date && date < today ? "default" : "secondary"
-                            }
-                            onClick={() => {
-                                const pastDate = new Date();
-                                pastDate.setMonth(pastDate.getMonth() - 1);
-                                setDate(pastDate);
-                            }}
-                            className="rounded-[0.75rem] w-[30%] h-[3.125rem] font-medium max-sm:w-full"
-                        >
-                            Past
-                        </Button>
-                    </div>
-
-                    <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        className="rounded-md border border-black border-opacity-25 bg-white max-sm:hidden"
+                <div className="h-auto max-sm:mt-4 flex-shrink-0">
+                    <EventTypeSelector
+                        currentType={filters.date_type}
+                        onChange={(type) => {
+                            updateFilters({
+                                date: undefined,
+                                date_type: type
+                            })
+                        }}
+                        className="space-x-2 mb-4"
+                    />
+                    <EventCalendar
+                        filters={filters}
+                        onFilterChange={updateFilters}
+                        className="bg-white max-sm:hidden"
                     />
                 </div>
+
             </div>
         </div>
     );

@@ -1,20 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
+// import { CalendarIcon } from "lucide-react";
+// import { useState } from "react";
 
 interface EventCalendarProps {
-    filters: {
-        dateRange: {
-            from: Date | undefined;
-            to: Date | undefined;
-        };
-        locations: string[];
-        eventType: "upcoming" | "past" | "all";
-    };
-    onFilterChange: (filterType: string, value: any) => void;
+    filters: EventFilter;
+    onFilterChange: <K extends keyof EventFilter>(key: K, value: EventFilter[K]) => void;
     className?: string;
 }
 
@@ -23,11 +16,11 @@ export function EventCalendar({
     filters,
     onFilterChange,
 }: EventCalendarProps) {
-    const [mobileCalendarOpen, setMobileCalendarOpen] = useState(false);
+    // const [mobileCalendarOpen, setMobileCalendarOpen] = useState(false);
 
     return (
-        <div className={className}>
-            <div className="absolute right-4 top-2 sm:hidden">
+        <div className={`rounded-2xl border border-[#D3D0D0] ${className}`}>
+            {/* <div className="absolute right-4 top-2 sm:hidden">
                 <Button
                     variant="outline"
                     onClick={() => setMobileCalendarOpen(true)}
@@ -43,8 +36,8 @@ export function EventCalendar({
                         <Calendar
                             mode="range"
                             selected={{
-                                from: filters.dateRange.from,
-                                to: filters.dateRange.to,
+                                from: filters.date_range.from,
+                                to: filters.date_range.to,
                             }}
                             onSelect={(range) =>
                                 onFilterChange("dateRange", {
@@ -62,19 +55,13 @@ export function EventCalendar({
                         </Button>
                     </div>
                 </div>
-            )}
+            )} */}
 
             <Calendar
-                mode="range"
-                selected={{
-                    from: filters.dateRange.from,
-                    to: filters.dateRange.to,
-                }}
-                onSelect={(range) =>
-                    onFilterChange("dateRange", {
-                        from: range?.from,
-                        to: range?.to,
-                    })
+                mode="single"
+                selected={filters.date}
+                onSelect={(date) =>
+                    onFilterChange("date", date)
                 }
                 initialFocus
             />

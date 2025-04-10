@@ -12,6 +12,9 @@ export async function GET(request: Request) {
     const locations = url.searchParams.getAll("locations");
     const dateType = url.searchParams.get("dateType");
     const locationType = url.searchParams.get("locationType");
+    const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const limit = parseInt(url.searchParams.get("limit") || "10", 10);
+    const skip = (page - 1) * limit;
 
     try {
         const query: any = {};
@@ -65,13 +68,25 @@ export async function GET(request: Request) {
             sortOrder = { date_from: 1 };
         }
 
+        const total = await Event.countDocuments(query);
+        const totalPages = Math.ceil(total / limit);
+
         const events = await Event.find(query)
             .sort(sortOrder)
+            .skip(skip)
+            .limit(limit)
             .populate({path: "organization", model: Organization})
             .exec();
 
         return NextResponse.json(
-            { success: true, events: events },
+            { 
+                success: true, 
+                events: events,
+                page: page,
+                limit: limit,
+                total: total,
+                total_pages: totalPages
+            },
             { status: 200 }
         );
     } catch (error) {

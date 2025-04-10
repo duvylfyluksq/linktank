@@ -37,16 +37,17 @@ export default function RootLayout({
 			publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 		>
 			<SavedEventsProvider>
-				<html lang="en">
+				<html lang="en" className="min-h-screen">
 					<body
-						className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF]`}
+						className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF] flex flex-col min-h-screen`}
 					>
 						<Navbar />
 
-						<main className="flex flex-col items-center">
+						<main className="flex-1 flex flex-col items-center">
 							{children}
 							<Toaster />
 						</main>
+
 						<Footer />
 					</body>
 				</html>

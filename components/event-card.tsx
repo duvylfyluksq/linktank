@@ -29,7 +29,7 @@ function removeMediaTags(htmlString: string): string {
 export const EventCard = ({ event }: { event: EventModel }) => {
     return (
         <Link href={`/events/${event.backlink}`} key={event._id}>
-            <div className="border flex border-[#D3D0D0] bg-white mt-6 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full">
+            <div className="border flex border-[#D3D0D0] bg-white mb-10 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full">
                 {/* Text container: add min-w-0 to prevent overflow issues */}
                 <div className="flex-1 flex flex-col gap-[0.5rem]">
                     <div className="flex items-center opacity-70 font-jakarta text-[0.8rem] md:text-[1rem] font-medium gap-2">
@@ -44,6 +44,13 @@ export const EventCard = ({ event }: { event: EventModel }) => {
                                 )}
                             </p>)
                         }
+                        {/* {(!!event.is_virtual && !!!event.is_in_person) ? 
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M13.3333 7.50004L17.5 5.83337V14.1667L13.3333 12.5M3.33333 15.4167H12.5C12.9602 15.4167 13.3333 15.0436 13.3333 14.5834V5.41671C13.3333 4.95647 12.9602 4.58337 12.5 4.58337H3.33333C2.8731 4.58337 2.5 4.95647 2.5 5.41671V14.5834C2.5 15.0436 2.8731 15.4167 3.33333 15.4167Z" stroke="#707070" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg> 
+                            :  
+                            <MapPin className="flex-shrink-0" size={16} />
+                        } */}
                         <MapPin className="flex-shrink-0" size={16} />
                         <p className="line-clamp-1">{event.location}</p>
                     </div>

@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import EventListings from "../EventListings";
 import { useEventFilters } from "@/hooks/useEventFilters";
 
 export default function Home() {
     const [events, setEvents] = useState<EventModel[]>([]);
     const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [fetching, setFetching] = useState(true);
+    const currentPageRef = useRef(1);
     const loadingState = useMemo(() => ({ loading, setLoading }), [loading]);
+    const fetchingState = useMemo(() => ({ fetching, setFetching }), [fetching]);
     const filters = useEventFilters();
+    const isLoadingRef = useRef(false);
+    const hasMoreRef = useRef(true);
 
-    async function fetchFilteredEvents(page: number): Promise<EventModel[]> {
-        setLoading(true);
+
+    async function fetchFilteredEvents(page: number, filters: ReturnType<typeof useEventFilters>): Promise<{ events: EventModel[]; hasMore: boolean }> {
+        setFetching(true);
         try {
             const params = new URLSearchParams();
             params.append("page", page.toString());
@@ -42,38 +47,53 @@ export default function Home() {
             const data = await response.json();
 
             if (data.success) {
-                return data.events;
+                return {events: data.events, hasMore: data.hasMore};
             } else {
                 console.error("Error fetching events:", data.error);
-                return [];
+                return {events: [], hasMore: false};
             }
         } catch (error) {
             console.error("Error fetching filtered events:", error);
-            return [];
+            return {events: [], hasMore: false};
         } finally {
-            setLoading(false);
+            setFetching(false);
         }
     }
 
-    const handleLoadNextPage = async () => {
-        const nextPage = currentPage + 1;
-        const newEvents = await fetchFilteredEvents(nextPage);
-
+    const handleLoadNextPage = useCallback(async () => {
+        if (isLoadingRef.current || !hasMoreRef.current) return;
+    
+        isLoadingRef.current = true;
+        const nextPage = currentPageRef.current + 1;
+    
+        const { events: newEvents, hasMore } = await fetchFilteredEvents(nextPage, filters);
+    
+        hasMoreRef.current = hasMore;
+    
         setEvents((prev) => {
             const combined = [...prev, ...newEvents];
-            return combined.length > 50
-                ? combined.slice(combined.length - 50)
-                : combined;
+            return combined;
+            // implement sliding window later
+            // return combined.length > 30
+            //     ? combined.slice(combined.length - 30)
+            //     : combined;
         });
-
-        setCurrentPage(nextPage);
-    };
+    
+        currentPageRef.current = nextPage;
+        isLoadingRef.current = false;
+    }, [filters]);
 
     useEffect(() => {
         (async () => {
-            const freshEvents = await fetchFilteredEvents(1);
-            setEvents(freshEvents);
-            setCurrentPage(1);
+            setLoading(true);
+            try {
+                const { events: freshEvents, hasMore } = await fetchFilteredEvents(1, filters);
+                hasMoreRef.current = hasMore;
+                setEvents(freshEvents);
+                currentPageRef.current = 1;
+            } finally {
+                setLoading(false);
+            }
         })();
     }, [filters]);
 
@@ -89,7 +109,14 @@ export default function Home() {
             filters={filters}
             events={events}
             loadingState={loadingState}
+            fetchingState={fetchingState}
             onLoadMore={handleLoadNextPage}
+            hasMoreRef={hasMoreRef}
         />
     )
 }
+
+
+// requestAnimationFrame(() => {
+//     window.scrollBy({ top: -2000, behavior: "auto" });
+// });

@@ -68,9 +68,6 @@ export async function GET(request: Request) {
             sortOrder = { date_from: 1 };
         }
 
-        const total = await Event.countDocuments(query);
-        const totalPages = Math.ceil(total / limit);
-
         const events = await Event.find(query)
             .sort(sortOrder)
             .skip(skip)
@@ -78,14 +75,14 @@ export async function GET(request: Request) {
             .populate({path: "organization", model: Organization})
             .exec();
 
+        const totalCount = await Event.countDocuments(query);
+        const totalPages = Math.ceil(totalCount / limit);
+
         return NextResponse.json(
             { 
                 success: true, 
                 events: events,
-                page: page,
-                limit: limit,
-                total: total,
-                total_pages: totalPages
+                hasMore : page < totalPages
             },
             { status: 200 }
         );

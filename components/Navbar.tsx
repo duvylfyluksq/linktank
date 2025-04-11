@@ -16,32 +16,33 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
   } from "@/components/ui/dropdown-menu";
-import { LogOut, User } from "lucide-react";
-import SearchPalette from "./SearchPalette";
+import { LogOut, Plus, Search, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import AccountModal from "./AccountModal";
+import SearchModal from "./SearchModal";
 
 const Navbar = () => {
     const { user } = useUser();
     const pathname = usePathname();
     const [accountModalOpen, setAccountModalOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
 
-    const handleOpenChange = (open: boolean) => {
-        setAccountModalOpen(open);      
+    const handleOpenChange = (open: boolean, setOpen: (val: boolean) => void) => {
+        setOpen(open);      
         if (!open) {
           setTimeout(() => {
             const active = document.activeElement as HTMLElement;
             if (active) active.blur();
           }, 10);
         }
-      };
+    };
 
     return (
-        <nav className="flex items-center justify-between h-[6rem] py-6 px-12 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+        <nav className="flex items-center justify-between h-[6rem] py-6 px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center mr-10">
                 <Link href="/" className="flex items-center">
                     <Image
@@ -92,12 +93,27 @@ const Navbar = () => {
                     </li>
                 </ul>
 
-                <div className="flex items-center gap-x-4">
-                    <SearchPalette />
+                <div className="flex items-center gap-x-6 ml-auto">
+                    <button 
+                        className="flex items-center text-gray-700 hover:text-black gap-x-2"
+                        onClick={() => setSearchOpen(true)}
+                    >
+                        <Search className="w-5 h-5 text-inherit" />
+                        <span>Search</span>
+                    </button>
+
+                    <button className="flex items-center text-gray-700 hover:text-black gap-x-2">
+                        <Plus className="w-5 h-5 text-inherit" />
+                        <span>Create an event</span>
+                    </button>
 
                     <SignedOut>
                         <SignUpButton>
-                            <Button>Sign Up</Button>
+                            <Button 
+                                className="px-10 py-6 text-base rounded-xl text-white bg-[#1C2329] hover:bg-[#0e3b69]"
+                            >
+                                Sign Up
+                            </Button>
                         </SignUpButton>
                     </SignedOut>
 
@@ -152,9 +168,13 @@ const Navbar = () => {
                     </SignedIn>
                 </div>
             </div>
+            <SearchModal
+                open={searchOpen}
+                onOpenChange={(open) => handleOpenChange(open, setSearchOpen)}
+            />
             <AccountModal
                 open={accountModalOpen}
-                onOpenChange={handleOpenChange}
+                onOpenChange={(open) => handleOpenChange(open, setAccountModalOpen)}
             />
         </nav>
     );

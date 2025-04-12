@@ -3,9 +3,9 @@ import Image from "next/image";
 
 export function Footer() {
     return (
-        <footer className="bg-[#113663] w-full text-white py-[2.75rem] px-[5.13rem] font-jakarta items-center justify-center">
+        <footer className="bg-[#113663] w-full text-white py-[2.75rem] px-5 sm:px-[5.13rem] font-jakarta items-center justify-center">
             <div className="flex w-full flex-col md:flex-row justify-between items-center">
-                <div className="mb-6 md:mb-0">
+                <div className="mb-6 md:mb-0 w-full">
                     <Link href="/" className="flex items-center">
                         <Image
                             src="/linktank_logo.png"
@@ -23,7 +23,7 @@ export function Footer() {
                         © 2025 Linktank. All rights reserved
                     </p>
                 </div>
-                <div className="flex flex-row gap-[0.81rem]">
+                <div className="flex flex-row gap-[0.81rem] w-full">
                     <div className="flex flex-col gap-[1.5rem]">
                         <div>
                             <Link

@@ -53,7 +53,7 @@ export default function Landing({ events }: { events: Event[] }) {
 
     return (
         <div className="flex flex-col items-center justify-center w-full">
-            <div className="min-h-[35.75rem] w-full bg-[#D1E7FD] flex flex-col items-center justify-center px-4 py-12 md:py-0 relative">
+            <div className="min-h-[24.5625rem] md:min-h-[35.75rem] w-full bg-[#D1E7FD] flex flex-col items-center justify-center px-8 sm:px-4 py-12 md:py-0 relative">
                 <Image
                     src={"/landingpagebg.png"}
                     alt=""
@@ -63,20 +63,20 @@ export default function Landing({ events }: { events: Event[] }) {
                     className="w-full h-auto absolute bottom-0"
                 />
                 <div className="w-full max-w-[42.875rem] flex flex-col items-center gap-[1.625rem] z-10">
-                    <h1 className="text-[#113663] font-jakarta text-[2rem] md:text-[2.5rem] font-extrabold text-center">
+                    <h1 className="text-[#113663] font-jakarta text-[1.5rem] md:text-[2.5rem] font-extrabold text-center">
                         Discover Conversations that
                         <br />
                         Shape the World
                     </h1>
-                    <p className="text-[#1C2329] font-jakarta text-[1rem] md:text-[1.25rem] text-center font-medium">
+                    <p className="text-[#1C2329] font-jakarta text-[0.875rem] md:text-[1.25rem] text-center font-medium">
                         Find every think tank and policy event. <br />
                         Meet experts in the know and never miss valuable
                         insight.
                     </p>
 
-                    <div className="flex flex-row flex-wrap gap-[0.56rem] w-full justify-center">
-                        <Link href="/sign-up">
-                            <Button className="flex-1 sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem]">
+                    <div className="flex flex-row flex-wrap gap-[0.56rem] w-[18.125rem] md:w-full justify-center">
+                        <Link href="/sign-up" className="flex-1">
+                            <Button className="w-full sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem]">
                                 Get Started
                             </Button>
                         </Link>
@@ -89,21 +89,21 @@ export default function Landing({ events }: { events: Event[] }) {
             <EventsSection events={events} />
             <div className="min-h-[35.0625rem] bg-[#EDFAFF] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
                 <div className="flex flex-col md:flex-row gap-[2.6875rem] max-w-[75rem]">
-                    <div className="flex flex-col gap-[1.625rem] w-full md:w-[36.25rem]">
-                        <h1 className="text-[#113663] font-jakarta text-[1.75rem] md:text-[2rem] font-bold text-center md:text-left">
+                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[36.25rem]">
+                        <h1 className="text-[#113663] font-jakarta text-[1.25rem] sm:text-[1.75rem] md:text-[2rem] font-bold text-left">
                             Global Event Calendar & Curated Email Alerts
                         </h1>
-                        <p className="text-[#1C2329] font-jakarta text-[1rem] text-center md:text-left font-normal">
+                        <p className="text-[#1C2329] font-jakarta text-[0.8125rem] sm:text-[1rem] text-left font-normal">
                             Access events from think tanks, research
                             institutions, and policy-focused organizations
                             worldwide. Find trending events and get notified
                             about what matters to you.
                         </p>
-                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[1.125rem]">
+                        <Button className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem]">
                             Get Started
                         </Button>
                     </div>
-                    <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-2 sm:grid-cols-3 grid-rows-2">
+                    <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3 grid-rows-2">
                         {images1.map((image, index) => (
                             <div
                                 className="h-[8rem] sm:h-[9.64819rem] w-full sm:w-[9.64819rem] rounded-[1.25375rem]"
@@ -123,8 +123,8 @@ export default function Landing({ events }: { events: Event[] }) {
                     </div>
                 </div>
             </div>
-            <div className="bg-white min-h-[27.75rem] gap-[3rem] flex flex-col items-center justify-center px-4 py-12 md:py-0 flex-shrink-0">
-                <h4 className="text-[#113663] font-jakarta text-[1.25rem] md:text-[1.5rem] font-semibold text-center max-w-[36.25rem] flex-shrink-0">
+            <div className="bg-white min-h-[17.63rem] sm:min-h-[27.75rem] gap-[3rem] flex flex-col items-center justify-center px-4 py-12 md:py-0 flex-shrink-0">
+                <h4 className="text-[#113663] font-jakarta text-[0.875rem] sm:text-[1.5rem] font-semibold text-center max-w-[36.25rem] flex-shrink-0">
                     Events and insights from organizations and experts shaping
                     conversations today
                 </h4>
@@ -202,27 +202,27 @@ export default function Landing({ events }: { events: Event[] }) {
                     />
                 </div>
             </div>
-            <div className="min-h-[43rem] w-full bg-[#113663] flex flex-col items-center justify-center gap-[2.69rem] px-4 py-12 md:py-0">
-                <h3 className="text-center text-[#FAFEFF] font-jakarta text-[1.75rem] md:text-[2rem] font-bold max-w-[33.25rem]">
+            <div className="min-h-[43rem] w-full bg-[#113663] flex flex-col items-center justify-center gap-[2.69rem] px-8 sm:px-4 py-12 md:py-0">
+                <h3 className="text-center text-[#FAFEFF] font-jakarta text-[1.25rem] sm:text-[1.75rem] md:text-[2rem] font-bold max-w-[33.25rem]">
                     Discover Insights and Connect with Experts
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-[2.5rem] gap-x-[2.06rem] w-full max-w-[51.19rem]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 sm:gap-y-[2.5rem] gap-x-[2.06rem] w-full max-w-[51.19rem]">
                     {features.map((feature) => (
                         <div
                             key={feature.title}
-                            className="flex flex-col gap-[0.5rem] bg-white rounded-[0.625rem] pl-[1.19rem] pr-[0.81rem] pt-[2rem] pb-[2.44rem]"
+                            className="flex flex-col gap-[0.5rem] bg-white rounded-[0.625rem] pl-[1.19rem] pr-[0.81rem] pt-5 sm:pt-[2rem] pb-6 sm:pb-[2.44rem]"
                         >
-                            <div className="flex flex-row gap-[0.5rem]">
+                            <div className="flex flex-row gap-[0.5rem] items-center">
                                 <feature.icon
                                     size={34}
-                                    className="text-[#113663]"
+                                    className="text-[#113663] sm:w-[34px] sm:h-[34px] w-[20px] h-[20px]"
                                 />
 
-                                <h4 className="text-[#113663] font-jakarta text-[1.25rem] md:text-[1.5rem] font-bold tracking-[-0.0465rem]">
+                                <h4 className="text-[#113663] font-jakarta text-base sm:text-[1.25rem] md:text-[1.5rem] font-bold tracking-[-0.0465rem]">
                                     {feature.title}
                                 </h4>
                             </div>
-                            <p className="text-[#113663] font-jakarta text-[1rem] font-normal tracking-[-0.01rem] leading-[1.4375rem]">
+                            <p className="text-[#113663] font-jakarta text-[0.85556rem] sm:text-[1rem] font-normal tracking-[-0.01rem] leading-[1.4375rem]">
                                 {feature.description}
                             </p>
                         </div>
@@ -231,17 +231,17 @@ export default function Landing({ events }: { events: Event[] }) {
             </div>
             <div className="min-h-[31rem] bg-[#FAFEFF] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
                 <div className="flex flex-col md:flex-row gap-[2.6875rem] max-w-[75rem]">
-                    <div className="flex flex-col gap-[1.625rem] w-full md:w-[36.25rem]">
-                        <h1 className="text-[#113663] font-jakarta text-[1.75rem] md:text-[2rem] font-bold text-center md:text-left">
+                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[36.25rem]">
+                        <h1 className="text-[#113663] font-jakarta text-[1.25rem] sm:text-[1.75rem] md:text-[2rem] font-bold text-left">
                             Who&apos;s Linktank for?
                         </h1>
-                        <p className="text-[#1C2329] font-jakarta text-[1rem] text-center md:text-left font-normal">
+                        <p className="text-[#1C2329] font-jakarta text-[0.8125rem] sm:text-[1rem] text-left font-normal">
                             Linktank is for policy professionals, issue
                             advocates, researchers, students, journalists,
                             business leaders—anyone interested in thoughtful
                             policy discussions.
                         </p>
-                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[1.125rem]">
+                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem]">
                             Get Started
                         </Button>
                     </div>
@@ -265,8 +265,8 @@ export default function Landing({ events }: { events: Event[] }) {
                     </div>
                 </div>
             </div>
-            <div className="min-h-[54.69rem] bg-[#D1E7FD] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
-                <h1 className="text-[#113663] text-3xl md:text-4xl font-bold text-center mb-[1.25rem]">
+            <div className="min-h-[42.63rem] sm:min-h-[54.69rem] bg-[#D1E7FD] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
+                <h1 className="text-[#113663] text-[1.25rem] sm:text-3xl md:text-4xl font-bold text-center mb-[1.25rem]">
                     One subscription. Full access.
                 </h1>
 
@@ -293,7 +293,7 @@ export default function Landing({ events }: { events: Event[] }) {
                     </button>
                 </div>
 
-                <p className="text-[#113663] text-[1.25rem] md:text-[1.5rem] mb-[2.25rem] font-semibold text-center">
+                <p className="text-[#113663] text-[0.9375rem] sm:text-[1.25rem] md:text-[1.5rem] mb-[2.25rem] font-semibold text-center">
                     Save 25% when billed annually!
                 </p>
 

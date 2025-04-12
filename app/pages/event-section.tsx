@@ -2,8 +2,8 @@
 
 import { Calendar } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Timeline } from "@/components/timeline";
-import { EventCard } from "@/components/event-card";
+import { Timeline } from "@/app/(event-listings)/timeline";
+import { EventCard } from "@/app/(event-listings)/EventCard";
 
 export default function PastEvents({ events }: { events: EventModel[] }) {
     const [isMobile, setIsMobile] = useState(false);

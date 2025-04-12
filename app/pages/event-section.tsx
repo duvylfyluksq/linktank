@@ -21,11 +21,11 @@ export default function PastEvents({ events }: { events: EventModel[] }) {
     return (
         <div className="max-w-4xl mx-auto px-4 py-12">
             <div className="text-center mb-8">
-                <h2 className="flex items-center justify-center gap-2 text-[32px] font-bold text-[#113663] mb-2">
+                <h2 className="flex items-center justify-center gap-2 text-[1.125rem] sm:text-[2rem] font-bold text-[#113663] mb-2">
                     <Calendar className="w-6 h-6" />
                     Past events
                 </h2>
-                <p className="text-lg text-gray-600">
+                <p className="text-[0.8125rem] font-medium sm:text-lg text-gray-600">
                     We go directly to the source including think tanks,
                     <br className="hidden sm:inline" /> government institutions,
                     and NGOs.

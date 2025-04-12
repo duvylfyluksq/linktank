@@ -1,11 +1,19 @@
 import dbConnect from "@/lib/dbConnect";
 import User from "@/models/User";
 import { NextResponse } from "next/server";
+import { stripe } from "@/lib/stripe";
 
 export async function createUser(user : any){
     try{
         await dbConnect();
+
+        const stripeCustomer = await stripe.customers.create({
+          email: user.email,
+        });
+        
+        user.stripe_id = stripeCustomer.id;
         const newUser = await User.create(user);
+        console.log(newUser);
         if(!newUser){
             return NextResponse.json({ success: false, message: "Invalid format" }, { status: 400 });
         }

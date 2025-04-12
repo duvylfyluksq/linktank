@@ -1,5 +1,5 @@
 import SkeletonCard from "@/app/(event-listings)/SkeletonCard";
-import { EventCard } from "@/components/event-card";
+import { EventCard } from "@/app/(event-listings)/EventCard";
 import { useMemo } from "react";
 
 interface TimelineProps {

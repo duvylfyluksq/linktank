@@ -20,7 +20,8 @@ export function PasswordInput({ id, value, onChange, placeholder }: PasswordInpu
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="pr-10"
+        className="w-full pr-10"
+        autoFocus
       />
       <button
         type="button"

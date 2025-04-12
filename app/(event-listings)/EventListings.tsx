@@ -2,7 +2,7 @@ import { useEventFilters } from "@/hooks/useEventFilters";
 import { useEffect, useState, useRef } from "react";
 import EventTypeSelector from "./EventTypeSelector";
 import { EventCalendar } from "./EventCalendar";
-import EventFiltersDialog from "@/components/EventFiltersDialog";
+import EventFiltersDialog from "@/app/(event-listings)/EventFiltersDialog";
 import { Button } from "@/components/ui/button";
 import { Select,
     SelectContent,
@@ -13,7 +13,7 @@ import { Select,
     SelectValue
 } from "@/components/ui/select";
 import {Loader2, SlidersHorizontal } from "lucide-react";
-import { Timeline } from "@/components/timeline";
+import { Timeline } from "@/app/(event-listings)/timeline";
 
 
 interface EventListingsProps {

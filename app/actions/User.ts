@@ -31,11 +31,22 @@ export async function createUser(user : any){
 export async function deleteUser(user : any){
     try{
         await dbConnect();
-        const result = await User.deleteOne(user);
-        if(result.deletedCount === 0){
-            return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+        const existingUser = await User.findOne(user);
+
+        if (!existingUser) {
+          return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
         }
-        return NextResponse.json({ success: true, message: "User deleted successfully", result }, { status: 200 });
+
+        if (existingUser.stripe_id) {
+          await stripe.customers.del(existingUser.stripe_id);
+        }
+
+        const result = await User.deleteOne({ _id: existingUser._id });
+
+        return NextResponse.json(
+          { success: true, message: "User deleted successfully", result },
+          { status: 200 }
+        );
     } 
     catch (error) {
         console.error("Error deleting user:", error);

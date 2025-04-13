@@ -20,6 +20,7 @@ interface Organization {
 
 interface User {
     clerk_id: string,
+    stripe_id: string,
     username: string,
     first_name: string,
     last_name: string,

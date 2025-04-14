@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { addMonths, addYears } from "date-fns";
 
 export function useBillingInfo(customerData: any) {
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
@@ -10,8 +11,13 @@ export function useBillingInfo(customerData: any) {
     const currentPlan = customerData?.customer?.subscriptions?.[0]?.plan?.id;
     const isMonthlyPlan = currentPlan === process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID;
     const isYearlyPlan = currentPlan === process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID;
-
     const defaultSelectedPlan: "monthly" | "yearly" = isYearlyPlan ? "yearly" : "monthly";
+    const billingCycleAnchor = customerData?.customer?.subscriptions?.[0]?.billing_cycle_anchor;
+    const renewalDate = hasSubscription && billingCycleAnchor
+      ? isYearlyPlan
+        ? addYears(new Date(billingCycleAnchor * 1000), 1)
+        : addMonths(new Date(billingCycleAnchor * 1000), 1)
+      : "NA";
 
     return {
       hasSubscription,
@@ -21,6 +27,7 @@ export function useBillingInfo(customerData: any) {
       isMonthlyPlan,
       isYearlyPlan,
       defaultSelectedPlan,
+      renewalDate
     };
   }, [customerData]);
 

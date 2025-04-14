@@ -34,6 +34,7 @@ export default function BillingPage() {
         isYearlyPlan,
         selectedPlan,
         setSelectedPlan,
+        renewalDate
       } = useBillingInfo(customerData);      
     const [cardFormOpen, setCardFormOpen] = useState(false);
     const [updateCard, setUpdateCard] = useState(false);
@@ -175,10 +176,6 @@ export default function BillingPage() {
         setCustomerData(data)
     }
 
-    const renewalDate = customerData?.activeSubscription?.current_period_end
-        ? new Date(customerData.activeSubscription.current_period_end * 1000).toLocaleDateString()
-        : "N/A"
-
     if (loading) {
         return <div className="p-6 text-center">Loading billing information...</div>
     }
@@ -312,7 +309,7 @@ export default function BillingPage() {
             
             {hasSubscription && (
                 <div className="flex justify-between items-center">
-                    <p className="text-xs text-gray-400">Renews {renewalDate}</p>
+                    <p className="text-xs text-gray-400">Renews {new Date(renewalDate).toLocaleDateString()}</p>
                     <Button
                         disabled={(selectedPlan==="monthly" && isMonthlyPlan) || (selectedPlan==="yearly" && isYearlyPlan)}
                         onClick={handleUpdateBillingCycle}

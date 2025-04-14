@@ -19,9 +19,9 @@ export async function getCustomerDetails(userId: string) {
       const stripeId = await getUserStripeId(userId);
   
       const customer = await stripe.customers.retrieve(stripeId, {
-        expand: ["subscriptions", "invoice_settings.default_payment_method"],
+        expand: ["subscriptions.data", "invoice_settings.default_payment_method"],
       }) as any;
-  
+      
       if (customer.deleted) {
         return {
           customer: null,
@@ -51,6 +51,7 @@ export async function getCustomerDetails(userId: string) {
           subscriptions: customer.subscriptions.data.map((sub) => ({
             id: sub.id,
             status: sub.status,
+            billing_cycle_anchor: sub.billing_cycle_anchor,
             current_period_end: sub.current_period_end,
             plan: {
               id: sub.items.data[0]?.plan.id,

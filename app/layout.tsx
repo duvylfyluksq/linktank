@@ -43,7 +43,7 @@ export default function RootLayout({
 					>
 						<Navbar />
 
-						<main className="flex-1 flex flex-col items-center">
+						<main className="pt-[6rem] flex-1 flex flex-col items-center">
 							{children}
 							<Toaster />
 						</main>

@@ -3,30 +3,46 @@ import Link from "next/link";
 import Image from "next/image";
 import { SaveButton } from "@/components/ui/save-button";
 import { MapPin } from "lucide-react";
-
-function removeMediaTags(htmlString: string): string {
-    const div = document.createElement("div");
-    div.innerHTML = htmlString;
-
-    const mediaTags = [
-        "img",
-        "video",
-        "iframe",
-        "audio",
-        "source",
-        "embed",
-        "object",
-        "picture",
-        "table",
-    ];
-    mediaTags.forEach((tag) => {
-        div.querySelectorAll(tag).forEach((el) => el.remove());
-    });
-
-    return div.innerHTML;
-}
+import { useEffect, useState } from "react";
 
 export const EventCard = ({ event }: { event: EventModel }) => {
+
+    const [cleanBriefDescription, setCleanBriefDescription] = useState("");
+
+    useEffect(() => {
+        const cleanAndExtract = (htmlString: string) => {
+            const div = document.createElement("div");
+            div.innerHTML = htmlString;
+        
+            const mediaTags = [
+                "img",
+                "video",
+                "iframe",
+                "audio",
+                "source",
+                "embed",
+                "object",
+                "picture",
+                "table",
+            ];
+
+            mediaTags.forEach((tag) => {
+                div.querySelectorAll(tag).forEach((el) => el.remove());
+            });
+            
+            return div.innerHTML;
+
+            // const firstP = div.querySelector("p");
+
+            // return firstP ? firstP.innerHTML : div.innerHTML;
+        };
+        
+
+        if (!event.brief_description) {
+            setCleanBriefDescription(cleanAndExtract(event.description));
+        }
+    }, [event]);
+
     return (
         <Link href={`/events/${event.backlink}`} key={event._id}>
             <div className="border flex border-[#D3D0D0] bg-white sm:mb-10 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full">
@@ -71,7 +87,7 @@ export const EventCard = ({ event }: { event: EventModel }) => {
                         <p
                             className="text-sm md:text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-2"
                             dangerouslySetInnerHTML={{
-                                __html: removeMediaTags(event.description),
+                                __html: cleanBriefDescription,
                             }}
                         ></p>
                     )}

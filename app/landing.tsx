@@ -46,7 +46,6 @@ const images2 = ["/landing-3-1.jpg", "/landing-3-2.jpg", "/landing-3-3.jpg"];
 
 export default function Landing({ events }: { events: Event[] }) {
     const [isYearly, setIsYearly] = useState(true);
-
     const price = isYearly ? "99.97" : "10.97";
     const period = isYearly ? "per year" : "per month";
     const billingText = isYearly ? "Billed yearly" : "Billed monthly";
@@ -74,15 +73,12 @@ export default function Landing({ events }: { events: Event[] }) {
                         insight.
                     </p>
 
-                    <div className="flex flex-row flex-wrap gap-[0.56rem] w-[18.125rem] md:w-full justify-center">
+                    <div className="flex flex-row flex-wrap w-[5rem] justify-center">
                         <Link href="/sign-up" className="flex-1">
-                            <Button className="w-full sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem]">
+                            <Button className="w-full sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem] hover:bg-[#0e3b69]">
                                 Get Started
                             </Button>
                         </Link>
-                        <Button className="flex-1 sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-transparent text-[#113663] hover:bg-transparent shadow-none font-inter font-semibold text-[0.875rem] md:text-[1rem]">
-                            Learn More
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -99,7 +95,7 @@ export default function Landing({ events }: { events: Event[] }) {
                             worldwide. Find trending events and get notified
                             about what matters to you.
                         </p>
-                        <Button className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem]">
+                        <Button className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]">
                             Get Started
                         </Button>
                     </div>
@@ -241,7 +237,7 @@ export default function Landing({ events }: { events: Event[] }) {
                             business leaders—anyone interested in thoughtful
                             policy discussions.
                         </p>
-                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem]">
+                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]">
                             Get Started
                         </Button>
                     </div>
@@ -331,7 +327,7 @@ export default function Landing({ events }: { events: Event[] }) {
                         </div>
                     </div>
 
-                    <Button className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem]">
+                    <Button className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem] hover:bg-[#0e3b69]">
                         Get started
                     </Button>
                 </div>

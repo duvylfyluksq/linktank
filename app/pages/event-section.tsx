@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Timeline } from "@/app/(event-listings)/timeline";
 import { EventCard } from "@/app/(event-listings)/EventCard";
 
-export default function PastEvents({ events }: { events: EventModel[] }) {
+export default function PastEvents( { events }: { events: EventModel[] } ){
     const [isMobile, setIsMobile] = useState(false);
 
     // uh fix

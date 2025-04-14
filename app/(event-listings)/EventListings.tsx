@@ -170,7 +170,7 @@ export default function EventListings({
                     <div className="h-1" ref={sentinelRef} />
                 </div>
 
-                <div className="h-auto max-sm:mt-4 flex-shrink-0 sticky top-4 self-start max-sm:hidden">
+                <div className="h-auto max-sm:mt-4 flex-shrink-0 sticky top-[7rem] self-start max-sm:hidden">
                     <EventTypeSelector
                         currentType={filters.date_type}
                         onChange={(type) => {

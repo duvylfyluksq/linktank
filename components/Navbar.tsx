@@ -45,7 +45,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[6rem]  py-6 px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[4.9375rem] sm:h-[6rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center mr-10">
                 <Link href="/" className="flex items-center">
                     <Image
@@ -68,7 +68,7 @@ const Navbar = () => {
                             href="/events"
                             className={cn(
                                 "text-gray-600 hover:underline",
-                                pathname === "/events" && "font-semibold"
+                                pathname === "/events" && "font-semibold underline"
                             )}
                         >
                             Events
@@ -79,7 +79,7 @@ const Navbar = () => {
                             href="/mycalendar"
                             className={cn(
                                 "text-gray-600 hover:underline",
-                                pathname === "/mycalendar" && "font-semibold"
+                                pathname === "/mycalendar" && "font-semibold underline"
                             )}
                         >
                             My calendar
@@ -90,7 +90,7 @@ const Navbar = () => {
                             href="/organizations"
                             className={cn(
                                 "text-gray-600 hover:underline",
-                                pathname === "/organizations" && "font-semibold"
+                                pathname === "/organizations" && "font-semibold underline"
                             )}
                         >
                             Organizations

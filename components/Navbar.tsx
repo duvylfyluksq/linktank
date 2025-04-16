@@ -8,7 +8,6 @@ import {
     SignedIn,
     SignedOut,
     useUser,
-    SignOutButton,
 } from "@clerk/nextjs";
 import {
     DropdownMenu,
@@ -16,17 +15,19 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Plus, Search, User } from "lucide-react";
+import { Plus, Search, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import AccountModal from "./AccountModal";
 import SearchModal from "./SearchModal";
+import LogoutMenuItem from "./LogoutMenuItem";
 
 const Navbar = () => {
-    const { user } = useUser();
+    const { user, isLoaded } = useUser();
     const pathname = usePathname();
     const [accountModalOpen, setAccountModalOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
@@ -111,70 +112,78 @@ const Navbar = () => {
                         <Plus className="w-5 h-5 text-inherit" />
                         <span>Create an event</span>
                     </button>
+                    
+                    {!isLoaded ? (
+                        
+                        <div className="flex items-center gap-2">
+                            <Skeleton className="w-8 h-8 rounded-full" />
+                            <div className="flex flex-col gap-1">
+                                <Skeleton className="w-36 h-4 rounded" />
+                                <Skeleton className="w-36 h-4 rounded" />
+                            </div>
+                        </div>
+                        ) : (
+                            <>
+                                <SignedOut>
+                                    <SignUpButton>
+                                        <Button className="px-[1.16rem] sm:px-10 py-5 sm:py-6 text-[0.875rem] sm:text-base rounded-xl text-white bg-[#1C2329] hover:bg-[#0e3b69]">
+                                            Sign Up
+                                        </Button>
+                                    </SignUpButton>
+                                </SignedOut>
 
-                    <SignedOut>
-                        <SignUpButton>
-                            <Button className="px-[1.16rem] sm:px-10 py-5 sm:py-6 text-[0.875rem] sm:text-base rounded-xl text-white bg-[#1C2329] hover:bg-[#0e3b69]">
-                                Sign Up
-                            </Button>
-                        </SignUpButton>
-                    </SignedOut>
+                                <SignedIn>
+                                    {!accountModalOpen && (
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <button className="flex items-center gap-x-2 text-black shadow-none px-3 py-2 rounded-md transition-none focus:outline-none">
+                                                    <img
+                                                        src={user?.imageUrl || ""}
+                                                        alt="User avatar"
+                                                        className="w-8 h-8 rounded-full object-cover"
+                                                    />
+                                                    <div className="text-sm leading-tight text-left sm:flex hidden">
+                                                        <h4 className="text-base text-[#1C2329] font-semibold">
+                                                            {user?.fullName}
+                                                        </h4>
+                                                        <p className="text-sm text-gray-500">
+                                                            {
+                                                                user?.primaryEmailAddress
+                                                                    ?.emailAddress
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <ChevronDownIcon className="text-[#737272] w-5 h-5 ml-1" />
+                                                </button>
+                                            </DropdownMenuTrigger>
 
-                    <SignedIn>
-                        {!accountModalOpen && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="flex items-center gap-x-2 text-black shadow-none px-3 py-2 rounded-md transition-none focus:outline-none">
-                                        <img
-                                            src={user?.imageUrl || ""}
-                                            alt="User avatar"
-                                            className="w-8 h-8 rounded-full object-cover"
-                                        />
-                                        <div className="text-sm leading-tight text-left sm:flex hidden">
-                                            <h4 className="text-base text-[#1C2329] font-semibold">
-                                                {user?.fullName}
-                                            </h4>
-                                            <p className="text-sm text-gray-500">
-                                                {
-                                                    user?.primaryEmailAddress
-                                                        ?.emailAddress
-                                                }
-                                            </p>
-                                        </div>
-                                        <ChevronDownIcon className="text-[#737272] w-5 h-5 ml-1" />
-                                    </button>
-                                </DropdownMenuTrigger>
-
-                                <DropdownMenuContent
-                                    align="start"
-                                    sideOffset={0}
-                                    alignOffset={4}
-                                    className="w-[--radix-dropdown-menu-trigger-width] shadow-md border rounded-md bg-white"
-                                >
-                                    <DropdownMenuItem
-                                        className="cursor-pointer"
-                                        onClick={() => {
-                                            setAccountModalOpen(true);
-                                        }}
-                                    >
-                                        <User className="mr-2 h-4 w-4" />
-                                        My account
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        asChild
-                                        className="cursor-pointer text-red-500 focus:text-red-600"
-                                    >
-                                        <SignOutButton>
-                                            <div className="flex items-center">
-                                                <LogOut className="mr-2 h-4 w-4" />
-                                                Logout
-                                            </div>
-                                        </SignOutButton>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                                            <DropdownMenuContent
+                                                align="start"
+                                                sideOffset={0}
+                                                alignOffset={4}
+                                                className="w-[--radix-dropdown-menu-trigger-width] shadow-md border rounded-md bg-white"
+                                            >
+                                                <DropdownMenuItem
+                                                    className="cursor-pointer"
+                                                    onClick={() => {
+                                                        setAccountModalOpen(true);
+                                                    }}
+                                                >
+                                                    <User className="mr-2 h-4 w-4" />
+                                                    My account
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem
+                                                    asChild
+                                                    className="cursor-pointer text-red-500 focus:text-red-600"
+                                                >   
+                                                    <LogoutMenuItem/>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    )}
+                                </SignedIn>
+                            </>
                         )}
-                    </SignedIn>
                 </div>
             </div>
             <SearchModal

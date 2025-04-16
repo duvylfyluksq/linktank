@@ -1,11 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Bell, Check, TrendingUp, Users, Wand } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import EventsSection from "./pages/event-section";
-import Link from "next/link";
+import GetStartedButton from "@/components/GetStartedButton";
 
 const features = [
     {
@@ -44,7 +43,7 @@ const images1 = [
 
 const images2 = ["/landing-3-1.jpg", "/landing-3-2.jpg", "/landing-3-3.jpg"];
 
-export default function Landing({ events }: { events: Event[] }) {
+export default function Landing({ events }: { events: EventModel[]}) {
     const [isYearly, setIsYearly] = useState(true);
     const price = isYearly ? "99.97" : "10.97";
     const period = isYearly ? "per year" : "per month";
@@ -74,11 +73,7 @@ export default function Landing({ events }: { events: Event[] }) {
                     </p>
 
                     <div className="flex flex-row flex-wrap w-[5rem] justify-center">
-                        <Link href="/sign-up" className="flex-1">
-                            <Button className="w-full sm:flex-none px-[1.5rem] md:px-[3rem] rounded-[0.75rem] py-[1.5rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.875rem] md:text-[1rem] hover:bg-[#0e3b69]">
-                                Get Started
-                            </Button>
-                        </Link>
+                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
                     </div>
                 </div>
             </div>
@@ -95,9 +90,7 @@ export default function Landing({ events }: { events: Event[] }) {
                             worldwide. Find trending events and get notified
                             about what matters to you.
                         </p>
-                        <Button className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]">
-                            Get Started
-                        </Button>
+                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
                     </div>
                     <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3 grid-rows-2">
                         {images1.map((image, index) => (
@@ -237,9 +230,7 @@ export default function Landing({ events }: { events: Event[] }) {
                             business leaders—anyone interested in thoughtful
                             policy discussions.
                         </p>
-                        <Button className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]">
-                            Get Started
-                        </Button>
+                        <GetStartedButton className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
                     </div>
                     <div className="grid grid-cols-3 gap-x-[1.09rem] gap-y-[1.4375rem]">
                         {images2.map((image, index) => (
@@ -327,9 +318,7 @@ export default function Landing({ events }: { events: Event[] }) {
                         </div>
                     </div>
 
-                    <Button className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem] hover:bg-[#0e3b69]">
-                        Get started
-                    </Button>
+                    <GetStartedButton className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem] hover:bg-[#0e3b69]"/>
                 </div>
             </div>
         </div>

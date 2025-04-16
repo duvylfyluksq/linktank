@@ -17,6 +17,7 @@ interface AddPaymentMethodFormProps {
     onOpenChange: (open: boolean) => void;
     onSuccess: () => void;
     isUpdate: boolean;
+    setLoadingCard: (boolean) => void;
     existingPaymentMethodId?: string;
 };
 
@@ -25,6 +26,7 @@ export function AddPaymentMethodForm({
     onOpenChange,
     onSuccess,
     isUpdate = false,
+    setLoadingCard,
     existingPaymentMethodId,
 }: AddPaymentMethodFormProps) {
 
@@ -44,6 +46,7 @@ export function AddPaymentMethodForm({
         setErrorMessage(null)
       
         try {
+            setLoadingCard(true);
             if (isUpdate && existingPaymentMethodId) {
                 const detachRes = await fetch(`/api/users/${userId}/payment_methods/${existingPaymentMethodId}`, {
                     method: "DELETE",

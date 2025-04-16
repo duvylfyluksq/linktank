@@ -1,8 +1,42 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { addMonths, addYears } from "date-fns";
+import { getCustomerDetails } from "@/app/actions/Stripe";
 
-export function useBillingInfo(customerData: any) {
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
+export function useBillingInfo(userId?: string) {
+  const [customerData, setCustomerData] = useState<any>(null);
+  const [loadingPlan, setLoadingPlan] = useState(true);
+  const [loadingCard, setLoadingCard] = useState(true);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchCustomerData = async () => {
+      try {
+        setLoadingPlan(true);
+        setLoadingCard(true);
+        const data = await getCustomerDetails(userId);
+        setCustomerData(data);
+      } catch (error) {
+        console.error("Error fetching customer data:", error);
+      } finally {
+        setLoadingPlan(false);
+        setLoadingCard(false);
+      }
+    };
+    fetchCustomerData();
+  }, [userId]);
+
+  const updateCustomerData = useCallback((data: any) => {
+    setCustomerData(data);
+  }, []);
+
+  const updateLoadingPlan = useCallback((loadingPlan: boolean) => {
+    setLoadingPlan(loadingPlan);
+  }, []);
+
+  const updateLoadingCard = useCallback((loadingCard: boolean) => {
+    setLoadingCard(loadingCard);
+  }, []);
 
   const billingInfo = useMemo(() => {
     const hasSubscription = customerData?.hasActiveSubscription ?? false;
@@ -27,9 +61,11 @@ export function useBillingInfo(customerData: any) {
       isMonthlyPlan,
       isYearlyPlan,
       defaultSelectedPlan,
-      renewalDate
+      renewalDate,
     };
   }, [customerData]);
+
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
 
   useEffect(() => {
     setSelectedPlan(billingInfo.defaultSelectedPlan);
@@ -39,5 +75,11 @@ export function useBillingInfo(customerData: any) {
     ...billingInfo,
     selectedPlan,
     setSelectedPlan,
+    customerData,
+    updateCustomerData,
+    loadingPlan,
+    updateLoadingPlan,
+    loadingCard,
+    updateLoadingCard
   };
 }

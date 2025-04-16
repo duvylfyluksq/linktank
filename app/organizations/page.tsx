@@ -1,32 +1,30 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-// import {
-//     Select,
-//     SelectTrigger,
-//     SelectValue,
-//     SelectContent,
-//     SelectGroup,
-//     SelectLabel,
-//     SelectItem,
-// } from "@/components/ui/select";
-import Image from "next/image";
-import Link from "next/link";
+import OrganizationCard from "./OrganizationCard";
+import OrganizationSkeleton from "./OrganizationSkeleton";
 
 export default function Organizations() {
     const [searchTerm, setSearchTerm] = useState("");
-    // const [selectedRegion, setSelectedRegion] = useState("all");
+    const [fetching, setFetching] = useState(true);
     const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [filteredOrganizations, setFilteredOrganizations] = useState<
-    Organization[]
-    >([]);
+    const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>([]);
 
     useEffect(() => {
-        fetchOrganizations();
-    }, []);
+        const fetchData = async () => {
+          try {
+            setFetching(true);
+            await fetchOrganizations();
+          } catch (error) {
+            console.error("Error fetching organizations:", error);
+          } finally {
+            setFetching(false);
+          }
+        };
+        fetchData();
+      }, []);
 
     async function fetchOrganizations() {
         const response = await fetch(`/api/organizations`);
@@ -42,8 +40,6 @@ export default function Organizations() {
                 const matchesSearch = org.name
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase());
-                // const matchesRegion =
-                //     selectedRegion === "all" || org.region === selectedRegion;
                 return matchesSearch;
             })
         );
@@ -77,73 +73,25 @@ export default function Organizations() {
                         </div>
                     </div>
                 </div>
-                {filteredOrganizations.length === 0 ? (
+                {fetching ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                        <OrganizationSkeleton key={i} />
+                        ))}
+                    </div>
+                ) :
+                filteredOrganizations.length === 0 ? (
                     <div className="text-center text-gray-600">
                         No organizations found.
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         {filteredOrganizations.map((org) => (
-                            <Link href={org.url} key={org._id} target="_blank" rel="noopener noreferrer">
-                                <div
-                                    key={org._id}
-                                    className="border border-[#D3D0D0] bg-white rounded-[10px] shadow-sm
-                    flex flex-col justify-center items-start
-                    pr-[40px] pl-[19px] py-8 w-auto h-auto gap-[0.5rem]"
-                                >
-                                    <div className="flex items-center gap-4">
-                                            {org.logo_url ? (
-                                                <div className="w-20 h-16 bg-gray-200 rounded flex flex-col items-center justify-center flex-shrink-0">
-                                                    <Image
-                                                        src={org.logo_url}
-                                                        alt={`${org.name} logo`}
-                                                        width={100}
-                                                        height={100}
-                                                        className="w-auto h-14 object-contain rounded"
-                                                    />
-                                                </div>
-                                            ) : (
-                                                <div className="w-16 h-16 bg-gray-200 rounded" />
-                                            )}
-                                            <h2 className="text-xl font-semibold text-[#323232]">
-                                                {org.name}
-                                            </h2>
-                                    </div>
-                                </div>
-                            </Link>
+                            <OrganizationCard org={org} key={org._id}/>
                         ))}
                     </div>
                 )}
             </div>
         </div>
     );
-    {/* <Select
-        value={selectedRegion}
-        onValueChange={(val) => setSelectedRegion(val)}
-    >
-        <SelectTrigger className="w-full md:w-64 h-12 bg-white rounded-md">
-            <SelectValue placeholder="Anywhere" />
-        </SelectTrigger>
-        <SelectContent className="bg-white">
-            <SelectGroup>
-                <SelectLabel>Regions</SelectLabel>
-                <SelectItem value="all">
-                    Anywhere
-                </SelectItem>
-                <SelectItem value="north-america">
-                    North America
-                </SelectItem>
-                <SelectItem value="europe">
-                    Europe
-                </SelectItem>
-                <SelectItem value="asia">Asia</SelectItem>
-                <SelectItem value="africa">
-                    Africa
-                </SelectItem>
-                <SelectItem value="south-america">
-                    South America
-                </SelectItem>
-            </SelectGroup>
-        </SelectContent>
-    </Select> */}
 }

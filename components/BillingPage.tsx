@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
@@ -17,6 +17,8 @@ import { useUser } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "./ui/button"
 import { useBillingInfo } from "@/hooks/useBillingInfo"
+import ConfirmDialog from "./ConfirmDialog"
+import { Skeleton } from "./ui/skeleton"
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -24,8 +26,6 @@ export default function BillingPage() {
     const { user } = useUser();
     const userId = user?.id as any;
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
-    const [customerData, setCustomerData] = useState<any>(null);
     const {
         hasSubscription,
         hasPaymentMethod,
@@ -34,28 +34,20 @@ export default function BillingPage() {
         isYearlyPlan,
         selectedPlan,
         setSelectedPlan,
-        renewalDate
-      } = useBillingInfo(customerData);      
+        renewalDate,
+        customerData,
+        updateCustomerData,
+        loadingPlan,
+        updateLoadingPlan,
+        loadingCard,
+        updateLoadingCard
+      } = useBillingInfo(userId);      
     const [cardFormOpen, setCardFormOpen] = useState(false);
     const [updateCard, setUpdateCard] = useState(false);
     const [setupIntent, setSetupIntent] = useState<string | null>(null);
     const [updatingPlan, setUpdatingPlan] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const { toast } = useToast();
-
-    useEffect(() => {
-        const fetchCustomerData = async () => {
-            try {
-                const data = await getCustomerDetails(userId)
-                setCustomerData(data)
-            } catch (error) {
-                console.error("Error fetching customer data:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchCustomerData()
-    }, [userId])
 
     const handleUpdateBillingCycle = async () => {
         if (!activeSubscription) return
@@ -70,6 +62,7 @@ export default function BillingPage() {
     
         try {
           setUpdatingPlan(true)
+          updateLoadingPlan(true)
           const newPriceId =
             selectedPlan === "monthly"
               ? process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID!
@@ -83,7 +76,7 @@ export default function BillingPage() {
           })
     
           const data = await getCustomerDetails(userId)
-          setCustomerData(data)
+          updateCustomerData(data)
         } catch (error) {
           console.error("Error updating billing cycle:", error)
           toast({
@@ -93,12 +86,13 @@ export default function BillingPage() {
           })
         } finally {
           setUpdatingPlan(false)
+          updateLoadingPlan(false)
         }
       }
 
     const handleSubscribe = async (priceId: string) => {
         try {
-            setLoading(true)
+            updateLoadingPlan(true)
             const { url } = await createCheckoutSession(userId, priceId)
             if (url) {
                 router.push(url)
@@ -106,23 +100,22 @@ export default function BillingPage() {
         } catch (error) {
             console.error("Error creating checkout session:", error)
         } finally {
-            setLoading(false)
+            updateLoadingPlan(false)
         }
     }
 
     const handleCancelSubscription = async () => {
         if (!activeSubscription) return;
-        if (confirm("Are you sure you want to cancel your subscription?")) {
-            try {
-                setLoading(true)
-                await cancelSubscription(userId, activeSubscription)
-                const data = await getCustomerDetails(userId)
-                setCustomerData(data)
-            } catch (error) {
-                console.error("Error canceling subscription:", error)
-            } finally {
-                setLoading(false)
-            }
+        try {
+            updateLoadingPlan(true)
+            await cancelSubscription(userId, activeSubscription)
+            const data = await getCustomerDetails(userId)
+            updateCustomerData(data)
+        } catch (error) {
+            console.error("Error canceling subscription:", error)
+        } finally {
+            updateLoadingPlan(false)
+            setConfirmOpen(false);
         }
     }
 
@@ -136,12 +129,13 @@ export default function BillingPage() {
       
       
         try {
+            updateLoadingCard(true)
             await fetch(`/api/users/${userId}/payment_methods/${defaultPaymentMethodId}`, {
                 method: "DELETE",
             });
       
             const data = await getCustomerDetails(userId)
-            setCustomerData(data)
+            updateCustomerData(data)
       
             toast({
                 title: "Success",
@@ -153,6 +147,8 @@ export default function BillingPage() {
                 description: "There was an error in deleting the card",
                 variant: "destructive"
             })
+        } finally{
+            updateLoadingCard(false)
         }
     };
 
@@ -173,11 +169,8 @@ export default function BillingPage() {
             description: "Card saved successfully",
         })
         const data = await getCustomerDetails(userId)
-        setCustomerData(data)
-    }
-
-    if (loading) {
-        return <div className="p-6 text-center">Loading billing information...</div>
+        updateCustomerData(data)
+        updateLoadingCard(false)
     }
     
 
@@ -190,10 +183,34 @@ export default function BillingPage() {
                     {hasSubscription ? "Your current plan and billing cycle" : "Subscribe to access Linktank fully!"}
                 </p>
 
-                <div className="flex flex-col gap-3 pt-2">
-                {hasSubscription ? (
+                <div className="flex flex-col gap-3">
+                {loadingPlan ? (
                     <>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex px-4 py-4 items-center gap-2 rounded-xl border border-inherit animate-pulse">
+                        <Skeleton className="h-4 w-4 rounded-full" />
+                        <div className="flex justify-between items-center w-full">
+                            <Skeleton className="h-4 w-20" />
+                            <Skeleton className="h-4 w-24" />
+                        </div>
+                    </div>
+                    <div className="flex px-4 py-4 items-center gap-2 rounded-xl border border-inherit animate-pulse">
+                        <Skeleton className="h-4 w-4 rounded-full" />
+                        <div className="flex justify-between items-center w-full">
+                        <div className="flex flex-col gap-1">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-3 w-16" />
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                            <Skeleton className="h-4 w-24" />
+                            <Skeleton className="h-3 w-24" />
+                        </div>
+                        </div>
+                    </div>
+                    </>
+                ) :
+                hasSubscription ? (
+                    <>
+                    <div className="flex-1 flex px-4 py-4 items-center gap-2 rounded-xl border border-inherit">
                         <input
                             type="radio"
                             id="monthly"
@@ -203,11 +220,11 @@ export default function BillingPage() {
                             className="h-4 w-4 text-blue-600 cursor-pointer"
                         />
                         <label htmlFor="monthly" className="flex justify-between items-center w-full">
-                        <span>Monthly</span>
-                        <span>$9.99/month</span>
+                            <span>Monthly</span>
+                            <span>$9.99/month</span>
                         </label>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex-1 flex px-4 py-4 items-center gap-2 rounded-xl border border-inherit">
                         <input
                             type="radio"
                             id="yearly"
@@ -217,14 +234,13 @@ export default function BillingPage() {
                             className="h-4 w-4 text-blue-600 cursor-pointer"
                         />
                         <label htmlFor="yearly" className="flex justify-between items-center w-full">
-                        <span>
-                            Yearly <span className="ml-1 text-xs text-green-400">Save 15%</span>
-                        </span>
-                        <span>
-                            $8.33/month
-                            <br />
-                            <span className="text-xs text-gray-400">$99.99 annually</span>
-                        </span>
+                            <span>
+                                Yearly <span className="ml-1 text-xs text-green-400">Save 15%</span>
+                            </span>
+                            <div className="flex flex-col">
+                                <span>$8.33/month</span>
+                                <span className="text-xs text-gray-400">$99.99 annually</span>
+                            </div>
                         </label>
                     </div>
                     </>
@@ -260,14 +276,30 @@ export default function BillingPage() {
                 <h3 className="text-sm font-medium mb-1">Payment Method</h3>
                 <p className="text-sm text-gray-500 mb-2">Your default payment method</p>
 
-                {hasPaymentMethod ? (
+                {loadingCard ? (
+                    <div className="flex items-center justify-between animate-pulse">
+                        <div className="flex items-center gap-2">
+                        <Skeleton className="h-5 w-5 rounded-full" />
+                        <div className="flex flex-col gap-1">
+                            <Skeleton className="h-4 w-32" />
+                            <Skeleton className="h-3 w-24" />
+                        </div>
+                        </div>
+                        <div className="flex gap-2">
+                            <Skeleton className="h-8 w-24 rounded-md" />
+                            <Skeleton className="h-8 w-24 rounded-md" />
+                        </div>
+                    </div>
+                    ) 
+                :
+                hasPaymentMethod ? (
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                     <CreditCardIcon className="h-5 w-5 text-blue-600" />
                     <div>
                         <p className="text-sm font-medium">
                             {customerData.paymentMethods[0].brand.charAt(0).toUpperCase() +
-                                customerData.paymentMethods[0].brand.slice(1)}
+                                customerData.paymentMethods[0].brand.slice(1)} {" "}
                             **** {customerData.paymentMethods[0].last4}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -327,6 +359,7 @@ export default function BillingPage() {
                         onOpenChange={setCardFormOpen}
                         onSuccess={handleCardSuccess}
                         isUpdate={updateCard}
+                        setLoadingCard={updateLoadingCard}
                         {...(customerData?.paymentMethods?.length > 0
                             ? { existingPaymentMethodId: customerData.paymentMethods[0].id }
                         : {})}
@@ -348,7 +381,29 @@ export default function BillingPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {customerData?.invoices?.length > 0 ? (
+                {loadingPlan ? (
+                        [...Array(10)].map((_, index) => (
+                            <tr key={index} className="border-t text-center animate-pulse">
+                            <td className="px-4 py-2">
+                                <div className="h-4 w-10 mx-auto bg-gray-200 rounded" />
+                            </td>
+                            <td className="px-4 py-2">
+                                <div className="h-4 w-16 mx-auto bg-gray-200 rounded" />
+                            </td>
+                            <td className="px-4 py-2">
+                                <div className="h-4 w-20 mx-auto bg-gray-200 rounded" />
+                            </td>
+                            <td className="px-4 py-2">
+                                <div className="h-4 w-14 mx-auto bg-gray-200 rounded-full" />
+                            </td>
+                            <td className="px-4 py-2">
+                                <div className="h-4 w-4 mx-auto bg-gray-200 rounded" />
+                            </td>
+                            </tr>
+                        ))
+                    )
+                    :
+                    customerData?.invoices?.length > 0 ? (
                     customerData.invoices.map((invoice, index) => (
                         <tr key={invoice.id} className="border-t text-center">
                             <td className="px-4 py-2">#{index+1}</td>
@@ -388,12 +443,22 @@ export default function BillingPage() {
                 </table>
 
                 {hasSubscription && (
-                    <button
-                        onClick={handleCancelSubscription}
-                        className="mt-4 text-sm px-4 py-2 border rounded-md hover:bg-gray-50"
-                    >
-                        Cancel Subscription
-                    </button>
+                    <>
+                        <Button
+                            variant="destructive"
+                            onClick={() => setConfirmOpen(true)}
+                            disabled={loadingPlan}
+                            className="mt-4 text-sm px-4 py-2 border rounded-md"
+                        >
+                            Cancel Subscription
+                        </Button>
+
+                        <ConfirmDialog
+                            open={confirmOpen}
+                            onConfirm={handleCancelSubscription}
+                            onCancel={() => setConfirmOpen(false)}
+                        />
+                    </>
                 )}
             </div>
         </div>

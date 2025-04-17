@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react";
 import { addMonths, addYears } from "date-fns";
-import { getCustomerDetails } from "@/app/actions/Stripe";
 import { useUser } from "@clerk/nextjs";
 
 interface BillingContextValue {
@@ -40,8 +39,9 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
       try {
         setLoadingPlan(true);
         setLoadingCard(true);
-        const data = await getCustomerDetails(user.id);
-        setCustomerData(data);
+        const response = await fetch(`/api/users/${user?.id}/stripe_data`);
+        const result = await response.json();
+        setCustomerData(result.data);
       } catch (error) {
         console.error("Error fetching customer data:", error);
       } finally {

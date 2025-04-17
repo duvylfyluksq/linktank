@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import {
-  getCustomerDetails,
   createCheckoutSession,
   cancelSubscription,
   updateSubscription,
@@ -75,8 +74,9 @@ export default function BillingPage() {
             description: `Your subscription has been updated to the ${selectedPlan} plan. You'll see the prorated charges on your next invoice.`,
           })
     
-          const data = await getCustomerDetails(userId)
-          updateCustomerData(data)
+            const response = await fetch(`/api/users/${userId}/stripe_data`);
+            const result = await response.json();
+            updateCustomerData(result.data);
         } catch (error) {
           console.error("Error updating billing cycle:", error)
           toast({
@@ -97,8 +97,9 @@ export default function BillingPage() {
             if (url) {
                 router.push(url)
             }
-            const data = await getCustomerDetails(userId)
-            updateCustomerData(data)
+            const response = await fetch(`/api/users/${userId}/stripe_data`);
+            const result = await response.json();
+            updateCustomerData(result.data);
         } catch (error) {
             console.error("Error creating checkout session:", error)
         } finally {
@@ -111,8 +112,9 @@ export default function BillingPage() {
         try {
             updateLoadingPlan(true)
             await cancelSubscription(userId, activeSubscription)
-            const data = await getCustomerDetails(userId)
-            updateCustomerData(data)
+            const response = await fetch(`/api/users/${userId}/stripe_data`);
+            const result = await response.json();
+            updateCustomerData(result.data);
         } catch (error) {
             console.error("Error canceling subscription:", error)
         } finally {
@@ -136,8 +138,9 @@ export default function BillingPage() {
                 method: "DELETE",
             });
       
-            const data = await getCustomerDetails(userId)
-            updateCustomerData(data)
+            const response = await fetch(`/api/users/${userId}/stripe_data`);
+            const result = await response.json();
+            updateCustomerData(result.data);
       
             toast({
                 title: "Success",
@@ -170,8 +173,9 @@ export default function BillingPage() {
             title: "Success",
             description: "Card saved successfully",
         })
-        const data = await getCustomerDetails(userId)
-        updateCustomerData(data)
+        const response = await fetch(`/api/users/${userId}/stripe_data`);
+        const result = await response.json();
+        updateCustomerData(result.data);
         updateLoadingCard(false)
     }
     

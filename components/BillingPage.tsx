@@ -4,12 +4,6 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
-import {
-  createCheckoutSession,
-  cancelSubscription,
-  updateSubscription,
-  createSetupIntent,
-} from "@/app/actions/Stripe"
 import { AddPaymentMethodForm } from "./AddPaymentMethodForm"
 import { DownloadIcon, CreditCardIcon, AlertCircleIcon, Loader2 } from "lucide-react"
 import { useUser } from "@clerk/nextjs";
@@ -67,7 +61,14 @@ export default function BillingPage() {
               ? process.env.NEXT_PUBLIC_STRIPE_MONTHLY_PRICE_ID!
               : process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!
     
-          await updateSubscription(userId, customerData.activeSubscription, newPriceId)
+
+            await fetch(`/api/users/${userId}/subscriptions`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ subscriptionId: activeSubscription, newPriceId: newPriceId })
+            });
     
           toast({
             title: "Success",
@@ -92,14 +93,16 @@ export default function BillingPage() {
 
     const handleSubscribe = async (priceId: string) => {
         try {
-            updateLoadingPlan(true)
-            const { url } = await createCheckoutSession(userId, priceId)
-            if (url) {
-                router.push(url)
-            }
+            const res = await fetch(`/api/users/${userId}/create_checkout_session`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ price_id: priceId }),
+              });
+            const result = await res.json();
+            if (result?.url) router.push(result.url);
             const response = await fetch(`/api/users/${userId}/stripe_data`);
-            const result = await response.json();
-            updateCustomerData(result.data);
+            const stripeDataResult = await response.json();
+            updateCustomerData(stripeDataResult.data);
         } catch (error) {
             console.error("Error creating checkout session:", error)
         } finally {
@@ -111,7 +114,13 @@ export default function BillingPage() {
         if (!activeSubscription) return;
         try {
             updateLoadingPlan(true)
-            await cancelSubscription(userId, activeSubscription)
+            await fetch(`/api/users/${userId}/subscriptions`, {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ subscriptionId: activeSubscription })
+            });
             const response = await fetch(`/api/users/${userId}/stripe_data`);
             const result = await response.json();
             updateCustomerData(result.data);
@@ -159,7 +168,12 @@ export default function BillingPage() {
 
     const handleCardOpen = async (isUpdate : boolean) => {
         try {
-            const { clientSecret } = await createSetupIntent(userId);
+            const response = await fetch(`/api/users/${userId}/create_setup_intent`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+              });
+            const data = await response.json();
+            const clientSecret = data.clientSecret;
             setSetupIntent(clientSecret)
             setCardFormOpen(true)
             setUpdateCard(isUpdate)

@@ -95,7 +95,6 @@ export async function getCustomerDetails(userId: string) {
     }
   }
 
-// Create a checkout session for subscription
 export async function createCheckoutSession(userId: string, priceId: string) {
   try {
     const stripeId = await getUserStripeId(userId)
@@ -122,25 +121,24 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 }
 
 // Create a billing portal session
-export async function createBillingPortalSession(userId: string) {
-  try {
-    const stripeId = await getUserStripeId(userId)
+// export async function createBillingPortalSession(userId: string) {
+//   try {
+//     const stripeId = await getUserStripeId(userId)
 
-    const session = await stripe.billingPortal.sessions.create({
-      customer: stripeId,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
-    })
+//     const session = await stripe.billingPortal.sessions.create({
+//       customer: stripeId,
+//       return_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+//     })
 
-    console.log(session);
+//     console.log(session);
 
-    return { url: session.url }
-  } catch (error) {
-    console.error("Error creating billing portal session:", error)
-    throw new Error("Failed to create billing portal session")
-  }
-}
+//     return { url: session.url }
+//   } catch (error) {
+//     console.error("Error creating billing portal session:", error)
+//     throw new Error("Failed to create billing portal session")
+//   }
+// }
 
-// Cancel subscription
 export async function cancelSubscription(userId: string, subscriptionId: string) {
   try {
     await stripe.subscriptions.cancel(subscriptionId)

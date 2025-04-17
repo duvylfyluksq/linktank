@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SavedEventsProvider } from "./contexts/SavedEventsContext";
-import { Toaster } from "@/components/ui/toaster";
 import { AccountModalProvider } from "./contexts/AccountModalContext";
 import { BillingProvider } from "./contexts/BillingContext";
+import ClientLayoutWrapper from "@/components/ClientLayoutWrapper";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -44,13 +42,9 @@ export default function RootLayout({
 							<body
 								className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF] flex flex-col min-h-screen`}
 							>
-								<Navbar />
-								<main className="pt-[8.125rem] flex-1 flex flex-col items-center">
+								<ClientLayoutWrapper>
 									{children}
-									<Toaster />
-								</main>
-
-								<Footer />
+								</ClientLayoutWrapper>
 							</body>
 						</html>
 					</BillingProvider>

@@ -28,8 +28,8 @@ const BillingContext = createContext<BillingContextValue | undefined>(undefined)
 export const BillingProvider = ({ children }: { children: React.ReactNode }) => {
   const { user, isSignedIn } = useUser();
   const [customerData, setCustomerData] = useState<any>(null);
-  const [loadingPlan, setLoadingPlan] = useState(true);
-  const [loadingCard, setLoadingCard] = useState(true);
+  const [loadingPlan, setLoadingPlan] = useState(false);
+  const [loadingCard, setLoadingCard] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
 
   useEffect(() => {

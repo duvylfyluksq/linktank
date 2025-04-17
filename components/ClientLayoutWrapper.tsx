@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "./ui/toaster";
+import { Footer } from "./Footer";
 
 export default function ClientLayoutWrapper({
   children,
@@ -21,6 +22,7 @@ export default function ClientLayoutWrapper({
         {children}
         <Toaster />
       </main>
+      <Footer/>
     </>
   );
 }

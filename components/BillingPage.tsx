@@ -16,9 +16,9 @@ import { DownloadIcon, CreditCardIcon, AlertCircleIcon, Loader2 } from "lucide-r
 import { useUser } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "./ui/button"
-import { useBillingInfo } from "@/hooks/useBillingInfo"
 import ConfirmDialog from "./ConfirmDialog"
 import { Skeleton } from "./ui/skeleton"
+import { useBillingInfo } from "@/app/contexts/BillingContext"
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -41,7 +41,7 @@ export default function BillingPage() {
         updateLoadingPlan,
         loadingCard,
         updateLoadingCard
-      } = useBillingInfo(userId);      
+      } = useBillingInfo();      
     const [cardFormOpen, setCardFormOpen] = useState(false);
     const [updateCard, setUpdateCard] = useState(false);
     const [setupIntent, setSetupIntent] = useState<string | null>(null);
@@ -97,6 +97,8 @@ export default function BillingPage() {
             if (url) {
                 router.push(url)
             }
+            const data = await getCustomerDetails(userId)
+            updateCustomerData(data)
         } catch (error) {
             console.error("Error creating checkout session:", error)
         } finally {

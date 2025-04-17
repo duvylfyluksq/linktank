@@ -6,7 +6,8 @@ import { Footer } from "@/components/Footer";
 import { ClerkProvider } from "@clerk/nextjs";
 import { SavedEventsProvider } from "./contexts/SavedEventsContext";
 import { Toaster } from "@/components/ui/toaster";
-// import { localization } from "./localization";
+import { AccountModalProvider } from "./contexts/AccountModalContext";
+import { BillingProvider } from "./contexts/BillingContext";
 
 const geistSans = localFont({
 	src: "./fonts/GeistVF.woff",
@@ -37,19 +38,23 @@ export default function RootLayout({
 			publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
 		>
 			<SavedEventsProvider>
-				<html lang="en" className="min-h-screen">
-					<body
-						className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF] flex flex-col min-h-screen`}
-					>
-						<Navbar />
-						<main className="pt-[6rem] flex-1 flex flex-col items-center">
-							{children}
-							<Toaster />
-						</main>
+				<AccountModalProvider>
+					<BillingProvider>
+						<html lang="en" className="min-h-screen">
+							<body
+								className={`${geistSans.variable} ${geistMono.variable} light antialiased bg-[#FAFEFF] flex flex-col min-h-screen`}
+							>
+								<Navbar />
+								<main className="pt-[8.125rem] flex-1 flex flex-col items-center">
+									{children}
+									<Toaster />
+								</main>
 
-						<Footer />
-					</body>
-				</html>
+								<Footer />
+							</body>
+						</html>
+					</BillingProvider>
+				</AccountModalProvider>
 			</SavedEventsProvider>
 		</ClerkProvider>
 	);

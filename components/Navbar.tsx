@@ -26,11 +26,12 @@ import AccountModal from "./AccountModal";
 import SearchModal from "./SearchModal";
 import LogoutMenuItem from "./LogoutMenuItem";
 import SubscriptionBanner from "./SubscriptionBanner";
+import { useAccountModal } from "@/app/contexts/AccountModalContext";
 
 const Navbar = () => {
     const { user, isLoaded } = useUser();
     const pathname = usePathname();
-    const [accountModalOpen, setAccountModalOpen] = useState(false);
+    const { open, setOpen} = useAccountModal();
     const [searchOpen, setSearchOpen] = useState(false);
 
     const handleOpenChange = (
@@ -48,7 +49,7 @@ const Navbar = () => {
 
     return (
         <div className="fixed top-0 left-0 right-0 z-50">
-        <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[6rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+        <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[4rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center mr-10">
                 <Link href="/" className="flex items-center">
                     <Image
@@ -128,14 +129,14 @@ const Navbar = () => {
                             <>
                                 <SignedOut>
                                     <SignUpButton>
-                                        <Button className="px-[1.16rem] sm:px-10 py-5 sm:py-6 text-[0.875rem] sm:text-base rounded-xl text-white bg-[#1C2329] hover:bg-[#0e3b69]">
+                                        <Button className="px-[1.16rem] sm:px-10 py-5 sm:py-5 text-[0.875rem] sm:text-base rounded-xl text-white bg-[#1C2329] hover:bg-[#0e3b69]">
                                             Sign Up
                                         </Button>
                                     </SignUpButton>
                                 </SignedOut>
 
                                 <SignedIn>
-                                    {!accountModalOpen && (
+                                    {!open && (
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <button className="flex items-center gap-x-2 text-black shadow-none px-3 py-2 rounded-md transition-none focus:outline-none">
@@ -168,7 +169,7 @@ const Navbar = () => {
                                                 <DropdownMenuItem
                                                     className="cursor-pointer"
                                                     onClick={() => {
-                                                        setAccountModalOpen(true);
+                                                        setOpen(true)
                                                     }}
                                                 >
                                                     <User className="mr-2 h-4 w-4" />
@@ -192,12 +193,7 @@ const Navbar = () => {
                 open={searchOpen}
                 onOpenChange={(open) => handleOpenChange(open, setSearchOpen)}
             />
-            <AccountModal
-                open={accountModalOpen}
-                onOpenChange={(open) =>
-                    handleOpenChange(open, setAccountModalOpen)
-                }
-            />
+            <AccountModal/>
         </nav>
         <SubscriptionBanner />
         </div>

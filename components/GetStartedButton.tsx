@@ -4,21 +4,33 @@ import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAccountModal } from "@/app/contexts/AccountModalContext";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useBillingInfo } from "@/app/contexts/BillingContext";
 
 export default function GetStartedButton({ className }: { className?: string }) {
+  const [loading, setLoading] = useState(false)
   const { isSignedIn, isLoaded } = useUser();
+  const { hasSubscription, loadingPlan } = useBillingInfo();
+  const { setTab, setOpen } = useAccountModal();
   const router = useRouter();
 
   const handleClick = () => {
+    setLoading(true)
     if (!isSignedIn) {
       router.push("/sign-up");
+    } else if(!hasSubscription){
+      setTab("billing")
+      setOpen(true)
     } else {
       router.push("/events");
     }
+    setLoading(false)
   };
 
   const getLabel = () => {
-    return isSignedIn ? "View Events" : "Get Started";
+    return !isSignedIn ? "Get Started" : hasSubscription ?  "View Events": "Subscribe";
   };
 
   return (
@@ -30,7 +42,7 @@ export default function GetStartedButton({ className }: { className?: string }) 
       onClick={handleClick}
       disabled={!isLoaded}
     >
-      {getLabel()}
+      {(loading || !isLoaded || loadingPlan) ? <Loader2 className="h-4 w-4 animate-spin" /> : getLabel()}
     </Button>
   );
 }

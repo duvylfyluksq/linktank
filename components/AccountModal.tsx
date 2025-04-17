@@ -6,10 +6,23 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import ProfilePage from "./ProfilePage";
 import BillingPage from "./BillingPage";
+import { useAccountModal } from "@/app/contexts/AccountModalContext";
 
-export default function AccountModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
+export default function AccountModal() {
+
+    const { open, setOpen, tab, setTab } = useAccountModal()
+
+    const handleChange = (open: boolean) => {
+        if (!open) {
+          setTab("profile");
+        }
+        setOpen(open);
+    };
+
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} 
+                onOpenChange={handleChange}
+        >
             <VisuallyHidden><DialogTitle/></VisuallyHidden>
             <DialogContent className="max-w-[60%] max-h-[80vh] p-0 flex flex-col overflow-hidden">
                 <div className="w-full bg-white rounded-xl flex flex-col flex-1 overflow-hidden">
@@ -17,8 +30,10 @@ export default function AccountModal({ open, onOpenChange }: { open: boolean, on
                         <h2 className="text-lg font-semibold">My Account</h2>
                     </div>
 
-                    <Tabs 
-                        defaultValue="profile" 
+                    <Tabs
+                        value={tab}
+                        onValueChange={(val) => setTab(val as any)}
+                        defaultValue="profile"
                         className="w-full flex flex-col flex-1 overflow-hidden"
                         onKeyDownCapture={(e) => {
                             if (

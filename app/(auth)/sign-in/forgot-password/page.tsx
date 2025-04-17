@@ -10,18 +10,30 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import VerficationCode from "../../VerificationCode"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
+  const [allowAccess, setAllowAccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [codeSent, setCodeSent] = useState(false)
   const [verificationCode, setVerificationCode] = useState("")
   const { isLoaded, signIn } = useSignIn()
   const { toast } = useToast()
   const router = useRouter()
+
+  useEffect(() => {
+    const visited = sessionStorage.getItem("visitedSignIn");
+    if (!visited) {
+      router.replace("/sign-in");
+    } else {
+      setAllowAccess(true);
+    }
+  }, []);
+
+  if (!allowAccess) return null;
 
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,6 +84,7 @@ export default function ForgotPasswordPage() {
       })
 
       if (result?.status === "needs_new_password") {
+        sessionStorage.setItem("visitedForgotPassword", "true");
         router.push("/sign-in/reset-password")
       } else {
         toast({

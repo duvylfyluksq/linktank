@@ -62,6 +62,7 @@ export default function SignUpPage() {
         password,
       })
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" })
+      sessionStorage.setItem("visitedSignUp", "true")
       router.push("/sign-up/verify")
     } catch (err: any) {
       const code = err.errors?.[0]?.code

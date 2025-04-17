@@ -31,7 +31,9 @@ export default function SignInPage() {
       const hasPassword = response!.supportedFirstFactors!.some(
         (factor: any) => factor.strategy === "password"
       );
-  
+      
+      sessionStorage.setItem("visitedSignIn", "true");
+
       if (hasPassword) {
         router.push("/sign-in/password");
       } else {

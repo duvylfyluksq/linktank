@@ -11,21 +11,27 @@ import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import VerficationCode from "../../VerificationCode"
+import AuthLoadingScreen from "../../AuthLoadingScreen"
 
 export default function VerifyPage() {
   const [verificationCode, setVerificationCode] = useState("")
+  const [allowAccess, setAllowAccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [resendDisabled, setResendDisabled] = useState(false)
+  const [authComplete, setAuthComplete] = useState(false)
   const [countdown, setCountdown] = useState(0)
   const { isLoaded, signUp, setActive } = useSignUp()
   const router = useRouter()
   const { toast } = useToast()
 
   useEffect(() => {
-    if (isLoaded && !signUp.status) {
-      router.push("/sign-up")
-    }
-  }, [isLoaded, signUp, router])
+      const visited = sessionStorage.getItem("visitedSignUp");
+      if (!visited) {
+        router.replace("/sign-up");
+      } else {
+        setAllowAccess(true);
+      }
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout
@@ -36,6 +42,8 @@ export default function VerifyPage() {
     }
     return () => clearTimeout(timer)
   }, [countdown])
+
+  if (!allowAccess) return null;
 
   const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -59,6 +67,7 @@ export default function VerifyPage() {
       })
 
       if (completeSignUp.status === "complete") {
+        setAuthComplete(true)
         await setActive({ session: completeSignUp.createdSessionId })
         toast({
           title: "Success",
@@ -105,63 +114,66 @@ export default function VerifyPage() {
   }
 
   return (
-    <div className="w-[30rem] py-10 flex justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
-        {/* Logo */}
-        <div className="flex items-center justify-center px-6 pt-6">
-          <Image
-            src="/linktank_logo.png"
-            alt="Linktank"
-            width={100}
-            height={100}
-            className="w-10 h-10 mr-[0.625rem] rounded-full"
-          />
-          <span className="text-2xl font-bold">Linktank</span>
-        </div>
-
-        {/* Tabs */}
-        <div className="px-6 mt-4">
-          <AuthTabs />
-        </div>
-
-        <form onSubmit={handleVerify} className="px-6 mt-6 space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-center">Verify your email</h2>
-            <p className="text-sm text-center text-muted-foreground">
-              We&apos;ve sent a verification code to your email address
-            </p>
+    <>
+      {authComplete && <AuthLoadingScreen type="signup" />}
+      <div className="w-[30rem] py-10 flex justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
+          {/* Logo */}
+          <div className="flex items-center justify-center px-6 pt-6">
+            <Image
+              src="/linktank_logo.png"
+              alt="Linktank"
+              width={100}
+              height={100}
+              className="w-10 h-10 mr-[0.625rem] rounded-full"
+            />
+            <span className="text-2xl font-bold">Linktank</span>
           </div>
 
-          <div className="space-y-4">
-            <VerficationCode
-              verificationCode={verificationCode}
-              setVerificationCode={setVerificationCode}
-            />
+          {/* Tabs */}
+          <div className="px-6 mt-4">
+            <AuthTabs />
+          </div>
 
-            <div className="text-center">
+          <form onSubmit={handleVerify} className="px-6 mt-6 space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-center">Verify your email</h2>
+              <p className="text-sm text-center text-muted-foreground">
+                We&apos;ve sent a verification code to your email address
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <VerficationCode
+                verificationCode={verificationCode}
+                setVerificationCode={setVerificationCode}
+              />
+
+              <div className="text-center">
+                <Button
+                  type="button"
+                  variant="link"
+                  className="text-sm text-[#1C2329] hover:text-[#0e3b69]"
+                  onClick={handleResendCode}
+                  disabled={resendDisabled}
+                >
+                  {resendDisabled ? `Resend code in ${countdown}s` : "Didn't receive a code? Resend"}
+                </Button>
+              </div>
+            </div>
+
+            <div className="pb-6">
               <Button
-                type="button"
-                variant="link"
-                className="text-sm text-[#1C2329] hover:text-[#0e3b69]"
-                onClick={handleResendCode}
-                disabled={resendDisabled}
+                type="submit"
+                disabled={loading || verificationCode.length !== 6}
+                className="w-full h-10 flex justify-center items-center bg-[#1C2329] hover:bg-[#0e3b69] text-white"
               >
-                {resendDisabled ? `Resend code in ${countdown}s` : "Didn't receive a code? Resend"}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify"}
               </Button>
             </div>
-          </div>
-
-          <div className="pb-6">
-            <Button
-              type="submit"
-              disabled={loading || verificationCode.length !== 6}
-              className="w-full h-10 flex justify-center items-center bg-[#1C2329] hover:bg-[#0e3b69] text-white"
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Verify"}
-            </Button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

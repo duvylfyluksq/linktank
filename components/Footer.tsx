@@ -70,7 +70,7 @@ export function Footer() {
                         </div>
                         <div>
                             <Link
-                                href="/terms"
+                                href="/terms-of-service"
                                 className="text-sm hover:text-gray-300"
                             >
                                 Terms of Service

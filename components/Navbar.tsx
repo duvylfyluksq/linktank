@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import AccountModal from "./AccountModal";
 import SearchModal from "./SearchModal";
 import LogoutMenuItem from "./LogoutMenuItem";
+import SubscriptionBanner from "./SubscriptionBanner";
 
 const Navbar = () => {
     const { user, isLoaded } = useUser();
@@ -46,7 +47,8 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between h-[4.9375rem] sm:h-[6rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
+        <div className="fixed top-0 left-0 right-0 z-50">
+        <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[6rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
             <div className="flex items-center mr-10">
                 <Link href="/" className="flex items-center">
                     <Image
@@ -197,6 +199,8 @@ const Navbar = () => {
                 }
             />
         </nav>
+        <SubscriptionBanner />
+        </div>
     );
 };
 

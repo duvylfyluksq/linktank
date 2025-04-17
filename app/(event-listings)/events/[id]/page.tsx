@@ -16,7 +16,7 @@ import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SpeakerCard from "./SpeakerCard";
 import { useUser } from "@clerk/nextjs";
-import SubscriptionPage from "@/app/authwall/authwall";
+import SubscriptionPage from "@/app/(authwall)/authwall";
 import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
 // import { connect } from "node:net";
 

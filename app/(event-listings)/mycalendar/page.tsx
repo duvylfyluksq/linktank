@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSavedEvents } from "../../contexts/SavedEventsContext";
 import { useUser } from "@clerk/nextjs";
-import SubscriptionPage from "@/app/authwall/authwall";
+import SubscriptionPage from "@/app/(authwall)/authwall";
 import { useEventFilters } from "@/hooks/useEventFilters";
 import EventListings from "../EventListings";
 

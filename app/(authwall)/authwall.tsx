@@ -1,5 +1,6 @@
 "use client";
 
+import GetStartedButton from "@/components/GetStartedButton";
 import { Check } from "lucide-react";
 import { useState } from "react";
 
@@ -125,12 +126,9 @@ export default function SubscriptionPage() {
 								</li>
 							</ul>
 						</div>
-						<button
-							type="button"
-							className="w-full rounded-md bg-[#1e293b] py-4 text-center text-base font-medium text-white transition-colors hover:bg-[#0e3b69]"
-						>
-							Get started
-						</button>
+						<GetStartedButton 
+							className="w-full rounded-md bg-[#1e293b] py-7 text-center text-xl font-medium text-white transition-colors hover:bg-[#0e3b69]"
+						/>
 					</div>
 				</div>
 			</div>

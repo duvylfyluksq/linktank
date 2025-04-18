@@ -52,7 +52,7 @@ export default function SignInPage() {
   };
   
 
-  const handleSocialSignUp = async (provider: "oauth_google" | "oauth_apple") => {
+  const handleSocialSignIn = async (provider: "oauth_google" | "oauth_apple") => {
     if (!isLoaded) return
 
     try {
@@ -60,7 +60,7 @@ export default function SignInPage() {
       
       await signIn.authenticateWithRedirect({
         strategy: provider,
-        redirectUrl: "sign-in/sso-callback",
+        redirectUrl: "https://clerk.linktank.com/v1/oauth_callback",
         redirectUrlComplete: "/",
       })
     } catch{
@@ -133,7 +133,7 @@ export default function SignInPage() {
               type="button"
               variant="outline"
               className="flex-1 h-10 flex justify-center items-center gap-2"
-              onClick={() => handleSocialSignUp("oauth_google")}
+              onClick={() => handleSocialSignIn("oauth_google")}
               disabled={!!socialLoading}
             >
               {socialLoading === "oauth_google" ? (
@@ -150,7 +150,7 @@ export default function SignInPage() {
               type="button"
               variant="outline"
               className="flex-1 h-10 flex justify-center items-center gap-2"
-              onClick={() => handleSocialSignUp("oauth_apple")}
+              onClick={() => handleSocialSignIn("oauth_apple")}
               disabled={!!socialLoading}
             >
               {socialLoading === "oauth_apple" ? (

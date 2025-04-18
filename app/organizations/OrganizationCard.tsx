@@ -8,7 +8,7 @@ export default function OrganizationContainer({org}: {org: Organization}){
                 key={org._id}
                 className="border border-[#D3D0D0] bg-white rounded-[10px] shadow-sm
     flex flex-col justify-center items-start
-    pr-[40px] pl-[19px] py-8 w-auto h-auto gap-[0.5rem]"
+    pr-[40px] pl-[19px] py-8 w-auto h-auto gap-[0.5rem] transition-shadow duration-300 ease-in-out hover:shadow-md hover:shadow-gray-300"
             >
                 <div className="flex items-center gap-4">
                         {org.logo_url ? (

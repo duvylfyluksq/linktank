@@ -9,7 +9,7 @@ export default function SpeakerCard({ speaker }) {
     return (
         <div
         key={speaker.name}
-        className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center"
+        className="border border-black border-opacity-15 bg-white rounded-[0.75rem] p-4 flex flex-row gap-[0.8125rem] items-center transition-shadow duration-300 ease-in-out hover:shadow-md hover:shadow-gray-300"
         >
             <Image
                 src={

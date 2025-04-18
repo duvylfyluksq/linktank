@@ -45,7 +45,7 @@ export const EventCard = ({ event }: { event: EventModel }) => {
 
     return (
         <Link href={`/events/${event.backlink}`} key={event._id}>
-            <div className="border flex border-[#D3D0D0] bg-white sm:mb-10 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full">
+            <div className="border flex border-[#D3D0D0] bg-white sm:mb-10 rounded-2xl py-[1.41rem] px-4 flex-row gap-8 w-full transition-shadow duration-300 ease-in-out hover:shadow-md hover:shadow-gray-300">
                 {/* Text container: add min-w-0 to prevent overflow issues */}
                 <div className="flex-1 flex flex-col gap-[0.5rem]">
                     <div className="flex items-center opacity-70 font-jakarta text-[0.8rem] md:text-[1rem] font-medium gap-2">

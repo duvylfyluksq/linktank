@@ -10,13 +10,18 @@ export default function Home() {
     const [fetching, setFetching] = useState(true);
     const currentPageRef = useRef(1);
     const loadingState = useMemo(() => ({ loading, setLoading }), [loading]);
-    const fetchingState = useMemo(() => ({ fetching, setFetching }), [fetching]);
+    const fetchingState = useMemo(
+        () => ({ fetching, setFetching }),
+        [fetching]
+    );
     const filters = useEventFilters();
     const isLoadingRef = useRef(false);
     const hasMoreRef = useRef(true);
 
-
-    async function fetchFilteredEvents(page: number, filters: ReturnType<typeof useEventFilters>): Promise<{ events: EventModel[]; hasMore: boolean }> {
+    async function fetchFilteredEvents(
+        page: number,
+        filters: ReturnType<typeof useEventFilters>
+    ): Promise<{ events: EventModel[]; hasMore: boolean }> {
         setFetching(true);
         try {
             const params = new URLSearchParams();
@@ -43,18 +48,20 @@ export default function Home() {
                 params.append("locationType", filters.location_type);
             }
 
-            const response = await fetch(`/api/events/search?${params.toString()}`);
+            const response = await fetch(
+                `/api/events/search?${params.toString()}`
+            );
             const data = await response.json();
 
             if (data.success) {
-                return {events: data.events, hasMore: data.hasMore};
+                return { events: data.events, hasMore: data.hasMore };
             } else {
                 console.error("Error fetching events:", data.error);
-                return {events: [], hasMore: false};
+                return { events: [], hasMore: false };
             }
         } catch (error) {
             console.error("Error fetching filtered events:", error);
-            return {events: [], hasMore: false};
+            return { events: [], hasMore: false };
         } finally {
             setFetching(false);
         }
@@ -62,14 +69,17 @@ export default function Home() {
 
     const handleLoadNextPage = useCallback(async () => {
         if (isLoadingRef.current || !hasMoreRef.current) return;
-    
+
         isLoadingRef.current = true;
         const nextPage = currentPageRef.current + 1;
-    
-        const { events: newEvents, hasMore } = await fetchFilteredEvents(nextPage, filters);
-    
+
+        const { events: newEvents, hasMore } = await fetchFilteredEvents(
+            nextPage,
+            filters
+        );
+
         hasMoreRef.current = hasMore;
-    
+
         setEvents((prev) => {
             const combined = [...prev, ...newEvents];
             return combined;
@@ -78,7 +88,7 @@ export default function Home() {
             //     ? combined.slice(combined.length - 30)
             //     : combined;
         });
-    
+
         currentPageRef.current = nextPage;
         isLoadingRef.current = false;
     }, [filters]);
@@ -87,7 +97,8 @@ export default function Home() {
         (async () => {
             setLoading(true);
             try {
-                const { events: freshEvents, hasMore } = await fetchFilteredEvents(1, filters);
+                const { events: freshEvents, hasMore } =
+                    await fetchFilteredEvents(1, filters);
                 hasMoreRef.current = hasMore;
                 setEvents(freshEvents);
                 currentPageRef.current = 1;
@@ -97,13 +108,13 @@ export default function Home() {
         })();
     }, [filters]);
 
-    
-
     return (
         <EventListings
-            Header={(filters)=>(
-                <h3 className="text-[2rem] font-jakarta font-extrabold max-sm:text-[18px]">
-                    {filters.date_type === "upcoming" ? "Upcoming Events" : "Past Events"}
+            Header={(filters) => (
+                <h3 className="text-[1.125rem] sm:text-[2rem] font-jakarta font-extrabold">
+                    {filters.date_type === "upcoming"
+                        ? "Upcoming Events"
+                        : "Past Events"}
                 </h3>
             )}
             filters={filters}
@@ -113,9 +124,8 @@ export default function Home() {
             onLoadMore={handleLoadNextPage}
             hasMoreRef={hasMoreRef}
         />
-    )
+    );
 }
-
 
 // requestAnimationFrame(() => {
 //     window.scrollBy({ top: -2000, behavior: "auto" });

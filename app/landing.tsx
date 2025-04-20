@@ -43,7 +43,7 @@ const images1 = [
 
 const images2 = ["/landing-3-1.jpg", "/landing-3-2.jpg", "/landing-3-3.jpg"];
 
-export default function Landing({ events }: { events: EventModel[]}) {
+export default function Landing({ events }: { events: EventModel[] }) {
     const [isYearly, setIsYearly] = useState(true);
     const price = isYearly ? "99.97" : "10.97";
     const period = isYearly ? "per year" : "per month";
@@ -72,8 +72,8 @@ export default function Landing({ events }: { events: EventModel[]}) {
                         insight.
                     </p>
 
-                    <div className="flex flex-row flex-wrap w-[5rem] justify-center">
-                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
+                    <div className="flex flex-row flex-wrap w-full sm:w-[5rem] justify-center">
+                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.54488rem] sm:rounded-[0.75rem] py-[1rem] sm:py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.8125rem] sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@ export default function Landing({ events }: { events: EventModel[]}) {
                             worldwide. Find trending events and get notified
                             about what matters to you.
                         </p>
-                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
+                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
                     <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3 grid-rows-2">
                         {images1.map((image, index) => (
@@ -230,7 +230,7 @@ export default function Landing({ events }: { events: EventModel[]}) {
                             business leaders—anyone interested in thoughtful
                             policy discussions.
                         </p>
-                        <GetStartedButton className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]"/>
+                        <GetStartedButton className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
                     <div className="grid grid-cols-3 gap-x-[1.09rem] gap-y-[1.4375rem]">
                         {images2.map((image, index) => (
@@ -318,7 +318,7 @@ export default function Landing({ events }: { events: EventModel[]}) {
                         </div>
                     </div>
 
-                    <GetStartedButton className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem] hover:bg-[#0e3b69]"/>
+                    <GetStartedButton className="w-full bg-[#1C2329] hover:bg-[#151a1f] text-white h-[3.75rem] text-[1rem] md:text-[1.125rem] rounded-[0.75rem] hover:bg-[#0e3b69]" />
                 </div>
             </div>
         </div>

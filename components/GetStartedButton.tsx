@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAccountModal } from "@/app/contexts/AccountModalContext";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { ArrowRightIcon, Loader2 } from "lucide-react";
 import { useBillingInfo } from "@/app/contexts/BillingContext";
 
-export default function GetStartedButton({ className }: { className?: string }) {
+export default function GetStartedButton({ className, isSubscriptionBanner = false }: { className?: string, isSubscriptionBanner?: boolean }) {
   const [loading, setLoading] = useState(false)
   const { isSignedIn, isLoaded } = useUser();
   const { hasSubscription, loadingPlan } = useBillingInfo();
@@ -20,7 +20,7 @@ export default function GetStartedButton({ className }: { className?: string }) 
     setLoading(true)
     if (!isSignedIn) {
       router.push("/sign-up");
-    } else if(!hasSubscription){
+    } else if (!hasSubscription) {
       setTab("billing")
       setOpen(true)
     } else {
@@ -30,7 +30,7 @@ export default function GetStartedButton({ className }: { className?: string }) 
   };
 
   const getLabel = () => {
-    return !isSignedIn ? "Get Started" : hasSubscription ?  "View Events": "Subscribe";
+    return !isSignedIn ? "Get Started" : hasSubscription ? "View Events" : "Subscribe";
   };
 
   return (
@@ -42,7 +42,7 @@ export default function GetStartedButton({ className }: { className?: string }) 
       onClick={handleClick}
       disabled={!isLoaded}
     >
-      {(loading || !isLoaded || loadingPlan) ? <Loader2 className="h-4 w-4 animate-spin" /> : getLabel()}
+      {(loading || !isLoaded || loadingPlan) ? <Loader2 className="h-4 w-4 animate-spin" /> : isSubscriptionBanner ? <><div className="sm:hidden flex"><ArrowRightIcon className="h-4 w-4" /></div><div className="hidden sm:flex">{getLabel()}</div></> : getLabel()}
     </Button>
   );
 }

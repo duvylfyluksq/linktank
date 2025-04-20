@@ -4,55 +4,58 @@ import EventTypeSelector from "./EventTypeSelector";
 import { EventCalendar } from "./EventCalendar";
 import EventFiltersDialog from "@/app/(event-listings)/EventFiltersDialog";
 import { Button } from "@/components/ui/button";
-import { Select,
+import {
+    Select,
     SelectContent,
     SelectGroup,
     SelectItem,
     SelectLabel,
     SelectTrigger,
-    SelectValue
+    SelectValue,
 } from "@/components/ui/select";
-import {Loader2, SlidersHorizontal } from "lucide-react";
+import { CalendarIcon, Loader2, SlidersHorizontal } from "lucide-react";
 import { Timeline } from "@/app/(event-listings)/timeline";
-
 
 interface EventListingsProps {
     Header: (filters: EventFilter) => React.ReactNode;
     filters: ReturnType<typeof useEventFilters>;
     events: EventModel[];
     loadingState: { loading: boolean };
-    fetchingState?: { fetching: boolean};
+    fetchingState?: { fetching: boolean };
     onLoadMore?: () => Promise<void>;
     hasMoreRef?: React.MutableRefObject<boolean>;
 }
 
-
 export default function EventListings({
-        Header,
-        filters,
-        events,
-        loadingState,
-        fetchingState,
-        onLoadMore,
-        hasMoreRef
-}: EventListingsProps){
-
+    Header,
+    filters,
+    events,
+    loadingState,
+    fetchingState,
+    onLoadMore,
+    hasMoreRef,
+}: EventListingsProps) {
     const sentinelRef = useRef<HTMLDivElement | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const isFetchingRef = useRef(false);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
-    
+
         if (!sentinel || !onLoadMore || !hasMoreRef?.current) return;
-    
+
         if (observerRef.current) {
             observerRef.current.disconnect();
         }
 
         observerRef.current = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting && !loadingState.loading && !isFetchingRef.current && hasMoreRef?.current) {
+                if (
+                    entry.isIntersecting &&
+                    !loadingState.loading &&
+                    !isFetchingRef.current &&
+                    hasMoreRef?.current
+                ) {
                     isFetchingRef.current = true;
                     observerRef.current?.unobserve(entry.target);
                     onLoadMore().finally(() => {
@@ -67,14 +70,14 @@ export default function EventListings({
                 threshold: 0,
             }
         );
-    
+
         observerRef.current.observe(sentinel);
-    
+
         return () => {
             observerRef.current?.disconnect();
             observerRef.current = null;
         };
-    }, [loadingState.loading, onLoadMore]); 
+    }, [loadingState.loading, onLoadMore]);
 
     const [organizations, setOrganizations] = useState<Organization[]>([]);
 
@@ -92,7 +95,9 @@ export default function EventListings({
         if (filters.date) {
             const now = new Date();
             const selected = filters.date;
-            const isUpcoming = selected >= new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const isUpcoming =
+                selected >=
+                new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const dateType = isUpcoming ? "upcoming" : "past";
             filters.updateFilters("date_type", dateType);
         }
@@ -100,30 +105,33 @@ export default function EventListings({
 
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
-    return(
-        <div className="mt-[3.75rem] flex flex-col gap-[2.25rem] w-[69.1875rem] pb-[2rem]">
-            <div className="w-full flex flex-row justify-between items-center">
-                <div className="flex flex-row items-center gap-2 max-sm:w-full">
+    return (
+        <div className="mt-6 sm:mt-[3.75rem] flex flex-col gap-[2.25rem] w-full sm:w-[69.1875rem] pb-[2rem] sm:px-0 px-4">
+            <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-[1.46rem] sm:gap-0">
+                <div className="flex gap-2.5 sm:hidden w-full">
+                    <EventTypeSelector
+                        currentType={filters.date_type}
+                        onChange={(type) => {
+                            filters.updateFilters({
+                                date: undefined,
+                                date_type: type,
+                            });
+                        }}
+                    />
+                </div>
+                <div className="flex flex-row items-center justify-between sm:justify-normal gap-2 max-sm:w-full">
                     {Header(filters)}
-                    <div className="flex gap-2.5 max-sm:ml-auto sm:hidden">
-                        <EventTypeSelector
-                            currentType={filters.date_type}
-                            onChange={(type) => {
-                                filters.updateFilters({
-                                    date: undefined,
-                                    date_type: type
-                                })
-                            }}
-                        />
-                    </div>
+                    <CalendarIcon className="w-5 h-5 text-gray-500 sm:hidden" />
                 </div>
 
-                <div className="flex gap-4 items-center h-full">
+                <div className="flex gap-4 items-center h-full w-full sm:w-auto">
                     <Select
                         value={filters.organization_id}
-                        onValueChange={(val) => filters.updateFilters("organization_id", val)}
+                        onValueChange={(val) =>
+                            filters.updateFilters("organization_id", val)
+                        }
                     >
-                        <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:mt-5 max-sm:w-full">
+                        <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:w-full">
                             <SelectValue placeholder="Select Organization" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
@@ -140,28 +148,32 @@ export default function EventListings({
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button 
-                        className="bg-[#1C2329] hover:bg-[#0e3b69] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] max-sm:w-full max-sm:h-11"
+                    <Button
+                        className="bg-[#1C2329] hover:bg-[#0e3b69] rounded-[0.74969rem] h-[3.125rem] text-white px-[0.81rem] w-fit sm:w-full max-sm:h-11"
                         onClick={() => setIsFiltersOpen(true)}
                     >
                         <SlidersHorizontal size={20} />
-                        <span className="text-[1rem]">Filters</span>
+                        <span className="text-[0.8125rem] sm:text-[1rem]">
+                            Filters
+                        </span>
                     </Button>
                     <EventFiltersDialog
                         open={isFiltersOpen}
                         onOpenChange={setIsFiltersOpen}
                         selectedType={filters.location_type}
-                        onApply={(type) => filters.updateFilters("location_type", type)}
-                        onClear={() => filters.updateFilters("location_type", "all")}
+                        onApply={(type) =>
+                            filters.updateFilters("location_type", type)
+                        }
+                        onClear={() =>
+                            filters.updateFilters("location_type", "all")
+                        }
                     />
                 </div>
             </div>
             <div className="flex flex-row w-full gap-[1.625rem] min-h-screen relative">
-                {/* removed mobile view from here and pasted at the bottom to reduce clutter */}                    
-                <div 
-                    className="flex-1 pr-4"
-                >
-                    <Timeline events={events} loading={loadingState.loading}/>
+                {/* removed mobile view from here and pasted at the bottom to reduce clutter */}
+                <div className="flex-1 sm:pr-4">
+                    <Timeline events={events} loading={loadingState.loading} />
                     {fetchingState?.fetching && (
                         <div className="flex justify-center items-center py-4">
                             <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
@@ -176,8 +188,8 @@ export default function EventListings({
                         onChange={(type) => {
                             filters.updateFilters({
                                 date: undefined,
-                                date_type: type
-                            })
+                                date_type: type,
+                            });
                         }}
                         className="flex w-full items-center space-x-2 mb-4 max-sm:flex-col max-sm:hidden"
                     />
@@ -193,9 +205,11 @@ export default function EventListings({
     );
 }
 
-
-{/* <ol className="relative border-s border-[#808080] border-opacity-25 w-full overflow-y-auto"> */}
-    {/* <>
+{
+    /* <ol className="relative border-s border-[#808080] border-opacity-25 w-full overflow-y-auto"> */
+}
+{
+    /* <>
         <div className="absolute right-4 top-2 sm:hidden">
             <Button
                 variant="outline"
@@ -228,8 +242,10 @@ export default function EventListings({
                 </div>
             </div>
         )}
-    </> */}
-    {/* <div className="sm:hidden">
+    </> */
+}
+{
+    /* <div className="sm:hidden">
         {loadingState.loading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <SkeletonCard key={i} />
@@ -252,8 +268,10 @@ export default function EventListings({
                     </div>
                 )
             )}
-    </div> */}
-    {/* <div className="hidden sm:block">
+    </div> */
+}
+{
+    /* <div className="hidden sm:block">
         {loadingState.loading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <SkeletonCard key={i} />
@@ -275,6 +293,7 @@ export default function EventListings({
                 )
             )}
     </div>
-</ol> */}
+</ol> */
+}
 
 // h-[calc(100vh-8rem)]

@@ -125,11 +125,10 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                             <Search className="w-5 h-5 text-inherit" />
                             <span className="hidden md:flex">Search</span>
                         </button>
-
-                        <button className="items-center text-gray-700 hover:text-black gap-x-2 hidden md:flex">
+                        <Link href="/events/new" className="items-center text-gray-700 hover:text-black gap-x-2 hidden md:flex">
                             <Plus className="w-5 h-5 text-inherit" />
                             <span>Create an event</span>
-                        </button>
+                        </Link>
 
                         {!isLoaded ? (
 
@@ -160,7 +159,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                                                         alt="User avatar"
                                                         className="w-8 h-8 rounded-full object-cover"
                                                     />
-                                                    <div className="text-sm leading-tight text-left sm:flex hidden">
+                                                    <div className="text-sm leading-tight flex-col text-left sm:flex hidden">
                                                         <h4 className="text-base text-[#1C2329] font-semibold">
                                                             {user?.fullName}
                                                         </h4>

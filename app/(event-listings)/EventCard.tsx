@@ -8,14 +8,17 @@ import { useEffect, useState } from "react";
 export const EventCard = ({ event }: { event: EventModel }) => {
 
     const [cleanBriefDescription, setCleanBriefDescription] = useState("");
-
     useEffect(() => {
         const cleanAndExtract = (htmlString: string) => {
             const div = document.createElement("div");
             div.innerHTML = htmlString;
 
             const firstP = div.querySelector("p");
-            return firstP ? firstP.innerHTML : "";
+            if (firstP) {
+                firstP.removeAttribute("class");
+                return firstP.innerHTML;
+            }
+            return "";
         };
 
         if (!event.brief_description) {

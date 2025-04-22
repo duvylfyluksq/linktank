@@ -13,7 +13,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
-import {FaApple} from "react-icons/fa"
+import { FaApple } from "react-icons/fa"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 
@@ -90,13 +90,13 @@ export default function SignUpPage() {
 
     try {
       setSocialLoading(provider)
-      
+
       await signUp.authenticateWithRedirect({
         strategy: provider,
         redirectUrl: "https://clerk.linktank.com/v1/oauth_callback",
         redirectUrlComplete: "/",
       })
-    } catch{
+    } catch {
       toast({
         title: "Authentication failed",
         description: "Failed to authenticate with provider. Please try again.",
@@ -107,7 +107,7 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="w-[30rem] py-10 flex justify-center px-4">
+    <div className="w-full sm:w-[30rem] py-10 flex justify-center px-4">
       <div className="py-4 w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
         <div className="flex items-center justify-center px-6 pt-6">
           <Image

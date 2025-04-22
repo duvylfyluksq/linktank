@@ -1,9 +1,10 @@
 "use client";
 
 import {
-  Dialog,
-  DialogContent}
-from "@/components/ui/dialog";
+    Dialog,
+    DialogContent
+}
+    from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
@@ -39,14 +40,14 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
             const data = await response.json();
 
             if (data.success) {
-                return {events: data.events, hasMore: data.hasMore};
+                return { events: data.events, hasMore: data.hasMore };
             } else {
                 console.error("Error fetching events:", data.error);
-                return {events: [], hasMore: false};
+                return { events: [], hasMore: false };
             }
         } catch (error) {
             console.error("Error fetching filtered events:", error);
-            return {events: [], hasMore: false};
+            return { events: [], hasMore: false };
         } finally {
             setFetching(false);
         }
@@ -55,65 +56,65 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
     const handleLoadMoreResults = useCallback(async () => {
         if (isLoadingRef.current || !hasMoreRef.current) return;
         isLoadingRef.current = true;
-      
+
         const nextPage = currentPageRef.current + 1;
         const { events: newResults, hasMore } = await fetchSearchResults(nextPage);
-      
+
         hasMoreRef.current = hasMore;
         setSearchResults(prev => {
             const combined = [...prev, ...newResults];
             return combined;
-        //   return combined.length > 30
-        //     ? combined.slice(combined.length - 30)
-        //     : combined;
+            //   return combined.length > 30
+            //     ? combined.slice(combined.length - 30)
+            //     : combined;
         });
-      
+
         currentPageRef.current = nextPage;
         isLoadingRef.current = false;
     }, [query]);
 
     useEffect(() => {
         if (!open) {
-          setQuery("");
-          setSearchResults([]);
-          hasMoreRef.current = true;
-          currentPageRef.current = 1;
-          isLoadingRef.current = false;
-          setFetching(false);
-          setSearching(false);
+            setQuery("");
+            setSearchResults([]);
+            hasMoreRef.current = true;
+            currentPageRef.current = 1;
+            isLoadingRef.current = false;
+            setFetching(false);
+            setSearching(false);
         }
-      }, [open]);
+    }, [open]);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
         const scrollContainer = scrollContainerRef.current;
-      
+
         if (!sentinel || !scrollContainer) return;
-      
+
         if (observerRef.current) observerRef.current.disconnect();
-      
+
         observerRef.current = new IntersectionObserver(
-          ([entry]) => {
-            if (entry.isIntersecting && !isLoadingRef.current && hasMoreRef.current) {
-              handleLoadMoreResults();
+            ([entry]) => {
+                if (entry.isIntersecting && !isLoadingRef.current && hasMoreRef.current) {
+                    handleLoadMoreResults();
+                }
+            },
+            {
+                root: scrollContainer,
+                rootMargin: "50px",
+                threshold: 0,
             }
-          },
-          {
-            root: scrollContainer,
-            rootMargin: "50px",
-            threshold: 0,
-          }
         );
-      
+
         observerRef.current.observe(sentinel);
-      
+
         return () => {
-          observerRef.current?.disconnect();
-          observerRef.current = null;
+            observerRef.current?.disconnect();
+            observerRef.current = null;
         };
     }, [handleLoadMoreResults, searchResults.length]);
-      
-    
+
+
 
     const handleSearch = async () => {
         setSearching(true);
@@ -124,13 +125,13 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
         currentPageRef.current = 1;
         isLoadingRef.current = false;
         setSearching(false);
-      };
+    };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <VisuallyHidden><DialogTitle/></VisuallyHidden>
+            <VisuallyHidden><DialogTitle /></VisuallyHidden>
             <DialogContent
-                className="bg-[#f9fdfd] rounded-2xl max-w-md w-full shadow-xl p-0 overflow-hidden gap-0"
+                className="bg-[#f9fdfd] rounded-2xl max-w-md w-[90%] sm:w-full shadow-xl p-0 overflow-hidden gap-0 sm:top-[50%] top-[20%]"
             >
                 <div className="w-full border-b rounded-t-2xl">
                     <form
@@ -152,9 +153,9 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
                     className="w-full max-h-[30vh] overflow-y-auto px-3 py-2"
                     ref={scrollContainerRef}
                 >
-                    {searching?
+                    {searching ?
                         (
-                            <div className="gap-1"> 
+                            <div className="gap-1">
                                 {Array.from({ length: 5 }).map((_, i) => (
                                     <SkeletonEventSearchResult key={i} />
                                 ))}

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { CalendarIcon, Loader2, SlidersHorizontal } from "lucide-react";
 import { Timeline } from "@/app/(event-listings)/timeline";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 interface EventListingsProps {
     Header: (filters: EventFilter) => React.ReactNode;
@@ -104,8 +105,10 @@ export default function EventListings({
     }, [filters.date]);
 
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     return (
+
         <div className="mt-6 sm:mt-[3.75rem] flex flex-col gap-[2.25rem] w-full sm:w-[69.1875rem] pb-[2rem] sm:px-0 px-4">
             <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-[1.46rem] sm:gap-0">
                 <div className="flex gap-2.5 sm:hidden w-full">
@@ -121,7 +124,16 @@ export default function EventListings({
                 </div>
                 <div className="flex flex-row items-center justify-between sm:justify-normal gap-2 max-sm:w-full">
                     {Header(filters)}
-                    <CalendarIcon className="w-5 h-5 text-gray-500 sm:hidden" />
+                    <CalendarIcon className="w-5 h-5 text-gray-500 sm:hidden" onClick={() => setIsCalendarOpen(!isCalendarOpen)} />
+                    <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                        <DialogContent className="flex flex-col items-center w-[70%]">
+                            <EventCalendar
+                                filters={filters}
+                                onFilterChange={filters.updateFilters}
+                                className="bg-white"
+                            />
+                        </DialogContent>
+                    </Dialog>
                 </div>
 
                 <div className="flex gap-4 items-center h-full w-full sm:w-auto">
@@ -202,6 +214,7 @@ export default function EventListings({
                 </div>
             </div>
         </div>
+
     );
 }
 

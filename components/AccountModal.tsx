@@ -14,17 +14,17 @@ export default function AccountModal() {
 
     const handleChange = (open: boolean) => {
         if (!open) {
-          setTab("profile");
+            setTab("profile");
         }
         setOpen(open);
     };
 
     return (
-        <Dialog open={open} 
-                onOpenChange={handleChange}
+        <Dialog open={open}
+            onOpenChange={handleChange}
         >
-            <VisuallyHidden><DialogTitle/></VisuallyHidden>
-            <DialogContent className="max-w-[60%] max-h-[80vh] p-0 flex flex-col overflow-hidden">
+            <VisuallyHidden><DialogTitle /></VisuallyHidden>
+            <DialogContent className="w-[90%] sm:max-w-[60%] sm:max-h-[80vh] p-0 flex flex-col overflow-hidden">
                 <div className="w-full bg-white rounded-xl flex flex-col flex-1 overflow-hidden">
                     <div className="border-b px-6 py-4 flex items-center justify-between">
                         <h2 className="text-lg font-semibold">My Account</h2>
@@ -37,13 +37,13 @@ export default function AccountModal() {
                         className="w-full flex flex-col flex-1 overflow-hidden"
                         onKeyDownCapture={(e) => {
                             if (
-                            e.key === "ArrowLeft" ||
-                            e.key === "ArrowRight" ||
-                            e.key === "Home" ||
-                            e.key === "End"
+                                e.key === "ArrowLeft" ||
+                                e.key === "ArrowRight" ||
+                                e.key === "Home" ||
+                                e.key === "End"
                             ) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                                e.preventDefault();
+                                e.stopPropagation();
                             }
                         }}
                     >
@@ -61,14 +61,14 @@ export default function AccountModal() {
                                 Billing and Payments
                             </TabsTrigger>
                         </TabsList>
-                        
+
                         <div className="w-full overflow-y-auto px-0 py-0 flex-1">
                             <TabsContent value="profile">
-                                <ProfilePage/>
+                                <ProfilePage />
                             </TabsContent>
 
                             <TabsContent value="billing">
-                                <BillingPage/>
+                                <BillingPage />
                             </TabsContent>
                         </div>
                     </Tabs>

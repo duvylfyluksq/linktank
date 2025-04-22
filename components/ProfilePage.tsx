@@ -14,7 +14,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="grid grid-cols-3 px-3 py-4 gap-x-6 gap-y-6 items-center w-full">
+      <div className="sm:grid flex flex-col grid-cols-3 px-3 py-4 gap-x-2 sm:gap-x-6 gap-y-6 items-start sm:items-center w-full">
 
         <div className="text-sm text-gray-600">Profile</div>
         <div className="flex items-center gap-2 truncate">

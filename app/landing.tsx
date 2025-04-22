@@ -71,10 +71,7 @@ export default function Landing({ events }: { events: EventModel[] }) {
                         Meet experts in the know and never miss valuable
                         insight.
                     </p>
-
-                    <div className="flex flex-row flex-wrap w-full sm:w-[5rem] justify-center">
-                        <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.54488rem] sm:rounded-[0.75rem] py-[1rem] sm:py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-[0.8125rem] sm:text-[1.125rem] hover:bg-[#0e3b69]" />
-                    </div>
+                    <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                 </div>
             </div>
             <EventsSection events={events} />
@@ -260,21 +257,19 @@ export default function Landing({ events }: { events: EventModel[] }) {
                 <div className="inline-flex items-center rounded-full border p-1 mb-8 bg-white">
                     <button
                         onClick={() => setIsYearly(true)}
-                        className={`px-[1.5rem] md:px-[2.5rem] py-2 rounded-full text-[1rem] md:text-[1.125rem] transition-colors h-[3.3125rem] ${
-                            isYearly
-                                ? "bg-[#14284B] text-white"
-                                : "text-gray-600"
-                        }`}
+                        className={`px-[1.5rem] md:px-[2.5rem] py-2 rounded-full text-[1rem] md:text-[1.125rem] transition-colors h-[3.3125rem] ${isYearly
+                            ? "bg-[#14284B] text-white"
+                            : "text-gray-600"
+                            }`}
                     >
                         Yearly
                     </button>
                     <button
                         onClick={() => setIsYearly(false)}
-                        className={`px-[1.5rem] md:px-[2.5rem] py-2 rounded-full text-[1rem] md:text-[1.125rem] transition-colors h-[3.3125rem] ${
-                            !isYearly
-                                ? "bg-[#14284B] text-white"
-                                : "text-gray-600"
-                        }`}
+                        className={`px-[1.5rem] md:px-[2.5rem] py-2 rounded-full text-[1rem] md:text-[1.125rem] transition-colors h-[3.3125rem] ${!isYearly
+                            ? "bg-[#14284B] text-white"
+                            : "text-gray-600"
+                            }`}
                     >
                         Monthly
                     </button>

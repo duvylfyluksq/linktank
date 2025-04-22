@@ -7,7 +7,7 @@ import AuthTabs from "@/components/AuthTabs";
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
-import {FaApple} from "react-icons/fa"
+import { FaApple } from "react-icons/fa"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -25,13 +25,13 @@ export default function SignInPage() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-  
+
     try {
-      const response = await signIn!.create({ identifier: email });  
+      const response = await signIn!.create({ identifier: email });
       const hasPassword = response!.supportedFirstFactors!.some(
         (factor: any) => factor.strategy === "password"
       );
-      
+
       sessionStorage.setItem("visitedSignIn", "true");
 
       if (hasPassword) {
@@ -39,31 +39,31 @@ export default function SignInPage() {
       } else {
         router.push("/sign-in/alternate-strategies");
       }
-  
-    } catch{
-        toast({
-          title: "Error",
-          description: "No account found with this email",
-          variant: "destructive",
-        })
+
+    } catch {
+      toast({
+        title: "Error",
+        description: "No account found with this email",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   const handleSocialSignIn = async (provider: "oauth_google" | "oauth_apple") => {
     if (!isLoaded) return
 
     try {
       setSocialLoading(provider)
-      
+
       await signIn.authenticateWithRedirect({
         strategy: provider,
         redirectUrl: "https://clerk.linktank.com/v1/oauth_callback",
         redirectUrlComplete: "/",
       })
-    } catch{
+    } catch {
       toast({
         title: "Authentication failed",
         description: "Failed to authenticate with provider. Please try again.",
@@ -74,7 +74,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="w-[30rem] py-10 flex justify-center px-4">
+    <div className="w-full sm:w-[30rem] py-10 flex justify-center px-4">
       <div className="py-4 w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
         <div className="flex items-center justify-center px-6 pt-6">
           <Image

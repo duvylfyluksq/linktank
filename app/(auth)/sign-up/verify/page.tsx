@@ -25,12 +25,12 @@ export default function VerifyPage() {
   const { toast } = useToast()
 
   useEffect(() => {
-      const visited = sessionStorage.getItem("visitedSignUp");
-      if (!visited) {
-        router.replace("/sign-up");
-      } else {
-        setAllowAccess(true);
-      }
+    const visited = sessionStorage.getItem("visitedSignUp");
+    if (!visited) {
+      router.replace("/sign-up");
+    } else {
+      setAllowAccess(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function VerifyPage() {
         title: "Code sent",
         description: "A new verification code has been sent to your email",
       })
-    } catch{
+    } catch {
       toast({
         title: "Failed to send code",
         description: "Something went wrong. Please try again",
@@ -116,7 +116,7 @@ export default function VerifyPage() {
   return (
     <>
       {authComplete && <AuthLoadingScreen type="signup" />}
-      <div className="w-[30rem] py-10 flex justify-center px-4">
+      <div className="w-full sm:w-[30rem] py-10 flex justify-center px-4">
         <div className="w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
           {/* Logo */}
           <div className="flex items-center justify-center px-6 pt-6">

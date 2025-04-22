@@ -23,7 +23,7 @@ export function Footer() {
                         © 2025 Linktank. All rights reserved
                     </p>
                 </div>
-                <div className="flex flex-row gap-[0.81rem] w-full">
+                <div className="flex flex-row gap-[0.81rem] w-full sm:justify-end">
                     <div className="flex flex-col gap-[1.5rem]">
                         <div>
                             <Link

@@ -235,8 +235,8 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                     <Link href="/organizations" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/organizations" && "underline opacity-100")}>
                         Organizations
                     </Link>
-                    <Link href="/settings" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/settings" && "underline opacity-100")}>
-                        Settings
+                    <Link href="/events/new" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/settings" && "underline opacity-100")}>
+                        Create an event
                     </Link>
                 </div>
             </div>

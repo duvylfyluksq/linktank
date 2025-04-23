@@ -2,6 +2,9 @@ import dbConnect from "@/lib/dbConnect";
 import Event from "@/models/Event";
 import { NextResponse } from "next/server";
 import Organization from "@/models/Organization";
+import City from "@/models/City";
+import mongoose from "mongoose";
+
 
 export async function GET(request: Request) {
     await dbConnect();
@@ -15,26 +18,24 @@ export async function GET(request: Request) {
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const limit = parseInt(url.searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
-
+    console.log(locations);
     try {
         const query: any = {};
 
-        // Handle search query
         if (searchQuery) {
             query.title = { $regex: searchQuery, $options: "i" };
         }
 
-        // Handle organization filter
         if (orgId && orgId !== "all") {
             query.organization = orgId;
         }
 
-        // Handle location filters
         if (locations && locations.length > 0) {
-            query.location = { $in: locations };
+            query.location_tag = {
+                $in: locations.map((id) => new mongoose.Types.ObjectId(id)),
+            };
         }
 
-        // Handle location type
         if(locationType == "online") query.is_virtual = true;
         else if(locationType == "in-person") query.is_in_person = true;
         else if(locationType == "hybrid"){
@@ -42,7 +43,6 @@ export async function GET(request: Request) {
             query.is_in_person = true;
         }
 
-        // Handle date range and event type filters
         const now = new Date();
 
         if (date) {
@@ -73,6 +73,7 @@ export async function GET(request: Request) {
             .skip(skip)
             .limit(limit)
             .populate({path: "organization", model: Organization})
+            .populate({path: "location_tag", model: City})
             .exec();
 
         const totalCount = await Event.countDocuments(query);

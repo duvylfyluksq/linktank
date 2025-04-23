@@ -67,6 +67,10 @@ const EventSchema = new Schema({
         type: String,
         required: true,
     },
+    location_tag: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "City",
+    },
     address: {
         type: String,
         default: null,

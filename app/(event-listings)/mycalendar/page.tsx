@@ -32,6 +32,8 @@ export default function Home() {
             return false;
           }
       
+          if (filters.locations && (!event.location_tag || !filters.locations.includes(event.location_tag._id))) return false;
+
           if (filters.location_type === "in-person" && !event.is_in_person) return false;
           if (filters.location_type === "online" && !event.is_virtual) return false;
           if (filters.location_type === "hybrid" &&

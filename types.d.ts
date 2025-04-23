@@ -18,6 +18,11 @@ interface Organization {
     logo_url?: string; // Optional, assuming URLField is a string
 }
 
+interface City {
+    _id: string;
+    name: string;
+}
+
 interface User {
     clerk_id: string,
     stripe_id: string,
@@ -54,6 +59,7 @@ interface Event extends Document {
     is_virtual?: boolean;
     is_in_person?: boolean;
     location: string;
+    location_tag?: City;
     address?: string;
     room?: string;
     city?: string;
@@ -71,7 +77,7 @@ type EventModel = Event;
 
 interface EventFilter{
     location_type: "online" | "in-person" | "hybrid" | "all";
-    locations: string[];
+    locations: City["_id"][];
     date_type: "upcoming" | "past" | "all";
     date: Date | undefined;
     organization_id: Organization["_id"] | "all";

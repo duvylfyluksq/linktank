@@ -1,5 +1,5 @@
 "use client"
-import { FormInput } from "@/components/formInput";
+// import { FormInput } from "@/components/formInput";
 import { UploadIcon } from "lucide-react";
 
 export default function NewEventPage() {
@@ -19,13 +19,14 @@ export default function NewEventPage() {
                 </div>
                 <div className="flex flex-col gap-[0.9375rem] w-full">
                     <h2 className="text-xl font-bold text-[#323232]">Basic Information</h2>
-                    <FormInput label="Event Title" placeholder="Title here" type="text" value="" onChange={(e) => { }} className="w-full" required />
+                    {/* <FormInput label="Event Title" placeholder="Title here" type="text" value="" onChange={(e) => { }} className="w-full" required />
                     <FormInput label="Event Location" placeholder="Short description of your event here" type="text" value="" onChange={(e) => { }} className="w-full" />
                     <FormInput label="Event Date" placeholder="Event URL" type="text" value="" onChange={(e) => { }} className="w-full" />
                     <FormInput label="Event Time" placeholder="Event Location" type="text" value="" onChange={(e) => { }} className="w-full" />
-                    <FormInput label="Online Meeting URL" placeholder="Zoom, Google Meet, etc." type="text" value="" onChange={(e) => { }} className="w-full" />
+                    <FormInput label="Online Meeting URL" placeholder="Zoom, Google Meet, etc." type="text" value="" onChange={(e) => { }} className="w-full" /> */}
                 </div>
             </div>
         </div>
     );
 }
+

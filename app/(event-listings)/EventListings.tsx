@@ -106,6 +106,7 @@ export default function EventListings({
 
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [selectedCities, setSelectedCities] = useState<City[]>([])
 
     return (
 
@@ -173,17 +174,26 @@ export default function EventListings({
                         open={isFiltersOpen}
                         onOpenChange={setIsFiltersOpen}
                         selectedType={filters.location_type}
-                        onApply={(type) =>
+                        initialSelectedCities={selectedCities}
+                        onApply={(type, cities) => {
                             filters.updateFilters("location_type", type)
-                        }
-                        onClear={() =>
-                            filters.updateFilters("location_type", "all")
-                        }
+                            if (cities) {
+                                setSelectedCities(cities)
+                                filters.updateFilters(
+                                    "locations",
+                                    cities.map((c) => c._id),
+                                )
+                            }
+                            }}
+                            onClear={() => {
+                                filters.updateFilters("location_type", "all")
+                                setSelectedCities([])
+                                filters.updateFilters("locations", [])
+                        }}
                     />
                 </div>
             </div>
             <div className="flex flex-row w-full gap-[1.625rem] min-h-screen relative">
-                {/* removed mobile view from here and pasted at the bottom to reduce clutter */}
                 <div className="flex-1 sm:pr-4">
                     <Timeline events={events} loading={loadingState.loading} />
                     {fetchingState?.fetching && (
@@ -217,96 +227,3 @@ export default function EventListings({
 
     );
 }
-
-{
-    /* <ol className="relative border-s border-[#808080] border-opacity-25 w-full overflow-y-auto"> */
-}
-{
-    /* <>
-        <div className="absolute right-4 top-2 sm:hidden">
-            <Button
-                variant="outline"
-                onClick={() => setMobileCalendarOpen(true)}
-                className="p-2"
-            >
-                <CalendarIcon size={20} />
-            </Button>
-        </div>
-
-        {mobileCalendarOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black backdrop-blur-sm bg-opacity-50 z-50 sm:hidden">
-                <div className="bg-white p-4 rounded-md">
-                    <Calendar
-                        mode="single"
-                        selected={date}
-                        onSelect={(d) => {
-                            setDate(d);
-                            setMobileCalendarOpen(false);
-                        }}
-                    />
-                    <Button
-                        onClick={() =>
-                            setMobileCalendarOpen(false)
-                        }
-                        className="mt-2 w-full"
-                    >
-                        Close
-                    </Button>
-                </div>
-            </div>
-        )}
-    </> */
-}
-{
-    /* <div className="sm:hidden">
-        {loadingState.loading
-            ? Array.from({ length: 5 }).map((_, i) => (
-                <SkeletonCard key={i} />
-            ))
-            : Object.entries(groupedEvents).map(
-                ([date, events]) => (
-                    <div
-                        key={date}
-                        className="mb-6 flex flex-col items-left"
-                    >
-                        <time className="text-2xl font-bold mb-2">
-                            {date}
-                        </time>
-                        {events.map((event) => (
-                            <EventCard
-                                event={event}
-                                key={event._id}
-                            />
-                        ))}
-                    </div>
-                )
-            )}
-    </div> */
-}
-{
-    /* <div className="hidden sm:block">
-        {loadingState.loading
-            ? Array.from({ length: 5 }).map((_, i) => (
-                <SkeletonCard key={i} />
-            ))
-            : Object.entries(groupedEvents).map(
-                ([date, groupedEvents]) => (
-                    <li key={date} className="mb-10 ms-4">
-                        <div className="absolute w-3 h-3 bg-gray-800 rounded-full mt-1.5 -start-1.5 border border-white" />
-                        <time className="mb-1 text-xl font-semibold leading-none">
-                            {date}
-                        </time>
-                        {groupedEvents.map((event) => (
-                            <EventCard
-                                event={event}
-                                key={event._id}
-                            />
-                        ))}
-                    </li>
-                )
-            )}
-    </div>
-</ol> */
-}
-
-// h-[calc(100vh-8rem)]

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Event from "@/models/Event";
+import City from '@/models/City';
 import Organization from "@/models/Organization";
 import Speaker from "@/models/Speaker";
 
@@ -24,6 +25,7 @@ export async function GET(
 			backlink: id,
 		})
 			.populate({path: "organization", model: Organization})
+			.populate({path: "location_tag", model: City})
 			.populate({path: "speakers", model: Speaker})
 			.populate({path: "agenda", populate: [{path: "speakers", model: Speaker}]})
 			.lean()

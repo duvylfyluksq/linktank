@@ -17,7 +17,7 @@ export default function SubscriptionBanner() {
   }
 
   return (
-    <div className="w-full bg-[#0e3b69] text-white h-[3.6875rem] sm:h-[unset] py-3 px-[0.88rem] sm:px-20 flex items-center justify-between">
+    <div className="w-full bg-[#0e3b69] text-white h-[3.6875rem] sm:h-[unset] py-3 px-[0.88rem] sm:px-10 flex items-center justify-between">
       <div className="flex items-center">
         <div className="p-2 rounded-full mr-3 bg-[linear-gradient(to_bottom,_#228BE0,_#47ADFF)]">
           <LockIcon className="h-5 w-5 text-white" />

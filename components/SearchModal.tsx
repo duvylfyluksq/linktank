@@ -18,6 +18,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
 
     const [query, setQuery] = useState("");
     const [searchResults, setSearchResults] = useState<EventModel[]>([]);
+    const [placeholder, setPlaceholder] = useState<string>("Search for events, organisations and more")
     const [fetching, setFetching] = useState(false);
     const [searching, setSearching] = useState(false);
     const isLoadingRef = useRef(false);
@@ -118,6 +119,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
 
     const handleSearch = async () => {
         setSearching(true);
+        setPlaceholder("No results found")
         setSearchResults([])
         const { events, hasMore } = await fetchSearchResults(1);
         setSearchResults(events);
@@ -185,7 +187,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
                                     className="rounded-full"
                                 />
                                 <p className="text-[1rem] font-medium text-[#0f2b4f] leading-snug">
-                                    Search for events, organisations<br />and more
+                                    {placeholder}
                                 </p>
                             </div>
                         )}

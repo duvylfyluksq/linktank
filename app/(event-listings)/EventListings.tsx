@@ -16,6 +16,7 @@ import {
 import { CalendarIcon, Loader2, SlidersHorizontal } from "lucide-react";
 import { Timeline } from "@/app/(event-listings)/timeline";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import NoEvents from "@/components/NoEvents";
 
 interface EventListingsProps {
     Header: (filters: EventFilter) => React.ReactNode;
@@ -195,13 +196,22 @@ export default function EventListings({
             </div>
             <div className="flex flex-row w-full gap-[1.625rem] min-h-screen relative">
                 <div className="flex-1 sm:pr-4">
+                {events.length > 0 || loadingState.loading ? (
+                <>
                     <Timeline events={events} loading={loadingState.loading} />
-                    {fetchingState?.fetching && (
+                        {fetchingState?.fetching && (
                         <div className="flex justify-center items-center py-4">
                             <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                         </div>
-                    )}
+                        )}
                     <div className="h-1" ref={sentinelRef} />
+                </>
+                ) : (
+                    <NoEvents
+                        imageUrl="/no-results.svg"
+                        text="No Events Found"
+                    />
+                )}
                 </div>
 
                 <div className="h-auto max-sm:mt-4 flex-shrink-0 sticky top-[5rem] self-start max-sm:hidden">

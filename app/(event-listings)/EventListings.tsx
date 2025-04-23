@@ -127,7 +127,7 @@ export default function EventListings({
                     {Header(filters)}
                     <CalendarIcon className="w-5 h-5 text-gray-500 sm:hidden" onClick={() => setIsCalendarOpen(!isCalendarOpen)} />
                     <Dialog open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                        <DialogContent className="flex flex-col items-center w-[70%]">
+                        <DialogContent className="flex flex-col items-center w-[70%]" hideClose={true}>
                             <EventCalendar
                                 filters={filters}
                                 onFilterChange={filters.updateFilters}

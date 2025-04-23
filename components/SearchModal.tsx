@@ -132,6 +132,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
             <VisuallyHidden><DialogTitle /></VisuallyHidden>
             <DialogContent
                 className="bg-[#f9fdfd] rounded-2xl max-w-md w-[90%] sm:w-full shadow-xl p-0 overflow-hidden gap-0 sm:top-[50%] top-[20%]"
+                hideClose={true}
             >
                 <div className="w-full border-b rounded-t-2xl">
                     <form

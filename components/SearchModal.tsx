@@ -25,6 +25,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
     const hasMoreRef = useRef(true);
     const currentPageRef = useRef(1);
     const sentinelRef = useRef<HTMLDivElement | null>(null);
+    const lastSearchRef = useRef<string>("");
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -87,6 +88,14 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
     }, [open]);
 
     useEffect(() => {
+        if (!query.trim()) return;
+        const debounceTimer = setTimeout(() => {
+            handleSearch();
+        }, 1000);
+        return () => clearTimeout(debounceTimer);
+    }, [query]);
+
+    useEffect(() => {
         const sentinel = sentinelRef.current;
         const scrollContainer = scrollContainerRef.current;
 
@@ -118,6 +127,9 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
 
 
     const handleSearch = async () => {
+        const trimmedQuery = query.trim();
+        if (trimmedQuery === "" || trimmedQuery === lastSearchRef.current) return;
+        lastSearchRef.current = trimmedQuery;
         setSearching(true);
         setPlaceholder("No results found")
         setSearchResults([])

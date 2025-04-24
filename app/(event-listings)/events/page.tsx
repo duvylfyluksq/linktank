@@ -106,7 +106,7 @@ export default function Home() {
                 setLoading(false);
             }
         })();
-    }, [filters], 400);
+    }, [filters], 200);
 
     return (
         <EventListings

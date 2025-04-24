@@ -214,7 +214,7 @@ export default function EventListings({
                 )}
                 </div>
 
-                <div className="h-auto max-sm:mt-4 flex-shrink-0 sticky top-[5rem] self-start max-sm:hidden">
+                <div className="h-auto max-sm:mt-4 flex-shrink-0 sticky top-[9rem] self-start max-sm:hidden">
                     <EventTypeSelector
                         currentType={filters.date_type}
                         onChange={(type) => {

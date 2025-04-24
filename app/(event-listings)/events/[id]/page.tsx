@@ -21,7 +21,6 @@ import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
 // import { connect } from "node:net";
 
 const displayDate = (date) => {
-    console.log(date);
     const dt = new Date(date);
     return dt.toLocaleDateString("en-US", {
         weekday: "short",
@@ -31,7 +30,6 @@ const displayDate = (date) => {
 };
 
 const displayTime = (date) => {
-    console.log(date);
     const dt = new Date(date);
     return dt.toLocaleTimeString("en-US", {
         hour: "numeric",

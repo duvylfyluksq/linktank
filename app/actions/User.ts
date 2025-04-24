@@ -13,7 +13,6 @@ export async function createUser(user : any){
         
         user.stripe_id = stripeCustomer.id;
         const newUser = await User.create(user);
-        console.log(newUser);
         if(!newUser){
             return NextResponse.json({ success: false, message: "Invalid format" }, { status: 400 });
         }

@@ -3,8 +3,7 @@
 import {
     Dialog,
     DialogContent
-}
-    from "@/components/ui/dialog";
+} from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
@@ -26,10 +25,11 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
     const currentPageRef = useRef(1);
     const sentinelRef = useRef<HTMLDivElement | null>(null);
     const lastSearchRef = useRef<string>("");
+    const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
     const scrollContainerRef = useRef<HTMLDivElement | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
 
-    async function fetchSearchResults(page: number): Promise<{ events: EventModel[]; hasMore: boolean }> {
+    async function fetchSearchResults(page: number, query: string): Promise<{ events: EventModel[]; hasMore: boolean }> {
         setFetching(true);
         try {
             const params = new URLSearchParams();
@@ -60,7 +60,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
         isLoadingRef.current = true;
 
         const nextPage = currentPageRef.current + 1;
-        const { events: newResults, hasMore } = await fetchSearchResults(nextPage);
+        const { events: newResults, hasMore } = await fetchSearchResults(nextPage, query);
 
         hasMoreRef.current = hasMore;
         setSearchResults(prev => {
@@ -78,6 +78,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
     useEffect(() => {
         if (!open) {
             setQuery("");
+            setPlaceholder("Search for events, organisations and more");
             setSearchResults([]);
             hasMoreRef.current = true;
             currentPageRef.current = 1;
@@ -87,13 +88,14 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
         }
     }, [open]);
 
-    useEffect(() => {
-        if (!query.trim()) return;
-        const debounceTimer = setTimeout(() => {
-            handleSearch();
-        }, 1000);
-        return () => clearTimeout(debounceTimer);
-    }, [query]);
+    const debouncedSearch = useCallback((query: string) => {
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = setTimeout(() => {
+          handleSearch(query);
+        }, 500);
+      }, []);
 
     useEffect(() => {
         const sentinel = sentinelRef.current;
@@ -126,14 +128,14 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
 
 
 
-    const handleSearch = async () => {
+    const handleSearch = async (query: string) => {
         const trimmedQuery = query.trim();
         if (trimmedQuery === "" || trimmedQuery === lastSearchRef.current) return;
         lastSearchRef.current = trimmedQuery;
         setSearching(true);
         setPlaceholder("No results found")
         setSearchResults([])
-        const { events, hasMore } = await fetchSearchResults(1);
+        const { events, hasMore } = await fetchSearchResults(1, query);
         setSearchResults(events);
         hasMoreRef.current = hasMore;
         currentPageRef.current = 1;
@@ -152,13 +154,17 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
-                            handleSearch();
+                            if (debounceTimerRef.current) {
+                                clearTimeout(debounceTimerRef.current);
+                                debounceTimerRef.current = null;
+                            }
+                            handleSearch(query);
                         }}
                     >
                         <Input
                             type="text"
                             placeholder="Type here..."
-                            onChange={(e) => setQuery(e.target.value)}
+                            onChange={(e) => {setQuery(e.target.value); debouncedSearch(e.target.value);}}
                             className="w-full px-3 py-6 !border-none !shadow-none !bg-transparent !ring-0 !outline-none focus:!ring-0 focus:!outline-none focus-visible:!ring-0 focus-visible:!outline-none text-lg focus:ring-0 focus:outline-none placeholder:text-gray-400 rounded-none"
                         />
                     </form>

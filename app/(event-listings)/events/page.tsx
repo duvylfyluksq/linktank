@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import EventListings from "../EventListings";
 import { useEventFilters } from "@/hooks/useEventFilters";
+import { useDebouncedEffect } from "@/hooks/useDebouncedEffect";
 
 export default function Home() {
     const [events, setEvents] = useState<EventModel[]>([]);
@@ -93,12 +94,11 @@ export default function Home() {
         isLoadingRef.current = false;
     }, [filters]);
 
-    useEffect(() => {
+    useDebouncedEffect(() => {
         (async () => {
             setLoading(true);
             try {
-                const { events: freshEvents, hasMore } =
-                    await fetchFilteredEvents(1, filters);
+                const { events: freshEvents, hasMore } = await fetchFilteredEvents(1, filters);
                 hasMoreRef.current = hasMore;
                 setEvents(freshEvents);
                 currentPageRef.current = 1;
@@ -106,7 +106,7 @@ export default function Home() {
                 setLoading(false);
             }
         })();
-    }, [filters]);
+    }, [filters], 400);
 
     return (
         <EventListings

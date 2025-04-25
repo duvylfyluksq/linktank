@@ -3,8 +3,8 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react"
-import CitySelector from "./CitySelector"
+import { useState } from "react"
+// import CitySelector from "./CitySelector"
 
 export type EventLocationTypeFilter = "all" | "in-person" | "online" | "hybrid"
 
@@ -23,20 +23,19 @@ export default function EventFiltersDialog({
   selectedType,
   onApply,
   onClear,
-  initialSelectedCities,
 }: FiltersDialogProps) {
   const [tempType, setTempType] = useState<EventLocationTypeFilter>(selectedType)
-  const [cities, setCities] = useState<City[]>([])
-  const [selectedCities, setSelectedCities] = useState<City[]>([])
+  // const [cities, setCities] = useState<City[]>([])
+  // const [selectedCities, setSelectedCities] = useState<City[]>([])
 
   const handleApply = () => {
-    onApply(tempType, selectedCities)
+    onApply(tempType)
     onOpenChange(false)
   }
 
   const handleClear = () => {
     setTempType("all")
-    setSelectedCities([])
+    // setSelectedCities([])
     onClear()
   }
 
@@ -45,37 +44,37 @@ export default function EventFiltersDialog({
     setTempType(selectedType)
   }
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      fetch("/api/cities")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            setCities(data.cities)
-          }
-        })
-    }
-    if (open) {
-      fetchCities()
-      setTempType(selectedType)
-    }
-  }, [open])
+  // useEffect(() => {
+  //   const fetchCities = async () => {
+  //     fetch("/api/cities")
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         if (data.success) {
+  //           setCities(data.cities)
+  //         }
+  //       })
+  //   }
+  //   if (open) {
+  //     fetchCities()
+  //     setTempType(selectedType)
+  //   }
+  // }, [open])
 
-  useEffect(() => {
-    if (open && initialSelectedCities) {
-      setSelectedCities(initialSelectedCities)
-    }
-  }, [open, initialSelectedCities])
+  // useEffect(() => {
+  //   if (open && initialSelectedCities) {
+  //     setSelectedCities(initialSelectedCities)
+  //   }
+  // }, [open, initialSelectedCities])
 
   return (
     <Dialog open={open} onOpenChange={(dialogOpen) => onDialogOpen(dialogOpen)}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Filter Events</DialogTitle>
-          <p className="text-sm text-gray-500">Filter events by location and type</p>
+          <p className="text-sm text-gray-500">Filter events by type</p>
         </DialogHeader>
 
-        <CitySelector cities={cities} selectedCities={selectedCities} setSelectedCities={setSelectedCities} />
+        {/* <CitySelector cities={cities} selectedCities={selectedCities} setSelectedCities={setSelectedCities} /> */}
 
         <div className="mt-4">
           <p className="font-medium text-sm mb-1">Event Type</p>

@@ -107,7 +107,7 @@ export default function EventListings({
 
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-    const [selectedCities, setSelectedCities] = useState<City[]>([])
+    // const [selectedCities, setSelectedCities] = useState<City[]>([])
 
     return (
 
@@ -175,21 +175,21 @@ export default function EventListings({
                         open={isFiltersOpen}
                         onOpenChange={setIsFiltersOpen}
                         selectedType={filters.location_type}
-                        initialSelectedCities={selectedCities}
-                        onApply={(type, cities) => {
+                        // initialSelectedCities={selectedCities}
+                        onApply={(type) => {
                             filters.updateFilters("location_type", type)
-                            if (cities) {
-                                setSelectedCities(cities)
-                                filters.updateFilters(
-                                    "locations",
-                                    cities.map((c) => c._id),
-                                )
-                            }
+                            // if (cities) {
+                            //     setSelectedCities(cities)
+                            //     filters.updateFilters(
+                            //         "locations",
+                            //         cities.map((c) => c._id),
+                            //     )
+                            // }
                             }}
                             onClear={() => {
                                 filters.updateFilters("location_type", "all")
-                                setSelectedCities([])
-                                filters.updateFilters("locations", [])
+                                // setSelectedCities([])
+                                // filters.updateFilters("locations", [])
                         }}
                     />
                 </div>

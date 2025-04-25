@@ -12,8 +12,8 @@ export default function SubscriptionBanner() {
   const { hasSubscription, loadingPlan } = useBillingInfo()
 
 
-  if (!isLoaded || loadingPlan || (isSignedIn && hasSubscription) || pathname.startsWith("/sign-up") || pathname.startsWith("/sign-in")) {
-    return null
+  if (!isLoaded || loadingPlan || (isSignedIn && hasSubscription) || !pathname.startsWith("/events")) {
+    return null;
   }
 
   return (

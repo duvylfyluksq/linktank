@@ -19,7 +19,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "LinkTank",
+	title: "Linktank",
 	description: "",
 	icons: {
 		icon: "/favicons/favicon.ico",

@@ -9,14 +9,14 @@ export function Footer() {
                     <Link href="/" className="flex items-center">
                         <Image
                             src="/linktank_logo.png"
-                            alt="LinkTank"
+                            alt="Linktank"
                             width={100}
                             height={100}
                             className="w-10 h-10 mr-[0.625rem] rounded-full"
                         />
 
                         <span className="text-2xl font-bold mr-[2.44rem]">
-                            LinkTank
+                            Linktank
                         </span>
                     </Link>
                     <p className="text-sm mt-4 text-gray-400">

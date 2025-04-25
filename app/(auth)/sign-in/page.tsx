@@ -60,7 +60,7 @@ export default function SignInPage() {
 
       await signIn.authenticateWithRedirect({
         strategy: provider,
-        redirectUrl: "https://clerk.linktank.com/v1/oauth_callback",
+        redirectUrl: "/sign-in/sso-callback",
         redirectUrlComplete: "/",
       })
     } catch {

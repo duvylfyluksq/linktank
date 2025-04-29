@@ -67,7 +67,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
             <Row>
               <Column>
                 <Img
-                  src="/linktank_logo.png"
+                  src="dev.linktank.com/linktank_logo.png"
                   width="30"
                   height="30"
                   alt="Linktank"
@@ -90,7 +90,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
               {dateEvents.map((event) => (
                 <Link
                   key={event._id}
-                  href={"/events/" + event.backlink}
+                  href={"dev.linktank.com/events/" + event.backlink}
                   style={cardLink}
                   target="_blank"
                 >
@@ -111,7 +111,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                                 </span>
                               )}
                               <Img
-                                src="/map-pin.svg"
+                                src="dev.linktank.com/map-pin.png"
                                 width="16"
                                 height="16"
                                 alt="Location"

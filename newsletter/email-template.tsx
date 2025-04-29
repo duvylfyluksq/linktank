@@ -102,11 +102,14 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                         <Row>
                           <Column>
                             <Text style={timeAndLocationText}>
-                              {new Date(event.date_from).toLocaleTimeString("en-US", {
-                                hour: "numeric",
-                                minute: "numeric",
-                              })} 
-                              {" "}
+                              {!event.is_date_range && (
+                                <span>
+                                  {new Date(event.date_from).toLocaleTimeString("en-US", {
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                  })}{" "}
+                                </span>
+                              )}
                               <Img
                                 src="/map-pin.svg"
                                 width="16"

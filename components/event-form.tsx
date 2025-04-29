@@ -2,21 +2,32 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { MapPin, Upload, Plus, X, Globe, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { DatePicker } from "@/components/date-picker"
 import { TimePicker } from "@/components/time-picker"
 import { NewSpeakerForm } from "@/components/new-speaker-form"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+// import MDEditor from "@uiw/react-md-editor";
 // import { useMobile } from "@/hooks/use-mobile"
 import { SpeakerSelector } from "@/components/speaker-selector"
+
+
 
 // Mock data for speakers
 // const speakersList = [
@@ -26,12 +37,18 @@ import { SpeakerSelector } from "@/components/speaker-selector"
 //   { id: 4, name: "Sarah Chen", role: "Product Lead, Linktank", image: "/placeholder.svg?height=40&width=40" },
 // ]
 
+
 export function EventForm() {
+
   // const isMobile = useMobile()
   const [eventImage, setEventImage] = useState<string | null>(null)
   const [isDateRange, setIsDateRange] = useState(false)
 
   // Date and time state
+  // const [description, setDescription] = useState("");
+  const [fetching, setFetching] = useState(true);
+  const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [startDate, setStartDate] = useState<Date | undefined>(new Date())
   const [startTime, setStartTime] = useState<string>("09:00")
   const [endDate, setEndDate] = useState<Date | undefined>(new Date())
@@ -45,6 +62,30 @@ export function EventForm() {
   ])
 
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setFetching(true);
+        await fetchOrganizations();
+      } catch (error) {
+        console.error("Error fetching organizations:", error);
+      } finally {
+        setFetching(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  async function fetchOrganizations() {
+    const response = await fetch(`/api/organizations`);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    setOrganizations(data.organizations);
+  }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -94,6 +135,8 @@ export function EventForm() {
   return (
     <div className="w-full max-w-5xl mx-auto">
       {/* Basic Information Section */}
+      <h1 className="text-xl sm:text-2xl font-bold">Submit an event</h1>
+      <p className="text-gray-500 text-sm sm:text-base mt-1">Fill in the details to submit an event to Linktank&apos;s directory</p>
       <Section title="Basic Information">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Image Upload Section */}
@@ -139,9 +182,9 @@ export function EventForm() {
             <div className="space-y-6">
               <div>
                 <Label htmlFor="event-title" className="text-sm font-medium mb-1 block">
-                  Event Title
+                  Event Title<span className="text-red-500">*</span>
                 </Label>
-                <Input id="event-title" placeholder="Enter event title" className="text-lg md:text-xl font-medium" />
+                <Input id="event-title" placeholder="Enter event title" />
               </div>
 
               {/* Brief Description */}
@@ -155,23 +198,62 @@ export function EventForm() {
               {/* Full Description */}
               <div>
                 <Label htmlFor="description" className="text-sm font-medium mb-1 block">
-                  Full Description
+                  Full Description<span className="text-red-500">*</span>
                 </Label>
-                <Textarea id="description" placeholder="Detailed description of your event" className="min-h-[120px]" />
+                {/* <MDEditor
+                  value={description}
+                  onChange={(value) => setDescription(value || "")}
+                  height={400}
+                  preview="edit"
+                /> */}
               </div>
 
               {/* URL */}
               <div>
                 <Label htmlFor="url" className="text-sm font-medium mb-1 block">
-                  Event URL
+                  Event URL<span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
-                    <Input
-                        id="url"
-                        placeholder="https://example.com/event"
-                    />
-                    <Globe className="h-4 w-4 text-gray-400 mr-2" />
+                  <Input
+                    id="url"
+                    placeholder="https://example.com/event"
+                    className="pl-10"
+                  />
+                  <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="organization" className="text-sm font-medium mb-1 block">
+                  Organization<span className="text-red-500">*</span>
+                </label>
+                {fetching ? (
+                  <div className="text-gray-500">Loading organizations…</div>
+                ) : (
+                  <Select
+                        value={selectedOrgId}
+                        onValueChange={(val) =>
+                            setSelectedOrgId(val)
+                        }
+                  >
+                    <SelectTrigger className="w-[15.625rem] h-[3.125rem] bg-white rounded-[0.75rem] max-sm:w-full">
+                        <SelectValue placeholder="Select Organization" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                        <SelectGroup>
+                            <SelectLabel>Select Organization</SelectLabel>
+                            <SelectItem value="all">
+                                All Organizations
+                            </SelectItem>
+                            {organizations.map((org) => (
+                                <SelectItem key={org._id} value={org._id}>
+                                    {org.name}
+                                </SelectItem>
+                            ))}
+                        </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
 
               <Separator className="my-6" />
@@ -190,22 +272,20 @@ export function EventForm() {
 
                 <div className="flex flex-col space-y-4">
                   <div className="space-y-2">
-                    <Label className="text-xs text-gray-500">Start Date & Time</Label>
+                    <Label className="text-xs text-gray-500">Start Date & Time<span className="text-red-500">*</span></Label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <DatePicker date={startDate} setDate={setStartDate} placeholder="Select start date" />
-                      <TimePicker time={startTime} setTime={setStartTime} placeholder="Select start time" />
+                      {!isDateRange && <TimePicker time={startTime} setTime={setStartTime} placeholder="Select start time" />}
                     </div>
                   </div>
 
-                  {isDateRange && (
-                    <div className="space-y-2">
-                      <Label className="text-xs text-gray-500">End Date & Time</Label>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <DatePicker date={endDate} setDate={setEndDate} placeholder="Select end date" />
-                        <TimePicker time={endTime} setTime={setEndTime} placeholder="Select end time" />
-                      </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs text-gray-500">End Date & Time</Label>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <DatePicker date={endDate} setDate={setEndDate} placeholder="Select end date" />
+                      {!isDateRange && <TimePicker time={endTime} setTime={setEndTime} placeholder="Select end time" />}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
 
@@ -243,9 +323,11 @@ export function EventForm() {
                       <Label className="text-xs text-gray-500">Physical Location</Label>
                       <div className="relative">
                         <Input
+                            id="event-location"
                             placeholder="Physical location address"
+                            className="pl-10"
                         />
-                        <MapPin className="h-4 w-4 text-gray-400 mr-2" />
+                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                       </div>
                     </div>
                   )}
@@ -254,10 +336,12 @@ export function EventForm() {
                     <div className="space-y-2">
                       <Label className="text-xs text-gray-500">Virtual Meeting Link</Label>
                       <div className="relative">
-                        <Input
-                            placeholder="Virtual meeting URL"
-                        />
-                        <Globe className="h-4 w-4 text-gray-400 mr-2" />
+                          <Input
+                            id="meeting-url"
+                            placeholder="Virtual meeting link"
+                            className="pl-10"
+                          />
+                          <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                       </div>
                     </div>
                   )}

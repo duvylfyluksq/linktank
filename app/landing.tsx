@@ -32,17 +32,6 @@ const features = [
     },
 ];
 
-const images1 = [
-    "/landing-2-1.jpg",
-    "/landing-2-2.jpg",
-    "/landing-2-3.jpg",
-    "/landing-2-4.jpg",
-    "/landing-2-5.webp",
-    "/landing-2-6.jpg",
-];
-
-const images2 = ["/landing-3-1.jpg", "/landing-3-2.jpg", "/landing-3-3.jpg"];
-
 export default function Landing({ events }: { events: EventModel[] }) {
     const [isYearly, setIsYearly] = useState(true);
     const price = isYearly ? "99.97" : "10.97";
@@ -89,26 +78,21 @@ export default function Landing({ events }: { events: EventModel[] }) {
                         </p>
                         <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
-                    <div className="grid gap-x-[1.09rem] gap-y-[1.4375rem] grid-cols-3 grid-rows-2">
-                        {images1.map((image, index) => (
-                            <div
-                                className="h-[8rem] sm:h-[9.64819rem] w-full sm:w-[9.64819rem] rounded-[1.25375rem]"
-                                key={`${image}-${index}`}
-                            >
-                                <Image
-                                    key={`${image}-${index}`}
-                                    src={image || "/placeholder.svg"}
-                                    alt=""
-                                    width={250}
-                                    height={250}
-                                    loading="lazy"
-                                    className="h-full w-full object-cover rounded-[1.25375rem]"
-                                />
-                            </div>
-                        ))}
+                    <div className="w-full flex justify-center md:justify-end">
+                        <div className="h-[20rem] w-[20rem] rounded-[1.25375rem] overflow-hidden">
+                            <Image
+                            src="/global-event-calendar.png"
+                            alt=""
+                            width={433}
+                            height={433}
+                            loading="lazy"
+                            className="h-full w-full object-cover rounded-[1.25375rem]"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
+
             <div className="bg-white min-h-[17.63rem] sm:min-h-[27.75rem] gap-[3rem] flex flex-col items-center justify-center px-4 py-12 md:py-0 flex-shrink-0">
                 <h4 className="text-[#113663] font-jakarta text-[0.875rem] sm:text-[1.5rem] font-semibold text-center max-w-[36.25rem] flex-shrink-0">
                     Events and insights from organizations and experts shaping
@@ -229,23 +213,17 @@ export default function Landing({ events }: { events: EventModel[] }) {
                         </p>
                         <GetStartedButton className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
-                    <div className="grid grid-cols-3 gap-x-[1.09rem] gap-y-[1.4375rem]">
-                        {images2.map((image, index) => (
-                            <div
-                                className="h-[10rem] md:h-[13.29413rem] w-full md:w-[10.94063rem] rounded-[0.50888rem]"
-                                key={`${image}-${index}`}
-                            >
-                                <Image
-                                    key={`${image}-${index}`}
-                                    src={image || "/placeholder.svg"}
-                                    alt=""
-                                    width={250}
-                                    height={250}
-                                    loading="lazy"
-                                    className="h-full w-full object-cover rounded-[0.50888rem]"
-                                />
-                            </div>
-                        ))}
+                    <div className="w-full flex justify-center md:justify-end">
+                        <div className="h-[20rem] w-[20rem] rounded-[1.25375rem] overflow-hidden">
+                            <Image
+                            src="/linktank-for.png"
+                            alt=""
+                            width={433}
+                            height={433}
+                            loading="lazy"
+                            className="h-full w-full object-cover rounded-[1.25375rem]"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

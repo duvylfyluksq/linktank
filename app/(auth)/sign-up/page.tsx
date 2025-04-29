@@ -13,7 +13,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { FcGoogle } from "react-icons/fc"
-import { FaApple } from "react-icons/fa"
+// import { FaApple } from "react-icons/fa"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 
@@ -221,7 +221,7 @@ export default function SignUpPage() {
               )}
             </Button>
 
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               className="flex-1 h-10 flex justify-center items-center gap-2"
@@ -236,7 +236,7 @@ export default function SignUpPage() {
                   <span>Apple</span>
                 </>
               )}
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>

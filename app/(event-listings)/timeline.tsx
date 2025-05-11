@@ -41,7 +41,7 @@ export const Timeline = ({ events, loading }: TimelineProps) => {
                                 </p>
                             </div>
 
-                            <div className="relative w-[1rem] flex-shrink-0 flex justify-center">
+                            <div className="relative w-[1rem] flex-shrink-0 flex justify-center self-stretch">
                                 <div className="absolute top-0 bottom-0 w-[2px] bg-gray-300" />
                                 <div className="w-3 h-3 bg-gray-800 rounded-full border border-white z-10 mt-0" />
                             </div>
@@ -54,7 +54,7 @@ export const Timeline = ({ events, loading }: TimelineProps) => {
                         </li>
                         <li className="flex sm:hidden w-full items-start flex-col">
                             <div className="flex flex-row gap-2"><p className="font-bold text-[#323232] font-jakarta text-lg">{date}</p><p className="font-bold text-[#323232] font-jakarta text-lg opacity-70">{new Date(date).toLocaleDateString(undefined, { weekday: "long" })}</p></div>
-                            <div className="flex flex-col my-[1.12rem] gap-4">
+                            <div className="flex flex-col w-full my-[1.12rem] gap-4">
                                 {events.map((event) => (
                                     <EventCard key={event._id} event={event} />
                                 ))}

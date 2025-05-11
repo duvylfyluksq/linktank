@@ -11,7 +11,8 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EventSearchResult } from "./EventSearchResult";
 import { SkeletonEventSearchResult } from "./SkeletonEventSearchResult";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
+import Link from "next/link";
 
 export default function SearchModal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
 
@@ -185,6 +186,14 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
                         :
                         searchResults.length > 0 ? (
                             <div className="flex flex-col gap-1">
+                                <Link href={`/search/${query}`} key="search-page" className="w-full" onClick={() => onOpenChange(false)}>
+                                    <div className="flex items-center gap-2 py-1 w-full text-muted-foreground hover:text-foreground hover:bg-gray-100 transition-colors cursor-pointer">
+                                        <Search className="w-4 h-4 flex-shrink-0" />
+                                        <div className="flex justify-between items-center w-full gap-0">
+                                            <span className="truncate max-w-[300px] flex-grow min-w-0 text-sm">Search {query}</span>
+                                        </div>
+                                    </div>
+                                </Link>
                                 {searchResults.map((event) => (
                                     <EventSearchResult key={event._id} event={event} onSelect={() => onOpenChange(false)} />
                                 ))}

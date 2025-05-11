@@ -1,50 +1,76 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import dynamic from "next/dynamic"
-import "easymde/dist/easymde.min.css"
+import { useState, useMemo, useCallback, useEffect } from "react";
+import dynamic from "next/dynamic";
+import "easymde/dist/easymde.min.css";
+import type SimpleMDE from "easymde";
 
-// Import SimpleMDE dynamically to avoid SSR issues
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-})
+const SimpleMdeReact = dynamic(
+  () => import("react-simplemde-editor").then((mod) => mod.default),
+  { ssr: false }
+);
 
-interface MarkdownEditorProps {
-  value: string
-  onChange: (value: string) => void
-  height?: number
+export interface MarkdownEditorProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  className?: string;
 }
 
-export function MarkdownEditor({ value, onChange, height = 400 }: MarkdownEditorProps) {
-  const [mounted, setMounted] = useState(false)
+export function MarkdownEditor({
+  value,
+  onChange,
+  placeholder,
+}: MarkdownEditorProps) {
+  const [cmInstance, setCmInstance] = useState<any>(null);
+  const [isFocused, setIsFocused] = useState(false);
 
-  // Only render the editor on the client side
+  const options = useMemo<SimpleMDE.Options>(
+    () => ({
+      autofocus: true,
+      spellChecker: false,
+      placeholder: placeholder,
+      toolbar: [
+        "bold",
+        "italic",
+        "heading",
+        "|",
+        "quote",
+        "code",
+        "unordered-list",
+        "ordered-list",
+        "|",
+        "preview",
+      ],
+    }),
+    []
+  );
+
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    if (isFocused && cmInstance) {
+      cmInstance.focus();
+    }
+  }, [value, isFocused, cmInstance]);
 
-  const options = {
-    autofocus: false,
-    spellChecker: false,
-    placeholder: "Write your event description here...",
-    status: ["lines", "words"],
-    minHeight: `${height}px`,
-  }
+  const getCodemirrorInstance = useCallback((cm: any) => {
+    setCmInstance(cm);
+    cm.focus();
+  }, []);
 
-  if (!mounted) {
-    return (
-      <div
-        style={{ height: `${height}px` }}
-        className="border rounded-md p-4 bg-gray-50 flex items-center justify-center"
-      >
-        <p className="text-gray-400">Loading editor...</p>
-      </div>
-    )
-  }
+  const changeHandler = useCallback((v: string) => {
+    onChange(v);
+  }, []);
 
   return (
-    <div className="markdown-editor">
-      <SimpleMDE value={value} onChange={onChange} options={options} />
+    <div className="max-w-2xl mx-auto">
+      <SimpleMdeReact
+        value={value}
+        onChange={changeHandler}
+        options={options}
+        getCodemirrorInstance={getCodemirrorInstance}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+      />
     </div>
-  )
+  );
 }

@@ -16,7 +16,6 @@ import { TimePicker } from "@/components/time-picker"
 import { NewSpeakerForm } from "@/components/new-speaker-form"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MarkdownEditor } from "@/components/markdown-editor"
 import {
   Select,
   SelectContent,
@@ -27,6 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SpeakerSelector } from "@/components/speaker-selector"
+import { MarkdownEditor } from "./markdown-editor"
+
 
 // Types
 interface Organization {
@@ -266,7 +267,11 @@ export function EventForm() {
                 <Label htmlFor="description" className="text-sm font-medium mb-1 block">
                   Full Description<span className="text-red-500">*</span>
                 </Label>
-                <MarkdownEditor value={description} onChange={setDescription} height={300} />
+                <MarkdownEditor
+                  value={description}
+                  onChange={setDescription}
+                  placeholder="Full description here"
+                />
               </div>
 
               {/* URL */}

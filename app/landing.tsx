@@ -66,7 +66,7 @@ export default function Landing({ events }: { events: EventModel[] }) {
             <EventsSection events={events} />
             <div className="min-h-[35.0625rem] bg-[#EDFAFF] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
                 <div className="flex flex-col md:flex-row gap-[2.6875rem] max-w-[75rem]">
-                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[36.25rem]">
+                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[1/2]">
                         <h1 className="text-[#113663] font-jakarta text-[1.25rem] sm:text-[1.75rem] md:text-[2rem] font-bold text-left">
                             Global Event Calendar & Curated Email Alerts
                         </h1>
@@ -78,7 +78,7 @@ export default function Landing({ events }: { events: EventModel[] }) {
                         </p>
                         <GetStartedButton className="w-full md:w-fit sm:mt-0 mt-2 px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
-                    <div className="w-full flex justify-center md:justify-end">
+                    <div className="w-full flex justify-center md:w-[1/2]">
                         <div className="h-[20rem] w-[20rem] rounded-[1.25375rem] overflow-hidden">
                             <Image
                             src="/global-event-calendar.png"
@@ -201,7 +201,7 @@ export default function Landing({ events }: { events: EventModel[] }) {
             </div>
             <div className="min-h-[31rem] bg-[#FAFEFF] w-full flex flex-col items-center justify-center px-4 py-12 md:py-0">
                 <div className="flex flex-col md:flex-row gap-[2.6875rem] max-w-[75rem]">
-                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[36.25rem]">
+                    <div className="flex flex-col gap-[0.9375rem] sm:gap-[1.625rem] w-full md:w-[1/2]">
                         <h1 className="text-[#113663] font-jakarta text-[1.25rem] sm:text-[1.75rem] md:text-[2rem] font-bold text-left">
                             Who&apos;s Linktank for?
                         </h1>
@@ -213,7 +213,7 @@ export default function Landing({ events }: { events: EventModel[] }) {
                         </p>
                         <GetStartedButton className="w-full md:w-fit px-[3rem] rounded-[0.75rem] py-[1.7rem] bg-[#1C2329] text-white border-[#3F4749] border-[1px] font-inter font-medium text-base sm:text-[1.125rem] hover:bg-[#0e3b69]" />
                     </div>
-                    <div className="w-full flex justify-center md:justify-end">
+                    <div className="w-full flex justify-center md:w-[1/2]">
                         <div className="h-[20rem] w-[20rem] rounded-[1.25375rem] overflow-hidden">
                             <Image
                             src="/linktank-for.png"

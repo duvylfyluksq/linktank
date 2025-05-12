@@ -50,6 +50,7 @@
     "lodash": "^4.17.21",
     "lucide-react": "^0.462.0",
     "markdown-it": "^14.1.0",
+    "markdown-it-task-lists": "^2.1.1",
     "mongoose": "^8.9.2",
     "next": "15.2.3",
     "next-themes": "^0.4.3",
@@ -76,6 +77,7 @@
     "vaul": "^1.1.1"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/papaparse": "^5.3.15",
     "@types/react": "^18",

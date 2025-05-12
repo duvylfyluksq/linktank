@@ -36,6 +36,14 @@ interface User {
     last_sign_in_at: Date
 }
 
+interface AgendaItem {
+    start_time: Date;
+    end_time: Date;
+    topic: string;
+    brief_description: string;
+    speakers: Speaker[];
+}
+
 interface Event extends Document {
     _id: string;
     title: string;
@@ -45,13 +53,7 @@ interface Event extends Document {
     ticket_url?: string;
     brief_description?: string;
     description: string;
-    agenda?: {
-        start_time: Date;
-        end_time: Date;
-        topic: string;
-        brief_description: string;
-        speakers: Speaker[];
-    }[][];
+    agenda?: AgendaItem[][];
     speakers?: Speaker[];
     organization: Organization;
     photo_url?: string;

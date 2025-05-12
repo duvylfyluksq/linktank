@@ -125,7 +125,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                             <Search className="w-5 h-5 text-inherit" />
                             <span className="hidden md:flex">Search</span>
                         </button>
-                        <Link href="/events/new" className="items-center text-gray-700 hover:text-black gap-x-2 hidden md:flex">
+                        <Link href="/events/create" className="items-center text-gray-700 hover:text-black gap-x-2 hidden md:flex">
                             <Plus className="w-5 h-5 text-inherit" />
                             <span>Create an event</span>
                         </Link>
@@ -235,7 +235,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                     <Link href="/organizations" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/organizations" && "underline opacity-100")}>
                         Organizations
                     </Link>
-                    <Link href="/events/new" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/settings" && "underline opacity-100")}>
+                    <Link href="/events/create" className={cn("text-[1.5rem] font-semibold opacity-50 text-[#113663]", pathname === "/settings" && "underline opacity-100")}>
                         Create an event
                     </Link>
                 </div>

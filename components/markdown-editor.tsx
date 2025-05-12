@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
-import "easymde/dist/easymde.min.css";
 import type SimpleMDE from "easymde";
+import "easymde/dist/easymde.min.css";
+
+import MarkdownIt from "markdown-it";
+import markdownItTaskLists from "markdown-it-task-lists"; // only if you installed it
 
 const SimpleMdeReact = dynamic(
   () => import("react-simplemde-editor").then((mod) => mod.default),
@@ -13,63 +16,68 @@ const SimpleMdeReact = dynamic(
 export interface MarkdownEditorProps {
   value: string;
   onChange: (value: string) => void;
-  placeholder?: string;
-  className?: string;
 }
 
 export function MarkdownEditor({
   value,
   onChange,
-  placeholder,
 }: MarkdownEditorProps) {
-  const [cmInstance, setCmInstance] = useState<any>(null);
-  const [isFocused, setIsFocused] = useState(false);
+  const mdParser = useMemo(() => {
+    const md = new MarkdownIt({
+      html:        true,   
+      linkify:     true,   
+      typographer: true,   
+      breaks:      true,   
+    });
+    md.use(markdownItTaskLists, { label: true, labelAfter: true });
+    return md;
+  }, []);
 
   const options = useMemo<SimpleMDE.Options>(
     () => ({
-      autofocus: true,
+      autofocus:    true,
       spellChecker: false,
-      placeholder: placeholder,
-      toolbar: [
+      placeholder:  "Description here",
+      toolbar : [
         "bold",
         "italic",
-        "heading",
+        "strikethrough",
         "|",
-        "quote",
+        "heading-1",
+        "heading-2",
+        "heading-3",
+        "|",
         "code",
+        "quote",
+        "|",
         "unordered-list",
         "ordered-list",
         "|",
-        "preview",
+        "link",
+        "image",
+        "horizontal-rule",
+        "|",
+        "preview"
       ],
+      previewRender: (plainText: string) => {
+        const rendered = mdParser.render(plainText);
+        return `<div class="prose max-w-none p-4">${rendered}</div>`;
+      },
     }),
-    []
+    [mdParser]
   );
 
-  useEffect(() => {
-    if (isFocused && cmInstance) {
-      cmInstance.focus();
-    }
-  }, [value, isFocused, cmInstance]);
-
-  const getCodemirrorInstance = useCallback((cm: any) => {
-    setCmInstance(cm);
-    cm.focus();
-  }, []);
-
-  const changeHandler = useCallback((v: string) => {
-    onChange(v);
-  }, []);
+  const changeHandler = useCallback(
+    (v: string) => onChange(v),
+    [onChange]
+  );
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="w-full lg:max-w-2xl lg:mx-auto">
       <SimpleMdeReact
         value={value}
         onChange={changeHandler}
         options={options}
-        getCodemirrorInstance={getCodemirrorInstance}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       />
     </div>
   );

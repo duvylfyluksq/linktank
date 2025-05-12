@@ -65,7 +65,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
         <div ref={containerRef} className="fixed top-0 left-0 right-0 z-50">
             <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[4rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">
                 <div className="flex items-center mr-10">
-                    <MenuIcon className="w-6 h-6 text-gray-500 sm:hidden mr-[0.44rem] flex-shrink-0" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+                    <MenuIcon className="w-6 h-6 text-gray-500 lg:hidden mr-[0.44rem] flex-shrink-0" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
                     <Link href="/" className="flex items-center">
                         <Image
                             src="/linktank_logo.png"
@@ -81,7 +81,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                 </div>
 
                 <div className="flex items-center justify-end sm:justify-end  w-full">
-                    <ul className="space-x-8 ml-6 font-medium hidden md:flex">
+                    <ul className="space-x-8 ml-6 font-medium hidden lg:flex">
                         <li>
                             <Link
                                 href="/events"
@@ -123,9 +123,9 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                             onClick={() => setSearchOpen(true)}
                         >
                             <Search className="w-5 h-5 text-inherit" />
-                            <span className="hidden md:flex">Search</span>
+                            <span className="hidden lg:flex">Search</span>
                         </button>
-                        <Link href="/events/create" className="items-center text-gray-700 hover:text-black gap-x-2 hidden md:flex">
+                        <Link href="/events/create" className="items-center text-gray-700 hover:text-black gap-x-2 hidden lg:flex">
                             <Plus className="w-5 h-5 text-inherit" />
                             <span>Create an event</span>
                         </Link>
@@ -211,7 +211,7 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
             </nav>
             <div className={cn("absolute top-0 left-0 h-screen w-[80vw] bg-secondaryBlue shadow-[2px_0px_0px_0px_rgba(0,0,0,0.12)]", isMobileMenuOpen ? "block" : "hidden")}>
                 <div className="flex items-center mr-10 h-[4.9375rem] px-4">
-                    <MenuIcon className="w-6 h-6 text-gray-500 sm:hidden mr-[0.44rem]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+                    <MenuIcon className="w-6 h-6 text-gray-500 lg:hidden mr-[0.44rem]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
                     <Link href="/" className="flex items-center">
                         <Image
                             src="/linktank_logo.png"

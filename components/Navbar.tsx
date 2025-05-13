@@ -133,10 +133,10 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
                         {!isLoaded ? (
 
                             <div className="flex items-center gap-2">
-                                <Skeleton className="w-8 h-8 rounded-full" />
-                                <div className="flex flex-col gap-1">
-                                    <Skeleton className="w-36 h-4 rounded" />
-                                    <Skeleton className="w-36 h-4 rounded" />
+                                <Skeleton className="w-8 h-8 rounded-full flex-shrink-0" />
+                                <div className="flex-1 flex flex-col gap-1 min-w-0">
+                                    <Skeleton className="w-full sm:w-36 h-4 rounded" />
+                                    <Skeleton className="w-2/3 sm:w-36 h-4 rounded" />
                                 </div>
                             </div>
                         ) : (

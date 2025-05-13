@@ -93,7 +93,7 @@ export default function ResetPasswordPage() {
   return (
     <>
       {authComplete && <AuthLoadingScreen type="signin" />}
-      <div className="w-[30rem] py-10 flex justify-center px-4">
+      <div className="max-w-[30rem] mx-auto w-full py-10 flex justify-center px-4">
         <div className="py-4 w-full max-w-md bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden">
           <div className="flex items-center justify-center px-6 pt-6">
             <Image

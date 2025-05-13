@@ -84,7 +84,7 @@ export default function VerificationCode({
               text-center text-base sm:text-lg md:text-xl font-medium
             "
             value={char === " " ? "" : char}
-            ref={el => (inputRefs.current[i] = el)}
+            // ref={el => (inputRefs.current[i] = el)}
             onChange={e => handleInputChange(i, e.target.value)}
             onKeyDown={e => handleKeyDown(i, e)}
             onFocus={e => e.target.select()}

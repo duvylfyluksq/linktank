@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import { AddPaymentMethodForm } from "./AddPaymentMethodForm"
-import { DownloadIcon, CreditCardIcon, AlertCircleIcon, Loader2 } from "lucide-react"
+import { DownloadIcon, CreditCardIcon, AlertCircleIcon, Loader2, Edit2, Trash2 } from "lucide-react"
 import { useUser } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "./ui/button"
@@ -297,17 +297,17 @@ export default function BillingPage() {
                 <p className="text-sm text-gray-500 mb-2">Your default payment method</p>
 
                 {loadingCard ? (
-                    <div className="flex items-center justify-between animate-pulse">
-                        <div className="flex items-center gap-2">
-                        <Skeleton className="h-5 w-5 rounded-full" />
-                        <div className="flex flex-col gap-1">
-                            <Skeleton className="h-4 w-32" />
-                            <Skeleton className="h-3 w-24" />
+                    <div className="animate-pulse flex flex-col sm:flex-row sm:items-center justify-between">
+                        <div className="flex items-center gap-2 mb-4 sm:mb-0">
+                            <Skeleton className="h-5 w-5 rounded-full" />
+                            <div className="flex flex-col gap-1">
+                                <Skeleton className="h-4 w-24 sm:w-32" />
+                                <Skeleton className="h-3 w-20 sm:w-24" />
+                            </div>
                         </div>
-                        </div>
-                        <div className="flex gap-2">
-                            <Skeleton className="h-8 w-24 rounded-md" />
-                            <Skeleton className="h-8 w-24 rounded-md" />
+                        <div className="flex gap-2 w-full sm:w-auto">
+                            <Skeleton className="h-8 w-full sm:w-24 rounded-md" />
+                            <Skeleton className="h-8 w-full sm:w-24 rounded-md" />
                         </div>
                     </div>
                     ) 
@@ -333,13 +333,15 @@ export default function BillingPage() {
                             onClick={() => handleCardOpen(true)} 
                             className="text-sm"
                         >
-                            Update card
+                            <Edit2 className="h-5 w-5 sm:hidden" />
+                            <span className="hidden sm:inline text-sm">Update card</span>
                         </Button>
                         <Button
                             onClick={handleDeleteCard}
                             className="text-sm"
                         >
-                            Delete card
+                            <Trash2 className="h-5 w-5 sm:hidden" />
+                            <span className="hidden sm:inline text-sm">Delete card</span>
                         </Button>
                     </div>
                 </div>
@@ -390,77 +392,82 @@ export default function BillingPage() {
             {/* Billing History */}
             <div>
                 <h3 className="text-sm font-medium mb-2">Billing History</h3>
-                <table className="w-full text-sm text-left border rounded-md overflow-hidden">
-                <thead className="bg-gray-100">
-                    <tr className="text-center">
-                        <th className="px-4 py-2">Invoice</th>
-                        <th className="px-4 py-2">Amount</th>
-                        <th className="px-4 py-2">Date</th>
-                        <th className="px-4 py-2">Status</th>
-                        <th className="px-4 py-2">Download</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {loadingPlan ? (
-                        [...Array(10)].map((_, index) => (
-                            <tr key={index} className="border-t text-center animate-pulse">
-                            <td className="px-4 py-2">
-                                <div className="h-4 w-10 mx-auto bg-gray-200 rounded" />
-                            </td>
-                            <td className="px-4 py-2">
-                                <div className="h-4 w-16 mx-auto bg-gray-200 rounded" />
-                            </td>
-                            <td className="px-4 py-2">
-                                <div className="h-4 w-20 mx-auto bg-gray-200 rounded" />
-                            </td>
-                            <td className="px-4 py-2">
-                                <div className="h-4 w-14 mx-auto bg-gray-200 rounded-full" />
-                            </td>
-                            <td className="px-4 py-2">
-                                <div className="h-4 w-4 mx-auto bg-gray-200 rounded" />
-                            </td>
+                <div className="overflow-hidden">
+                    <table className="table-fixed text-center w-full text-sm border rounded-md">
+                        <colgroup>
+                            <col className="w-1/5" />
+                            <col className="w-1/5" />
+                            <col className="w-1/5" />
+                            <col className="w-1/5" />
+                            <col className="w-1/5" />
+                        </colgroup>
+
+                        <thead className="bg-gray-100">
+                            <tr className="text-center">
+                            <th className="px-4 py-2 truncate">Invoice</th>
+                            <th className="px-4 py-2 truncate">Amount</th>
+                            <th className="px-4 py-2 truncate">Date</th>
+                            <th className="px-4 py-2 truncate">Status</th>
+                            <th className="px-4 py-2 truncate">Download</th>
                             </tr>
-                        ))
-                    )
-                    :
-                    customerData?.invoices?.length > 0 ? (
-                    customerData.invoices.map((invoice, index) => (
-                        <tr key={invoice.id} className="border-t text-center">
-                            <td className="px-4 py-2">#{index+1}</td>
-                            <td className="px-4 py-2">${(invoice.amount_paid / 100).toFixed(2)}</td>
-                            <td className="px-4 py-2">{new Date(invoice.created * 1000).toLocaleDateString()}</td>
-                            <td className="px-4 py-2">
-                                <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                    invoice.status === "paid" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-600"
-                                }`}
-                                >
-                                {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
-                                </span>
-                            </td>
-                            <td className="px-4 py-2">
-                                <div className="flex justify-center items-center">
+                        </thead>
+
+                        <tbody>
+                            {loadingPlan
+                            ? [...Array(5)].map((_, idx) => (
+                                <tr key={idx} className="border-t text-center animate-pulse">
+                                    {Array(5).fill(0).map((__, j) => (
+                                    <td key={j} className="px-2 py-2">
+                                        <div className="h-4 w-full bg-gray-200 rounded" />
+                                    </td>
+                                    ))}
+                                </tr>
+                                ))
+                            : customerData?.invoices?.length > 0
+                            ? customerData.invoices.map((inv, i) => (
+                                <tr key={inv.id} className="border-t text-center">
+                                    <td className="px-4 py-2 truncate">#{i + 1}</td>
+                                    <td className="px-4 py-2 truncate">
+                                    ${(inv.amount_paid / 100).toFixed(2)}
+                                    </td>
+                                    <td className="px-4 py-2 truncate">
+                                    {new Date(inv.created * 1000).toLocaleDateString()}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                    <span
+                                        className={`
+                                        px-2 py-1 rounded-full text-xs font-medium
+                                        ${inv.status === "paid"
+                                            ? "bg-green-100 text-green-700"
+                                            : "bg-red-100 text-red-600"
+                                        }
+                                        `}
+                                    >
+                                        {inv.status[0].toUpperCase() + inv.status.slice(1)}
+                                    </span>
+                                    </td>
+                                    <td className="px-4 py-2">
                                     <a
-                                        href={invoice.hosted_invoice_url}
+                                        href={inv.hosted_invoice_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-blue-600 hover:underline"
                                     >
-                                        <DownloadIcon className="h-4 w-4" />
+                                        <DownloadIcon className="inline h-4 w-4" />
                                     </a>
-                                </div>
-                            </td>
-                        </tr>
-                    ))
-                    ) : (
-                    <tr>
-                        <td colSpan={5} className="px-4 py-2 text-center text-gray-500">
-                        No invoices found
-                        </td>
-                    </tr>
-                    )}
-                </tbody>
-                </table>
+                                    </td>
+                                </tr>
+                                ))
+                            : (
+                                <tr>
+                                <td colSpan={5} className="px-4 py-2 text-center text-gray-500">
+                                    No invoices found
+                                </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
 
                 {hasSubscription && (
                     <>

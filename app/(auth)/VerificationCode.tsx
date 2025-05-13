@@ -14,11 +14,10 @@ export default function VerificationCode({
 }: VerificationCodeProps) {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Always work with an array of exactly 6 characters, padding with " "
   const codeChars = verificationCode
-    .padEnd(6, " ")        // if shorter, fill with spaces
-    .slice(0, 6)           // if longer, truncate
-    .split("");            // -> ["1"," ","4"," ",...," "]
+    .padEnd(6, " ")        
+    .slice(0, 6)           
+    .split("");
 
   const updateCodeAt = (idx: number, char: string) => {
     const newChars = [...codeChars];
@@ -37,7 +36,6 @@ export default function VerificationCode({
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === "Backspace") {
-      // clear this box (to space) and stay, or move back if already empty
       if (codeChars[idx] !== " ") {
         updateCodeAt(idx, " ");
       } else if (idx > 0) {
@@ -75,16 +73,19 @@ export default function VerificationCode({
             type="text"
             inputMode="numeric"
             maxLength={1}
+            ref={(el: HTMLInputElement | null) => {
+              inputRefs.current[i] = el;
+            }}   
             className="
-              flex-shrink-0
-              w-6 h-8
-              sm:w-8 sm:h-10
-              md:w-12 md:h-14
-              border border-gray-300 rounded-md
-              text-center text-base sm:text-lg md:text-xl font-medium
+                flex-shrink-0
+                w-6 h-8
+                sm:w-8 sm:h-10
+                !px-1 !py-1 
+                md:w-12 md:h-14
+                border border-gray-300 rounded-md
+                text-center text-base sm:text-lg md:text-xl font-medium
             "
             value={char === " " ? "" : char}
-            // ref={el => (inputRefs.current[i] = el)}
             onChange={e => handleInputChange(i, e.target.value)}
             onKeyDown={e => handleKeyDown(i, e)}
             onFocus={e => e.target.select()}

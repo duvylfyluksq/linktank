@@ -1,3 +1,4 @@
+import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 
 interface VerificationCodeProps {
@@ -53,27 +54,32 @@ export default function VerficationCode({verificationCode, setVerificationCode} 
     };
 
 
-    return(
-        <div className="flex justify-center gap-2 my-6">
+    return (
+        <div className="flex justify-center gap-2 my-6 px-4 overflow-x-auto">
             {[...Array(6)].map((_, i) => (
-                <input
+            <Input
                 key={i}
                 id={`code-box-${i}`}
                 type="text"
                 inputMode="numeric"
                 maxLength={1}
-                className="w-12 h-14 border border-gray-300 rounded-md text-center text-xl font-medium focus:outline-none focus:ring-2 focus:ring-[#1C2329] focus:border-transparent"
+                className="
+                    flex-shrink-0
+                    w-10 h-12
+                    sm:w-12 sm:h-14
+                    border border-gray-300 rounded-md
+                    text-center text-xl font-medium
+                "
                 value={verificationCode[i] === " " ? "" : verificationCode[i]}
-                ref={(el) => {
-                    inputRefs.current[i] = el;
-                }}
-                onChange={(e) => handleInputChange(i, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(i, e)}
-                onFocus={(e) => e.target.select()}
+                ref={el => { inputRefs.current[i] = el }}
+                onChange={e => handleInputChange(i, e.target.value)}
+                onKeyDown={e => handleKeyDown(i, e)}
+                onFocus={e => e.target.select()}
                 onPaste={i === 0 ? handlePaste : undefined}
                 autoFocus={i === 0}
-                />
+            />
             ))}
         </div>
-    );    
+    );
+   
 }

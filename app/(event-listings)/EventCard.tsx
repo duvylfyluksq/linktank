@@ -78,7 +78,7 @@ export const EventCard = ({ event }: { event: EventModel }) => {
                 <div className="relative flex-shrink-0">
                     <Image
                         src={
-                            event.photo_url ||
+                            // event.photo_url ||
                             (event!.organization!.logo_url ??
                                 "/linktank_logo.png")
                         }

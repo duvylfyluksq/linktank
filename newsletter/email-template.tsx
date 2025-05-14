@@ -122,7 +122,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                                   margin: "0 4px",
                                 }}
                               />
-                              {truncateText(event.location, 30)}
+                              {truncateText(event.location, 20)}
                             </Text>
                           </Column>
                         </Row>
@@ -130,7 +130,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                         {/* Title Row */}
                         <Row>
                           <Column>
-                            <Text style={eventTitle}>{truncateText(event.title, 60)}</Text>
+                            <Text style={eventTitle}>{truncateText(event.title, 40)}</Text>
                           </Column>
                         </Row>
 
@@ -138,7 +138,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                         <Row>
                           <Column>
                             <Text style={organizationName}>
-                            <span style={{ color: "#333333", fontWeight: 500 }}>By</span> {event.organization?.name || "Unknown Host"}
+                            <span style={{ color: "#333333", fontWeight: 500 }}>By</span> {truncateText(event.organization?.name, 30) || "Unknown Host"}
                             </Text>
                           </Column>
                         </Row>
@@ -148,7 +148,7 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
                           <Column>
                             <Text style={eventDescription}>
                               {event.brief_description
-                                ? truncateText(event.brief_description, 120)
+                                ? truncateText(event.brief_description, 100)
                                 : cleanDescription(event.description)}
                             </Text>
                           </Column>
@@ -180,8 +180,8 @@ export const EmailTemplate = ({ events }: EventEmailProps) => {
 export default EmailTemplate
 
 const main = {
-  paddingLeft: "5px",
-  paddingRight: "5px",
+  paddingLeft: "1px",
+  paddingRight: "1px",
   backgroundColor: "#ffffff",
   fontFamily: "Plus Jakarta Sans, Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 }
@@ -293,8 +293,8 @@ const eventImage = {
   display: "block",
   margin: "auto",
   borderRadius: "8px",
-  width: "100px",
-  height: "100px",
+  width: "60px",
+  height: "60px",
 }
 
 const footerText = {

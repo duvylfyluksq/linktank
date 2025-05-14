@@ -73,6 +73,8 @@ interface Event extends Document {
     contact_phone?: string;
     contact_email?: string;
     backlink: string;
+    is_approved: boolean;
+    is_rejected: boolean;
 }
 
 type EventModel = Event;

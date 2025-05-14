@@ -28,6 +28,7 @@ export default function Home() {
             const params = new URLSearchParams();
             params.append("page", page.toString());
             params.append("limit", "10");
+            params.append("isApproved", "true");
 
             if (filters.organization_id !== "all") {
                 params.append("organization", filters.organization_id);

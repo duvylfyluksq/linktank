@@ -5,7 +5,7 @@ import Landing from "./landing";
 async function getPastEvents() {
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/search?page=1&limit=5&dateType=past`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/search?page=1&limit=5&dateType=past&isApproved=true`,
             {
                 cache: "no-store", // or "force-cache", "revalidate", etc., depending on your needs
             }

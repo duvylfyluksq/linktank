@@ -118,7 +118,9 @@ const EventSchema = new Schema({
         type: String,
         unique: true,
         required: true
-    }
+    },
+    is_approved: { type: Boolean },
+    is_rejected: { type: Boolean }
 }, { strict: false });
 
 const Event = models.Event || model("Event", EventSchema);

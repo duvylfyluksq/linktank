@@ -30,6 +30,7 @@ export default function Home() {
             const params = new URLSearchParams();
             params.append("page", page.toString());
             params.append("limit", "10");
+            params.append("isApproved", "true");
             params.append("search", searchParams.query as string);
 
             if (filters.organization_id !== "all") {

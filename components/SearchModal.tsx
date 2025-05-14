@@ -36,6 +36,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
             const params = new URLSearchParams();
             params.append("page", page.toString());
             params.append("limit", "10");
+            params.append("isApproved", "true")
             params.append("dateType", "upcoming")
             params.append("search", query);
 

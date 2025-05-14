@@ -18,8 +18,25 @@ export async function GET(request: Request) {
     const page = parseInt(url.searchParams.get("page") || "1", 10);
     const limit = parseInt(url.searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
+    const isApproved = url.searchParams.get("isApproved") === "true";
+    const isRejected = url.searchParams.get("isRejected") === "true";
     try {
         const query: any = {};
+
+        query.is_approved = isApproved;
+        if (!isApproved) {
+            if (isRejected) {
+                query.$and = [
+                    { is_rejected: true },
+                    { is_rejected: { $exists: true } }
+                ];
+            } else {
+                query.$or = [
+                    { is_rejected: false },
+                    { is_rejected: { $exists : false } }
+                ]
+            }
+        }
 
         if (searchQuery) {
             query.title = { $regex: searchQuery, $options: "i" };

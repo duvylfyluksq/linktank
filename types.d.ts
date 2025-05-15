@@ -44,6 +44,10 @@ interface AgendaItem {
     speakers: Speaker[];
 }
 
+interface DayAgenda {
+  items: AgendaItem[];
+}
+
 interface Event extends Document {
     _id: string;
     title: string;

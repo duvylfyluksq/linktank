@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import Section from "./section";
 import { SpeakerSelector } from "@/components/speaker-selector"
 
-export default function SpeakersSection(){
-    const [speakers, setSpeakers] = useState<Speaker[]>([])
+export interface SpeakersSectionProps {
+  value: Speaker[];
+  onChange: (speakers: Speaker[]) => void;
+}
 
+export default function SpeakersSection({
+  value,
+  onChange,
+}: SpeakersSectionProps) {
     return(
         <Section title="Speakers">
-            <SpeakerSelector selectedSpeakers={speakers} onSpeakersChange={setSpeakers} />
+            <SpeakerSelector selectedSpeakers={value} onSpeakersChange={onChange} />
         </Section>
     )
 }

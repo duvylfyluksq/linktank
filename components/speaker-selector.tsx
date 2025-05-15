@@ -6,14 +6,6 @@ import { Plus, Users } from "lucide-react"
 import { SpeakerCard } from "@/components/speaker-card" 
 import { NewSpeakerForm } from "./new-speaker-form"
 
-// Mock data for speakers - this would typically come from your API
-// const availableSpeakers = [
-//   { id: 1, name: "Alex Johnson", role: "CEO, TechCorp", image: "/placeholder.svg?height=40&width=40" },
-//   { id: 2, name: "Maria Garcia", role: "CTO, InnovateLabs", image: "/placeholder.svg?height=40&width=40" },
-//   { id: 3, name: "James Wilson", role: "AI Researcher", image: "/placeholder.svg?height=40&width=40" },
-//   { id: 4, name: "Sarah Chen", role: "Product Lead, Linktank", image: "/placeholder.svg?height=40&width=40" },
-// ]
-
 interface SpeakerSelectorProps {
   selectedSpeakers: any[]
   onSpeakersChange: (speakers: any[]) => void

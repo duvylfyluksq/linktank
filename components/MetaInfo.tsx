@@ -14,11 +14,37 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useEffect, useState } from "react";
+import { BasicInfoValues } from "./BasicInfoSection";
 
-export default function MetaInfo(){
+export interface MetaInfoProps {
+  title: BasicInfoValues["title"];
+  briefDescription: BasicInfoValues["briefDescription"];
+  description: BasicInfoValues["description"];
+  url: BasicInfoValues["url"];
+  organizationId: BasicInfoValues["organizationId"];
+  onChange: (
+    fields: Partial<
+      Pick<
+        BasicInfoValues,
+        | "title"
+        | "briefDescription"
+        | "description"
+        | "url"
+        | "organizationId"
+      >
+    >
+  ) => void;
+}
 
-    const [description, setDescription] = useState<string>("")
-    const [selectedOrgId, setSelectedOrgId] = useState<string>("")
+export default function MetaInfo({
+    title,
+    briefDescription,
+    description,
+    url,
+    organizationId,
+    onChange,} : MetaInfoProps
+){
+
     const [organizations, setOrganizations] = useState<Organization[]>([])
     const [fetching, setFetching] = useState(true)
         
@@ -51,7 +77,12 @@ export default function MetaInfo(){
                 <Label htmlFor="event-title" className="text-sm font-medium mb-1 block">
                     Event Title<span className="text-red-500">*</span>
                 </Label>
-                <Input id="event-title" placeholder="Enter event title" />
+                <Input
+                    id="event-title"
+                    placeholder="Enter event title"
+                    value={title}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({title: e.target.value})}
+                />
             </div>
 
             {/* Brief Description */}
@@ -59,7 +90,12 @@ export default function MetaInfo(){
                 <Label htmlFor="brief-description" className="text-sm font-medium mb-1 block">
                     Brief Description
                 </Label>
-                <Input id="brief-description" placeholder="A short summary of your event (displayed in event cards)" />
+                <Input
+                    id="brief-description"
+                    placeholder="A short summary of your event (displayed in event cards)"
+                    value={briefDescription}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({briefDescription: e.target.value})}
+                />
             </div>
 
             {/* Full Description */}
@@ -69,7 +105,7 @@ export default function MetaInfo(){
                 </Label>
                 <MarkdownEditor
                     value={description}
-                    onChange={setDescription}
+                    onChange={(markdown: string) => onChange({ description: markdown })}
                 />
             </div>
 
@@ -79,7 +115,13 @@ export default function MetaInfo(){
                     Event URL<span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
-                    <Input id="url" placeholder="https://example.com/event" className="pl-10" />
+                    <Input
+                        id="url"
+                        placeholder="https://example.com/event"
+                        value={url}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange({url: e.target.value})}
+                        className="pl-10"
+                    />
                     <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
             </div>
@@ -90,7 +132,7 @@ export default function MetaInfo(){
                 {fetching ? (
                     <div className="text-gray-500">Loading organizations…</div>
                 ) : (
-                    <Select value={selectedOrgId} onValueChange={(val) => setSelectedOrgId(val)}>
+                    <Select value={organizationId} onValueChange={(val) => onChange({organizationId: val})}>
                     <SelectTrigger
                         className="
                             w-[20rem] h-9 bg-white rounded-md max-sm:w-full

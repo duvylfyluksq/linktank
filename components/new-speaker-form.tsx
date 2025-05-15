@@ -63,7 +63,7 @@ export function NewSpeakerForm({ isOpen, onClose, onSave }: SpeakerFormProps) {
     const newSpeaker = {
       id: Date.now(), // Temporary ID for demo purposes
       name,
-      role: title,
+      title: title,
       image: speakerImage || "/placeholder.svg?height=40&width=40",
       links: links.filter((link) => link.url.trim() !== ""),
     }

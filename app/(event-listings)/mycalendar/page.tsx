@@ -19,7 +19,10 @@ export default function Home() {
     );
     const filters = useEventFilters();
     const { isSignedIn } = useUser();
-    
+
+    useEffect(()=>{console.log(events); console.log(filters)}
+
+    , [events, filters])
 
     useEffect(() => {
         const now = new Date();
@@ -32,7 +35,7 @@ export default function Home() {
             return false;
           }
       
-          if (filters.locations && (!event.location_tag || !filters.locations.includes(event.location_tag._id))) return false;
+          if (filters.locations.length > 0 && (!event.location_tag || !filters.locations.includes(event.location_tag._id))) return false;
 
           if (filters.location_type === "in-person" && !event.is_in_person) return false;
           if (filters.location_type === "online" && !event.is_virtual) return false;

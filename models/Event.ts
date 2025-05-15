@@ -90,12 +90,6 @@ const EventSchema = new Schema({
     zip_code: {
         type: String,
         default: null,
-        validate: {
-            validator: function (value: any) {
-                return /^\d{5}$/.test(value);
-            },
-            message: (props: any) => `${props.value} is not a valid 5-digit zip code!`,
-        },
     },
     country: {
         type: String,

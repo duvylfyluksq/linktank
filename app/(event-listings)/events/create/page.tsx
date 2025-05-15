@@ -5,8 +5,15 @@ import BasicInfoSection, { BasicInfoValues } from "@/components/BasicInfoSection
 import SpeakersSection from "@/components/SpeakersSection";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+
 
 export default function CreateEventPage() {
+  const router = useRouter();
+
+  const [submitting, setSubmitting] = useState(false);
 
   const [basicInfo, setBasicInfo] = useState<BasicInfoValues>({
     title: "",
@@ -30,10 +37,67 @@ export default function CreateEventPage() {
 
   const [agenda, setAgenda] = useState<DayAgenda[]>([]);
 
+  const handleSubmit = async () => {
+    
+    setSubmitting(true);
+
+    const df = new Date(
+      basicInfo.startDate.toDateString() + " " + basicInfo.startTime
+    ).toISOString();
+    const dt = basicInfo.isDateRange
+      ? new Date(
+          basicInfo.endDate!.toDateString() + " " + basicInfo.endTime!
+        ).toISOString()
+      : undefined;
+
+    const payload = {
+      title: basicInfo.title,
+      date_from: df,
+      date_to: dt,
+      url: basicInfo.url,
+      ticket_url: basicInfo.meetingUrl,
+      brief_description: basicInfo.briefDescription,
+      description: basicInfo.description,
+      speakers: speakers,            
+      agenda: agenda,              
+      organization: basicInfo.organizationId,
+      photo_url: basicInfo.photoUrl,
+      is_virtual: basicInfo.isVirtual,
+      is_in_person: basicInfo.isInPerson,
+      is_date_range: basicInfo.isDateRange,
+      location: basicInfo.location,
+    };
+
+    const res = await fetch("/api/events/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      toast({
+        title: "Success",
+        description: "Event submitted successfully!"
+      })
+      router.push(`/`);
+    } else {
+      console.error("Failed to create:", data.message);
+      toast({
+        title: "Error",
+        description: "Error submitting event",
+        variant: "destructive",
+      })
+    }
+    setSubmitting(false);
+  };
+
   useEffect(() => {
     console.log(basicInfo)
     console.log(speakers)
-  }, [basicInfo, speakers])
+    console.log(agenda)
+  }, [basicInfo, speakers, agenda])
 
   return (
     <div className="min-h-screen w-full bg-gray-50">
@@ -62,8 +126,9 @@ export default function CreateEventPage() {
               px-8 py-4
               hover:bg-[#0e3b69]
             "
+            onClick={handleSubmit}
           >
-            Submit event
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Submit event"}
           </Button>
         </div>
       </div>

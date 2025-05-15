@@ -11,10 +11,10 @@ interface ISpeaker extends Document {
 const SpeakerSchema: Schema = new Schema({
     name: { type: String, required: true },
     title: { type: String, required: true },
-    photo_url: { type: String, required: true },
-    url: { type: String, required: true },
-    twitter: { type: String, required: true },
-    linkedin: {type: String, required: true}
+    photo_url: { type: String, required: false },
+    url: { type: String, required: false },
+    twitter: { type: String, required: false },
+    linkedin: {type: String, required: false}
 });
 
 const Speaker = models.Speaker || model("Speaker", SpeakerSchema);

@@ -18,7 +18,9 @@ import SpeakerCard from "./SpeakerCard";
 import { useUser } from "@clerk/nextjs";
 import SubscriptionPage from "@/app/(authwall)/authwall";
 import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
-// import { connect } from "node:net";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 const displayDate = (date) => {
     const dt = new Date(date);
@@ -307,12 +309,24 @@ export default function EventPage() {
                             )}
                         </TabsList>
                         <TabsContent value="about">
-                            <div
+                            {/* <div
                                 className="prose text-[#323232] text-[0.8125rem] sm:text-[1rem] mt-6 flex flex-col gap-6"
                                 dangerouslySetInnerHTML={{
-                                    __html: event.description,
+                                    __html: md.render(event.description),
                                 }}
-                            />
+                            /> */}
+                            <div
+                                className="prose text-[#323232] text-[0.8125rem] sm:text-[1rem] mt-6 flex flex-col gap-6"
+                            >
+                                <ReactMarkdown 
+                                    remarkPlugins={[remarkGfm]}
+                                    rehypePlugins={[
+                                        rehypeRaw,
+                                    ]}
+                                >
+                                    {event.description}
+                                </ReactMarkdown>
+                            </div>
                         </TabsContent>
                         <TabsContent value="agenda">
                             <div className="flex flex-col gap-7 w-full mt-6">
@@ -437,10 +451,16 @@ export default function EventPage() {
                         </h1>
                         <div
                             className="prose text-[#323232] text-[0.8125rem] sm:text-[1rem] mt-6 flex flex-col gap-6"
-                            dangerouslySetInnerHTML={{
-                                __html: event.description,
-                            }}
-                        />
+                        >
+                            <ReactMarkdown 
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[
+                                    rehypeRaw,
+                                ]}
+                            >
+                                {event.description}
+                            </ReactMarkdown>
+                        </div>
                     </>
                 }
             </div>

@@ -61,6 +61,10 @@ const Navbar = ({ onHeightChange }: { onHeightChange: (height: number) => void }
         return () => observer.disconnect();
     }, [onHeightChange]);
 
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
     return (
         <div ref={containerRef} className="fixed top-0 left-0 right-0 z-50">
             <nav className="flex items-center justify-between h-[4.9375rem] sm:h-[4rem] px-4 sm:px-10 bg-secondaryBlue border-b border-[#323232] border-opacity-15">

@@ -173,7 +173,7 @@ export default function SearchModal({ open, onOpenChange }: { open: boolean, onO
                 </div>
 
                 <div
-                    className="w-full max-h-[30vh] overflow-y-auto px-3 py-2"
+                    className="w-full max-h-[30vh] overflow-y-auto touch-pan-y overscroll-contain px-3 py-2"
                     ref={scrollContainerRef}
                 >
                     {searching ?

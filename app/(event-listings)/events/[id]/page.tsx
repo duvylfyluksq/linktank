@@ -21,7 +21,6 @@ import { useSavedEvents } from "@/app/contexts/SavedEventsContext";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 const displayDate = (date) => {
     const dt = new Date(date);
@@ -73,16 +72,14 @@ export default function EventPage() {
 
     if (loading) {
         return (
-            <ErrorBoundary>
             <div className="flex items-center justify-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
             </div>
-            </ErrorBoundary>
         );
     }
 
     if (!isSignedIn) {
-        return <ErrorBoundary><SubscriptionPage /></ErrorBoundary>;
+        return <SubscriptionPage />;
     }
 
     const handleSaveEvent = async () => {
@@ -130,7 +127,6 @@ export default function EventPage() {
 
     if (!event) {
         return (
-            <ErrorBoundary>
             <div className="flex flex-col items-center justify-center min-h-screen">
                 <h2 className="text-2xl font-bold text-gray-800">
                     Event not found
@@ -143,12 +139,10 @@ export default function EventPage() {
                     <Button className="mt-4">View All Events</Button>
                 </Link>
             </div>
-            </ErrorBoundary>
         );
     }
 
     return (
-        <ErrorBoundary>
         <div className="flex flex-col items-center justify-center w-full pt-[2.69rem] sm:pt-[4.625rem] pb-[2.82rem] sm:pb-[6.56rem]">
             <div className="flex flex-col w-full sm:w-[45.875rem] gap-[2.25rem] sm:gap-[2.88rem] px-5 sm:px-0">
                 <div className="">
@@ -471,6 +465,5 @@ export default function EventPage() {
                 }
             </div>
         </div>
-        </ErrorBoundary>
     );
 }

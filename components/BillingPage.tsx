@@ -253,14 +253,20 @@ export default function BillingPage() {
                             onChange={() => setSelectedPlan("yearly")}
                             className="h-4 w-4 text-blue-600 cursor-pointer"
                         />
-                        <label htmlFor="yearly" className="flex justify-between items-center w-full">
-                            <span>
-                                Yearly <span className="ml-1 text-xs text-green-400">Save 15%</span>
+                        <label
+                            htmlFor="yearly"
+                            className="flex justify-between items-start w-full"
+                        >
+                        <div className="flex flex-col items-start">
+                            <span className="font-medium">Yearly</span>
+                            <span className="text-xs text-green-400 mt-1">
+                                Save 15%
                             </span>
-                            <div className="flex flex-col">
-                                <span>$8.33/month</span>
-                                <span className="text-xs text-gray-400">$99.99 annually</span>
-                            </div>
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span>$8.33/month</span>
+                            <span className="text-xs text-gray-400 mt-1">$99.99 annually</span>
+                        </div>
                         </label>
                     </div>
                     </>
@@ -277,14 +283,18 @@ export default function BillingPage() {
                         onClick={() => handleSubscribe(process.env.NEXT_PUBLIC_STRIPE_YEARLY_PRICE_ID!)}
                         className="flex justify-between items-center border border-black rounded-md px-4 py-2 text-sm font-medium text-white bg-black hover:bg-[#113663] transition"
                     >
-                        <span>
-                            Yearly <span className="ml-1 text-xs text-green-400">Save 15%</span>
-                        </span>
-                        <span>
-                            $9.99/month
-                        <br />
-                        <span className="text-xs text-gray-400">$99.99 annually</span>
-                        </span>
+                        <div className="flex flex-col items-start">
+                            <span>
+                                Yearly 
+                            </span>
+                            <span className="mt-1 text-xs text-green-400">Save 15%</span>
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span>
+                                $9.99/month
+                            </span>
+                            <span className="mt-1 text-xs text-gray-400">$99.99 annually</span>
+                        </div>
                     </button>
                     </>
                 )}
